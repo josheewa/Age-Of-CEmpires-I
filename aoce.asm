@@ -160,6 +160,7 @@ GraphicsAppvarStart = $+1
 	jr ChangeRelocationTableLoop
 _:	pop hl
 	djnz LoadSpritesAppvar
+	
 	ld hl, drawfield_loc
 	ld de, DrawField
 	ld bc, DrawFieldEnd - DrawField
@@ -182,8 +183,6 @@ _:	pop hl
 		ex (sp), hl
 		call gfx_SetDraw
 	pop hl
-	;ld hl, MAP_SIZE*16-8
-	;ld (ix+OFFSET_X), hl
 	xor a, a
 	ld (ix+OFFSET_X), a
 	ld (ix+OFFSET_Y), a
@@ -199,27 +198,9 @@ _:	pop hl
 	ld bc, 320*(240-15)
 	ldir
 	
-	
 MainGameLoop:
-; Speed: 994146/376705 cycles
-	bit need_to_redraw_tiles, (iy+0)
-	call nz, DrawField
-	ld de, vRAM+(16*320)+32												; Copy the buffer to/from (32, 16)
-	ld hl, screenBuffer+(16*320)+32
-	ld b, 0
-	mlt bc
-	ld a, 240-16-32
-CopyBufferLoop:
-	ld c, b
-	inc b																; Copy 256 bytes
-	ldir
-	ld c, 32+32
-	add hl, bc
-	ex de, hl
-	add hl, bc
-	ex de, hl
-	dec a
-	jr nz, CopyBufferLoop
+; Speed: 908839/342212 cycles
+	call DrawField
 	ld ix, saveSScreen+21000
 	call GetKeyFast
 	ld iy, TopLeftXTile
@@ -231,27 +212,16 @@ CheckIfPressedUp:
 	bit kpUp, (hl)
 	jr z, CheckIfPressedRight
 	ld a, (ix+OFFSET_Y)
-	or a, a
-	jr nz, +_
-	shift_tile0_x_right()
-	shift_tile0_y_down()
-_:	dec a
+	inc a
 	and %00001111
 	ld (ix+OFFSET_Y), a
+	jr nz, CheckIfPressedRight
+	shift_tile0_x_left()
+	shift_tile0_y_up()
 CheckIfPressedRight:
 	bit kpRight, (hl)
 	jr z, CheckIfPressedLeft
 	ld a, (ix+OFFSET_X)
-	inc a
-	and %00011111
-	ld (ix+OFFSET_X), a
-	jr nz, CheckIfPressedLeft
-	shift_tile0_x_left()
-	shift_tile0_y_down()
-CheckIfPressedLeft:
-	bit 1, (hl)
-	jr z, CheckIfPressedDown
-	ld a, (ix+OFFSET_X)
 	or a, a
 	jr nz, +_
 	shift_tile0_x_right()
@@ -259,16 +229,27 @@ CheckIfPressedLeft:
 _:	dec a
 	and %00011111
 	ld (ix+OFFSET_X), a
+CheckIfPressedLeft:
+	bit kpLeft, (hl)
+	jr z, CheckIfPressedDown
+	ld a, (ix+OFFSET_X)
+	inc a
+	and %00011111
+	ld (ix+OFFSET_X), a
+	jr nz, CheckIfPressedDown
+	shift_tile0_x_left()
+	shift_tile0_y_down()
 CheckIfPressedDown:
 	bit kpDown, (hl)
 	jr z, CheckKeyPressesStop
 	ld a, (ix+OFFSET_Y)
-	inc a
+	or a, a
+	jr nz, +_
+	shift_tile0_x_right()
+	shift_tile0_y_down()
+_:	dec a
 	and %00001111
 	ld (ix+OFFSET_Y), a
-	jr nz, CheckKeyPressesStop
-	shift_tile0_x_left()
-	shift_tile0_y_up()
 CheckKeyPressesStop:
 	ld iy, AoCEFlags
 	res need_to_redraw_tiles, (iy+0)

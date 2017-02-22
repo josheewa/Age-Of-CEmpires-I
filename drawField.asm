@@ -2,6 +2,32 @@ drawfield_loc = $
 relocate(mpShaData)
 
 DrawField:
+	bit need_to_redraw_tiles, (iy+0)
+	call nz, DrawTiles
+	ld de, vRAM+(32*320)+32												; Copy the buffer to/from (32, 32)
+	ld hl, screenBuffer+(32*320)+32
+	ld b, 0
+	mlt bc
+	ld a, 240-32-32
+CopyBufferLoop:
+	ld c, b
+	inc b																; Copy 256 bytes
+	ldir
+	ld c, 32+32
+	add hl, bc
+	ex de, hl
+	add hl, bc
+	ex de, hl
+	dec a
+	jr nz, CopyBufferLoop
+	ret
+DrawFieldEnd:
+	
+endrelocate()
+drawtiles_loc = $
+relocate(cursorImage)
+
+DrawTiles:
 	ld b, (ix+OFFSET_X)
 	bit 4, b
 	ld a, 16
@@ -24,16 +50,6 @@ _:	ld (TopRowLeftOrRight), a
 	ld e, a
 	add hl, de
 	ld (startingPosition), hl
-	jp DrawTiles
-DrawFieldEnd:
-	
-.echo $-DrawField
-	
-endrelocate()
-drawfieldstart_loc = $
-relocate(cursorImage)
-	
-DrawTiles:
 	ld de, (TopLeftYTile)
 	ld b, 27
 	ld hl, (TopLeftXTile)
@@ -42,6 +58,7 @@ DrawTiles:
 DisplayEachRowLoop:
 ; Registers:
 ;   B' = row index
+;   BC = length of row tile
 ;   DE = pointer to output
 ;   HL = pointer to tile/black
 ;   DE' = x index tile
@@ -60,23 +77,20 @@ DisplayTile:
 	ld c, a														; Check if x/y tile is within the bounds
 	ld a, d
 	or a, h
-	cp a, 2
-	ccf
-	ld a, c
-	jr c, +_
+	scf
+	jr nz, +_
 	ld a, e
-	cp a, (MAP_SIZE*2) & 255
+	cp a, MAP_SIZE
 	ccf
-	ld a, c
 	jr c, +_
 	ld a, l
-	cp a, (MAP_SIZE*2) & 255
-	ld a, c
+	cp a, MAP_SIZE
 	ccf
-_:	exx															; Here are the normal registers active
+_:	ld a, c
+	exx															; Here are the normal registers active
 	ld hl, _tile_test \.r2
 	jr nc, +_
-	ld hl, _grass \.r2
+	ld hl, 0E40000h
 _:	ld ix, 0
 	lea bc, ix+2
 	add ix, de
