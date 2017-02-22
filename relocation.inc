@@ -16,9 +16,6 @@
 #endmacro
 #define .r2 relocate2()
 
-.echo >> relocation_table1.asm "RelocationTable1:\n"
-.echo >> relocation_table2.asm "RelocationTable2:\n"
-
 #macro relocate(addr)
 	#define old_addr eval($)
 	.org addr
@@ -30,3 +27,6 @@
 	#undefine old_addr
 	#undefine new_addr
 #endmacro
+
+.echo >> relocation_table1.asm "RelocationTable1:\n"
+.echo >> relocation_table2.asm "RelocationTable2:\n"

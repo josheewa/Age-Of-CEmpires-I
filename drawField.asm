@@ -4,37 +4,27 @@ relocate(mpShaData)
 DrawField:
 	ld b, (ix+OFFSET_X)
 	bit 4, b
-	ld a, 020h
+	ld a, 16
+	ld c, 028h
 	jr z, +_
-	ld a, 028h
-_:	ld e, (ix+OFFSET_Y)
-	bit 3, e
-	jr z, +_
-	xor a, %00001000										; switch jr z/nz
-_:	ld (TopRowOrSecondRowLeft), a
-	ld a, e
-	and %00000111
-	ld e, a
+	ld a, -16
+	ld c, 020h
+_:	ld (TopRowLeftOrRight), a
+	ld a, c
+	ld (IncrementRowXOrNot), a
+	ld e, (ix+OFFSET_Y)
 	ld d, 160
 	mlt de
-	call DrawTiles
-	ld de, vRAM+(16*320)+32
-	ld hl, screenBuffer+(16*320)+32
-	ld b, 0
-	mlt bc
-	ld a, 240-16-32
-CopyBufferLoop:
-	ld c, b
-	inc b
-	ldir
-	ld c, 32+32
-	add hl, bc
-	ex de, hl
-	add hl, bc
-	ex de, hl
-	dec a
-	jr nz, CopyBufferLoop
-	ret
+	ld hl, screenBuffer
+	add hl, de
+	add hl, de
+	ld d, 0
+	ld a, b
+	add a, 15
+	ld e, a
+	add hl, de
+	ld (startingPosition), hl
+	jp DrawTiles
 DrawFieldEnd:
 	
 .echo $-DrawField
@@ -44,35 +34,52 @@ drawfieldstart_loc = $
 relocate(cursorImage)
 	
 DrawTiles:
-	ld hl, screenBuffer
-	add hl, de
-	add hl, de
-	ld a, b
-	and %00001111
-	add a, 15
-	ld d, 0
-	ld e, a
-	add hl, de
-	ld (startingPosition), hl
-	ld de, 8*320
+	ld de, (TopLeftYTile)
 	ld b, 27
+	ld hl, (TopLeftXTile)
 	ld (TempSP2), sp
 	ld sp, 320
 DisplayEachRowLoop:
-	bit 0, b
-	exx
+; Registers:
+;   B' = row index
+;   DE = pointer to output
+;   HL = pointer to tile/black
+;   DE' = x index tile
+;   HL' = y index tile
+	bit 0, b													; Here are the shadow registers active
 startingPosition = $+2
 	ld iy, 0
-TopRowOrSecondRowLeft:
 	jr nz, +_
-	lea iy, iy+16
+TopRowLeftOrRight = $+2
+	lea iy, iy+0
 _:	ld a, 9
-	lea de, iy
+	exx
+	lea de, iy													; Populate DE to be the poiter to the output tile
+	exx
 DisplayTile:
-	ld ix, 0
+	ld c, a														; Check if x/y tile is within the bounds
+	ld a, d
+	or a, h
+	cp a, 2
+	ccf
+	ld a, c
+	jr c, +_
+	ld a, e
+	cp a, (MAP_SIZE*2) & 255
+	ccf
+	ld a, c
+	jr c, +_
+	ld a, l
+	cp a, (MAP_SIZE*2) & 255
+	ld a, c
+	ccf
+_:	exx															; Here are the normal registers active
+	ld hl, _tile_test \.r2
+	jr nc, +_
+	ld hl, _grass \.r2
+_:	ld ix, 0
 	lea bc, ix+2
 	add ix, de
-	ld hl, _tile_test \.r2
 	ldir
 	add ix, sp
 	lea de, ix-2
@@ -141,11 +148,30 @@ DisplayTile:
 	ld hl, 30-(320*16)
 	add hl, de
 	ex de, hl
+	exx															; Shadow registers are active here
+	inc hl
+	dec de
 	dec a
 	jp nz, DisplayTile
-	exx
+	ld a, b
+	ld bc, -9
+	add hl, bc
+	ex de, hl
+	ld bc, 9+1
+	add hl, bc
+	ex de, hl
+	ld b, a
+	bit 0, b
+IncrementRowXOrNot:
+	jr nz, +_
+	dec de
+	inc hl
+_:	exx															; Main registers are active here
+	ld hl, (startingPosition)
+	ld de, 8*320
 	add hl, de
 	ld (startingPosition), hl
+	exx
 	dec b
 	jp nz, DisplayEachRowLoop
 TempSP2 = $+1

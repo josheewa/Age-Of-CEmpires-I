@@ -17,5 +17,5 @@ _miningcamp_height equ 41
 _towncenter equ 24716
 _towncenter_height equ 97
 _resources equ 37134
-_tile_test equ 41935
-_grass equ 42223
+_tile_test equ 41934
+_grass equ 42222

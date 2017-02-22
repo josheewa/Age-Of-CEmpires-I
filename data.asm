@@ -35,10 +35,6 @@ AmountOfMaxPeople:
 	.db 10
 AmountOfBuildings:
 	.db 0
-nBuffer:
-	.db 14
-mBuffer:
-	.db 14
 	
 BuildingsPointer:
 	.dl _barracks \.r2
@@ -59,27 +55,10 @@ BuildingsHeights:
 BuildingsSizes:
 	.db 4, 4, 3, 3, 3, 3, 5
 	
-funlock_loc = $
-relocate(pixelShadow2)
+AoCEFlags:
+	.db 0
 	
-funlock:
-	ld a, 08Ch
-	out0 (024h), a
-	ld c, 4
-	in0 a, (6)
-	or c
-	out0 (6), a
-	out0 (028h), c
-	ret.l
-flock:
-	xor	a, a
-	out0 (028h), a
-	in0 a, (6)
-	res 2, a
-	out0 (6), a
-	ld a, 088h
-	out0(024h), a
-	ret.l
-funlockEnd:
-
-endrelocate()
+TopLeftXTile:
+	.dl -10
+TopLeftYTile:
+	.dl -3

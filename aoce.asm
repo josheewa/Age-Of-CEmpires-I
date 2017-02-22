@@ -1,6 +1,7 @@
 #include "ti84pce.inc"
 #include "defines.asm"
 #include "offset.asm"
+#include "macros.inc"
 #include "relocation.inc"
 
 .db tExtTok, tAsm84CECmp
@@ -77,16 +78,34 @@ ForceStopProgram:
 backupSP = $+1
 	ld sp, 0
 	call gfx_End
-	call.lis flock - 0D00000h
+	call.lis flock - 0D10000h
+	ld a, 0D0h
+	.db 0EDh, 06Dh															; ld mb, a
 	ld iy, flags
 	jp _DrawStatusBar
+funlock:
+	ld a, 08Ch
+	out0 (024h), a
+	ld c, 4
+	in0 a, (6)
+	or c
+	out0 (6), a
+	out0 (028h), c
+	ret.l
+flock:
+	xor	a, a
+	out0 (028h), a
+	in0 a, (6)
+	res 2, a
+	out0 (6), a
+	ld a, 088h
+	out0(024h), a
+	ret.l
 RunProgram:
-	ld hl, funlock_loc
-	ld bc, funlockEnd - funlock
-	ld de, funlock
-	ldir
+	ld a, 0D1h
+	.db 0EDh, 06Dh															; ld mb, a
 	di
-	call.lis funlock - 0D00000h
+	call.lis funlock - 0D10000h
 	ld b, 2
 	ld ix, GraphicsAppvar
 LoadSpritesAppvar:
@@ -141,6 +160,14 @@ GraphicsAppvarStart = $+1
 	jr ChangeRelocationTableLoop
 _:	pop hl
 	djnz LoadSpritesAppvar
+	ld hl, drawfield_loc
+	ld de, DrawField
+	ld bc, DrawFieldEnd - DrawField
+	ldir
+	ld de, DrawTiles
+	ld bc, DrawTilesEnd - DrawTiles
+	ldir
+	
 	ld ix, saveSScreen+21000
 	ld l, lcdBpp8
 	push hl
@@ -151,91 +178,104 @@ _:	pop hl
 		ld l, 255
 		ex (sp), hl
 		call gfx_SetTransparentColor
+		ld l, 1
+		ex (sp), hl
+		call gfx_SetDraw
 	pop hl
-	ld hl, drawfield_loc
-	ld de, DrawField
-	ld bc, DrawFieldEnd - DrawField
-	ldir
-	ld de, DrawTiles
-	ld bc, DrawTilesEnd - DrawTiles
-	ldir
-	ld hl, MAP_SIZE*16-8
-	ld (ix+OFFSET_X), hl
-	or a
-	sbc hl, hl
-	ld (ix+OFFSET_Y), hl
+	;ld hl, MAP_SIZE*16-8
+	;ld (ix+OFFSET_X), hl
+	xor a, a
+	ld (ix+OFFSET_X), a
+	ld (ix+OFFSET_Y), a
+	ld iy, AoCEFlags
+	set need_to_redraw_tiles, (iy+0)
 	ld hl, 0000000h
 	ld (buildings_stack+0), hl
 	ld de, vRAM
 	ld hl, _resources \.r2
-	ld bc, 320*15+1
+	ld bc, 320*15
 	ldir
-	ld hl, vRAM+(320*15)
-	ld bc, 320*(240-15)-1
+	ld hl, 0E40000h
+	ld bc, 320*(240-15)
 	ldir
+	
+	
 MainGameLoop:
-; Speed: 988734 cycles
-	call DrawField
+; Speed: 994146/376705 cycles
+	bit need_to_redraw_tiles, (iy+0)
+	call nz, DrawField
+	ld de, vRAM+(16*320)+32												; Copy the buffer to/from (32, 16)
+	ld hl, screenBuffer+(16*320)+32
+	ld b, 0
+	mlt bc
+	ld a, 240-16-32
+CopyBufferLoop:
+	ld c, b
+	inc b																; Copy 256 bytes
+	ldir
+	ld c, 32+32
+	add hl, bc
+	ex de, hl
+	add hl, bc
+	ex de, hl
+	dec a
+	jr nz, CopyBufferLoop
 	ld ix, saveSScreen+21000
 	call GetKeyFast
+	ld iy, TopLeftXTile
 	ld l, 01Ch
-	bit 6, (hl)
+	bit kpClear, (hl)
 	jp nz, ForceStopProgram
 	ld l, 01Eh
 CheckIfPressedUp:
-	bit 3, (hl)
+	bit kpUp, (hl)
 	jr z, CheckIfPressedRight
-	ld bc, (ix+OFFSET_Y)
-	ld a, b
-	or a, c
-	jr z, CheckIfPressedRight
-	dec bc
-	dec bc
-	;dec bc
-	;dec bc
-	ld (ix+OFFSET_Y), bc
+	ld a, (ix+OFFSET_Y)
+	or a, a
+	jr nz, +_
+	shift_tile0_x_right()
+	shift_tile0_y_down()
+_:	dec a
+	and %00001111
+	ld (ix+OFFSET_Y), a
 CheckIfPressedRight:
-	bit 2, (hl)
+	bit kpRight, (hl)
 	jr z, CheckIfPressedLeft
-	ex de, hl
-	ld hl, MAP_SIZE*32-16
-	ld bc, (ix+OFFSET_X)
-	scf
-	sbc hl, bc
-	ex de, hl
-	jr c, CheckIfPressedLeft
-	inc bc
-	inc bc
-	;inc bc
-	;inc bc
-	ld (ix+OFFSET_X), bc
+	ld a, (ix+OFFSET_X)
+	inc a
+	and %00011111
+	ld (ix+OFFSET_X), a
+	jr nz, CheckIfPressedLeft
+	shift_tile0_x_left()
+	shift_tile0_y_down()
 CheckIfPressedLeft:
 	bit 1, (hl)
 	jr z, CheckIfPressedDown
-	ld bc, (ix+OFFSET_X)
-	ld a, b
-	or a, c
-	jr z, CheckIfPressedDown
-	dec bc
-	dec bc
-	;dec bc
-	;dec bc
-	ld (ix+OFFSET_X), bc
+	ld a, (ix+OFFSET_X)
+	or a, a
+	jr nz, +_
+	shift_tile0_x_right()
+	shift_tile0_y_up()
+_:	dec a
+	and %00011111
+	ld (ix+OFFSET_X), a
 CheckIfPressedDown:
-	bit 0, (hl)
+	bit kpDown, (hl)
+	jr z, CheckKeyPressesStop
+	ld a, (ix+OFFSET_Y)
+	inc a
+	and %00001111
+	ld (ix+OFFSET_Y), a
+	jr nz, CheckKeyPressesStop
+	shift_tile0_x_left()
+	shift_tile0_y_up()
+CheckKeyPressesStop:
+	ld iy, AoCEFlags
+	res need_to_redraw_tiles, (iy+0)
+	ld a, (hl)
+	or a, a
 	jr z, +_
-	ex de, hl
-	ld hl, MAP_SIZE*17-42
-	ld bc, (ix+OFFSET_Y)
-	scf
-	sbc hl, bc
-	ex de, hl
-	jr c, +_
-	inc bc
-	inc bc
-	;inc bc
-	;inc bc
-	ld (ix+OFFSET_Y), bc
+	set need_to_redraw_tiles, (iy+0)
 _:	jp MainGameLoop
 	
 #include "routines.asm"
