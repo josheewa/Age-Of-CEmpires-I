@@ -3,8 +3,9 @@ relocate(mpShaData)
 
 DrawField:
 	bit need_to_redraw_tiles, (iy+0)
-	call nz, DrawTiles
-	ld de, vRAM+(32*320)+32												; Copy the buffer to/from (32, 32)
+	jr z, +_
+	call DrawTiles
+_:	ld de, vRAM+(32*320)+32												; Copy the buffer to/from (32, 32)
 	ld hl, screenBuffer+(32*320)+32
 	ld b, 0
 	mlt bc

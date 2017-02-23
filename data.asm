@@ -14,9 +14,13 @@ NoMultiplayer1:
 NoMultiplayer2:
 	.db "supported yet!", 0
 GraphicsAppvar:
-	.db AppVarObj, "AOCEGFX0", 0
+	.db AppVarObj, "AOCEGFX0"
+AoCEAppvar:
+	.db AppVarObj, "AOCEMAP"
 GraphicsAppvarNotFound:
 	.db "Can't find appvar:", 0
+LoadingMessage:
+	.db "Loading...", 0
 	
 RelocationTables:
 	.dl RelocationTable2, RelocationTable1
