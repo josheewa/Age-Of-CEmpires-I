@@ -6,29 +6,27 @@ _:	cp a, (hl)
 	jr nz, -_
 	ret
 	
-CheckTileInField:
-	push hl
-		add hl, hl
-	pop hl
-	ret c
-	ex de, hl
-	push hl
-		add hl, hl
-	pop hl
-	ex de, hl
-	ret c
-	ld c, a
-	ld a, d
-	or a, h
-	ld a, c
-	ret nz
-	ld a, e
-	cp a, MAP_SIZE
-	ccf
-	ld a, c
-	ret c
-	ld a, l
-	cp a, MAP_SIZE
-	ld a, c
-	ccf
+GetAnyKeyFast:
+	call GetKeyFast
+	ld l, 012h
+	ld a, (hl)
+	inc l
+	inc l
+	or a, (hl)
+	inc l
+	inc l
+	or a, (hl)
+	inc l
+	inc l
+	or a, (hl)
+	inc l
+	inc l
+	or a, (hl)
+	inc l
+	inc l
+	or a, (hl)
+	inc l
+	inc l
+	or a, (hl)
+	jr z, GetAnyKeyFast
 	ret

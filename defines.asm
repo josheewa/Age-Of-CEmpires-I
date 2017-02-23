@@ -23,3 +23,4 @@ kpLeft					.equ 1
 kpRight					.equ 2
 kpDown					.equ 0
 kpClear					.equ 6
+kpEnter					.equ 0

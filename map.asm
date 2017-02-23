@@ -1,0 +1,3 @@
+GenerateMap:
+LoadMap:
+	ret

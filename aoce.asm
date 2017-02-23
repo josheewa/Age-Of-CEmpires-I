@@ -138,14 +138,11 @@ GraphicsAppvarStart = $+1
 	jr ChangeRelocationTableLoop
 _:	pop hl
 	djnz LoadSpritesAppvar
-	ld hl, LoadingMessage
-	call _PutS
 	di
 	ld.sis sp, 0987Eh
 	ld a, 0D1h
 	.db 0EDh, 06Dh															; ld mb, a
 	call.lis fUnlockFlash - 0D10000h
-	call fCopyRAMToFlash
 	ld hl, drawfield_loc
 	ld de, DrawField
 	ld bc, DrawFieldEnd - DrawField
@@ -163,10 +160,9 @@ _:	pop hl
 		ld l, 255
 		ex (sp), hl
 		call gfx_SetTransparentColor
-		ld l, 1
-		ex (sp), hl
-		call gfx_SetDraw
 	pop hl
+	call DrawMainMenu
+	call fCopyRAMToFlash
 	xor a, a
 	ld (ix+OFFSET_X), a
 	ld (ix+OFFSET_Y), a
@@ -245,8 +241,9 @@ _:	jp MainGameLoop
 	
 #include "routines.asm"
 #include "drawField.asm"
-#include "drawMenu.asm"
 #include "data.asm"
+#include "mainmenu.asm"
+#include "map.asm"
 #include "decompress.asm"
 
 #include "relocation_table1.asm"

@@ -14,5 +14,6 @@ gfx_main1_transpcolor_index equ 0
 #include "gfx/Main/soldier.asm" ; 7010 bytes
 #include "gfx/Main/playhelpquit.asm" ; 3153 bytes
 #include "gfx/Main/singlemultiplayer.asm" ; 4725 bytes
+#include "gfx/Main/newloadgame.asm" ; 3671 bytes
 
 #endif

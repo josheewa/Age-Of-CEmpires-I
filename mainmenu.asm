@@ -1,5 +1,5 @@
 DrawMainMenu:
-	ld de, (currDrawingBuffer)
+	ld de, vRAM
 	ld hl, 0E40000h
 	ld bc, 320*240
 	ldir
@@ -76,10 +76,7 @@ DisplayHelp:
 			pop hl
 		pop hl
 	pop hl
-WaitForKey1:
-	call _GetCSC
-	or a, a
-	jr z, WaitForKey1
+	call GetAnyKeyFast
 	jp SelectLoopDrawPlayHelpQuit
 SelectedPlay:
 	call EraseArea
@@ -121,13 +118,34 @@ SelectedPlay:
 			pop hl
 		pop de
 	pop hl
-WaitForKey2:
-	call _GetCSC
-	or a, a
-	jr z, WaitForKey2
+	call GetAnyKeyFast
 	jr SelectedPlay
 SelectedSinglePlayer:
+	ld hl, AoCEMapAppvar
+	call _Mov9ToOP1
+	call _ChkFindSym
+	jr c, +_
 	call EraseArea
+	ld l, 110
+	push hl
+		ld hl, 50
+		push hl
+			ld de, saveSScreen
+			push de
+				ld hl, _newloadgame_compressed \.r1
+				call DecompressSprite
+				call gfx_Sprite_NoClip									; gfx_Sprite_NoClip(_newloadgame_compressed, 50, 110);
+			pop hl
+		pop hl
+	pop hl
+	ld hl, SelectMenuMax
+	dec (hl)
+	call SelectMenu
+	jp c, SelectedPlay
+	dec c
+	jr z, ++_
+_:	call GenerateMap
+_:	call LoadMap
 	jp ForceStopProgram
 	
 EraseArea:
@@ -166,26 +184,30 @@ SelectLoop:
 	pop bc
 	ld b, c
 KeyLoop:
-	call _GetCSC
-	cp a, skDown
-	jr nz, +_
+	call GetKeyFast
+	ld a, 10
+	call _DelayTenTimesAms
+	ld l, 01Eh
+	bit kpDown, (hl)
+	jr z, +_
 	ld a, c
 SelectMenuMax = $+1
 	cp a, 2
 	jr z, +_
 	inc c
 	jr EraseCursor
-_:	cp a, skUp
-	jr nz, +_
+_:	bit kpUp, (hl)
+	jr z, +_
 	ld a, c
 	or a, a
 	jr z, +_
 	dec c
 	jr EraseCursor
-_:	cp a, skEnter
-	ret z
-	cp skClear
-	jr nz, KeyLoop
+_:	ld l, 01Ch
+	bit kpEnter, (hl)
+	ret nz
+	bit kpClear, (hl)
+	jr z, KeyLoop
 	scf
 	ret
 	

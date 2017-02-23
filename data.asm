@@ -15,8 +15,8 @@ NoMultiplayer2:
 	.db "supported yet!", 0
 GraphicsAppvar:
 	.db AppVarObj, "AOCEGFX0"
-AoCEAppvar:
-	.db AppVarObj, "AOCEMAP"
+AoCEMapAppvar:
+	.db AppVarObj, "AOCEMAP", 0
 GraphicsAppvarNotFound:
 	.db "Can't find appvar:", 0
 LoadingMessage:

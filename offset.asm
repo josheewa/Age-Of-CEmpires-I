@@ -2,6 +2,8 @@ _AoCEI_compressed equ 0
 _soldier_compressed equ 5962
 _playhelpquit_compressed equ 12972
 _singlemultiplayer_compressed equ 16125
+_newloadgame_compressed equ 20850
+_pointer equ 24521
 _barracks equ 0
 _barracks_height equ 81
 _farm equ 7778
