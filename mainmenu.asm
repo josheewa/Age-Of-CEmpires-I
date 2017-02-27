@@ -148,6 +148,8 @@ _:	call GenerateMap
 _:	call LoadMap
 	jp ForceStopProgram
 	
+	
+
 EraseArea:
 	ld hl, 130
 	push hl

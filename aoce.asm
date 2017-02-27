@@ -78,7 +78,6 @@ ForceStopProgram:
 backupSP = $+1
 	ld sp, 0
 	call gfx_End
-	call fRestoreFlashToRAM
 	call.lis fLockFlash - 0D10000h
 	ld a, 0D0h
 	.db 0EDh, 06Dh															; ld mb, a
@@ -86,6 +85,25 @@ backupSP = $+1
 	jp _DrawStatusBar
 #include "flash.asm"
 RunProgram:
+	or a, a
+	sbc hl, hl
+	ex de, hl
+	ld hl, mpTmrCtrl
+	ld (hl), %00000010
+	inc hl
+	set 1, (hl)
+	set 2, (hl)
+	ld l, 0
+	ld (hl), de
+	inc l
+	ld (hl), de
+	ld l, 010h
+	ld (hl), de
+	inc hl
+	ld (hl), de
+	ld l, $30
+	set 0, (hl)
+	set 3, (hl)
 	ld b, 2
 	ld ix, GraphicsAppvar
 LoadSpritesAppvar:
@@ -162,7 +180,6 @@ _:	pop hl
 		call gfx_SetTransparentColor
 	pop hl
 	call DrawMainMenu
-	call fCopyRAMToFlash
 	xor a, a
 	ld (ix+OFFSET_X), a
 	ld (ix+OFFSET_Y), a

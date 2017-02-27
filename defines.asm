@@ -1,4 +1,4 @@
-MAP_SIZE				.equ 200
+MAP_SIZE				.equ 144
 OFFSET_X				.equ 0
 OFFSET_Y				.equ 1
 OFFSET_X_TILE0			.equ 0

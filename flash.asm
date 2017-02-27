@@ -20,13 +20,13 @@ fLockFlash:
 .assume ADL=1
 	
 fCopyRAMToFlash:
-	ld a, 03Fh
-	call fMemorySafeErase
-	ld a, 03Eh
+	ld a, 03Ch
 	call fMemorySafeErase
 	ld a, 03Dh
 	call fMemorySafeErase
-	ld a, 03Ch
+	ld a, 03Eh
+	call fMemorySafeErase
+	ld a, 03Fh
 	call fMemorySafeErase
 	ld hl, 0D00001h
 	ld (hl), 0A5h
@@ -45,6 +45,7 @@ fRestoreFlashToRAM:
 	ld hl, $3E0000
 	ld de, ramStart+020000h
 	ld bc, $020000
+	ldir
 	ret
 fMemorySafeErase:
 	ld	bc,$0000F8
