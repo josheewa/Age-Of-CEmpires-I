@@ -185,8 +185,6 @@ _:	pop hl
 	ld (ix+OFFSET_Y), a
 	ld iy, AoCEFlags
 	set need_to_redraw_tiles, (iy+0)
-	ld hl, 0000000h
-	ld (buildings_stack+0), hl
 	ld de, vRAM
 	ld hl, _resources \.r2
 	ld bc, 320*15
