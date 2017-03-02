@@ -144,9 +144,13 @@ SelectedSinglePlayer:
 	jp c, SelectedPlay
 	dec c
 	jr z, ++_
-_:	call GenerateMap
-_:	call LoadMap
-	jp ForceStopProgram
+_:	jp GenerateMap
+_:	jp LoadMap
+
+
+
+
+
 	
 	
 

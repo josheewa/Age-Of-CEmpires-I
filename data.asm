@@ -66,3 +66,32 @@ TopLeftXTile:
 	.dl -10
 TopLeftYTile:
 	.dl -3
+	
+ResourcesType1:
+	.db 0, 1, 0
+	.db 0, 1, 1
+	.db 1, 1, 1
+ResourcesType2:
+	.db 1, 0, 0
+	.db 0, 1, 0
+	.db 0, 1, 1
+ResourcesType3:
+	.db 0, 0, 0
+	.db 1, 1, 0
+	.db 0, 0, 0
+ResourcesType4:
+	.db 1, 1, 1
+	.db 0, 1, 0
+	.db 0, 0, 0
+ResourcesType5:
+	.db 0, 0, 0
+	.db 0, 0, 1
+	.db 1, 1, 1
+ResourcesType6:
+	.db 0, 0, 0
+	.db 0, 1, 0
+	.db 0, 0, 0
+ResourcesType7:
+	.db 0, 0, 0
+	.db 0, 0, 1
+	.db 0, 1, 1

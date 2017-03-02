@@ -1,5 +1,13 @@
 @ECHO OFF
 mode con lines=30
+echo --------------------------------------------------------
+echo                 Age of CEmpires I v1.0
+echo                        By PT_
+echo --------------------------------------------------------
+echo                          See 
+echo   http://github.com/PeterTillema/Age-Of-CEmpires-I.git
+echo                 for more information!
+echo --------------------------------------------------------
 if not exist bin\ mkdir bin
 del "relocation_table1.asm"
 del "relocation_table2.asm"
