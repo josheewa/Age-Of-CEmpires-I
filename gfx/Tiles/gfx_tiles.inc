@@ -10,7 +10,9 @@
 
 gfx_tiles_transpcolor_index equ 0
 
-#include "gfx/Tiles/tile_test.asm" ; 546 bytes
 #include "gfx/Tiles/grass.asm" ; 546 bytes
+#include "gfx/Tiles/gold.asm" ; 546 bytes
+#include "gfx/Tiles/stone.asm" ; 546 bytes
+#include "gfx/Tiles/tile_test.asm" ; 546 bytes
 
 #endif

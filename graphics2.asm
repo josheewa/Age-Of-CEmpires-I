@@ -28,5 +28,7 @@ size_graphics_appv = $-start+8+8
 .echo >> offset.asm "_towncenter equ ",_towncenter,"\n"
 .echo >> offset.asm "_towncenter_height equ ",_towncenter_height,"\n"
 .echo >> offset.asm "_resources equ ",_resources,"\n"
-.echo >> offset.asm "_tile_test equ ",_tile_test,"\n"
 .echo >> offset.asm "_grass equ ",_grass,"\n"
+.echo >> offset.asm "_food equ ",_tile_test,"\n"
+.echo >> offset.asm "_gold equ ",_gold,"\n"
+.echo >> offset.asm "_stone equ ",_stone,"\n"

@@ -13,6 +13,10 @@ NoMultiplayer1:
 	.db "Multiplayer is not", 0
 NoMultiplayer2:
 	.db "supported yet!", 0
+GeneratingMapMessage:
+	.db "Generating map...", 0
+LoadingMapMessage:
+	.db "Loading map...", 0
 GraphicsAppvar:
 	.db AppVarObj, "AOCEGFX0"
 AoCEMapAppvar:
@@ -58,6 +62,13 @@ BuildingsHeights:
 	.db _towncenter_height
 BuildingsSizes:
 	.db 4, 4, 3, 3, 3, 3, 5
+	
+TilesWithResourcesPointers:
+	.dl _grass \.r2
+	.dl _food \.r2
+	.dl _gold \.r2
+	.dl _stone \.r2
+	.dl _grass \.r2
 	
 AoCEFlags:
 	.db 0

@@ -1,9 +1,20 @@
 GenerateMap:
+	call EraseArea
+	ld l, 112
+	push hl
+		ld hl, 5
+		push hl
+			ld hl, GeneratingMapMessage
+			push hl
+				call gfx_PrintStringXY									; gfx_PrintStringXY(GeneratingMapMessage, 5, 122);
+			pop hl
+		pop de
+	pop hl
 	ld hl, (mpTmr1Counter)
 	ld (seed_1), hl
 	ld hl, (mpTmr2Counter)
 	ld (seed_2), hl
-	ld de, vRAM
+	ld de, screenBuffer
 	ld hl, 0E40000h
 	ld bc, 320*240
 	ldir
@@ -33,13 +44,13 @@ FillMapLoop:
 	ld b, ixh
 	djnz FillMapLoop
 PlaceTrees:
-	ld hl, vRAM															; Check for every pixel, if it's lower than $1E, it becomes a tree
+	ld hl, screenBuffer													; Check for every pixel, if it's lower than $1E, it becomes a tree
 	ld bc, 320*240
 _:	ld a, (hl)
 	ld e, 0
 	cp 01Eh
 	jr nc, +_
-	inc e
+	ld e, 4
 _:	ld (hl), e
 	cpi
 	jp pe, --_
@@ -79,7 +90,7 @@ PlaceResourceTypeLoop:
 			ld l, a
 		pop de
 		add hl, de
-		ld de, vRAM
+		ld de, screenBuffer
 		add hl, de
 		push hl
 		pop iy
@@ -113,7 +124,7 @@ PlaceResourceRowLoop:
 	or a, a
 	jr z, +_
 ResourceType = $+1
-	ld a, 2
+	ld a, 1
 	ld (de), a
 _:	inc hl
 	inc de
@@ -135,13 +146,15 @@ DontDrawResource:
 	ld b, ixh
 	dec b
 	jp nz, PlaceAllResourceTypesLoop
+	call _ChkFindSym
+	call nc, _DelVarArc
 	ld hl, MAP_SIZE*MAP_SIZE
 	call _EnoughMem
 	jp c, ForceStopProgram
 	ex de, hl
 	call _CreateAppvar
 	ld bc, 0
-	ld hl, vRAM
+	ld hl, screenBuffer
 	inc de
 	inc de
 	ld a, MAP_SIZE
@@ -152,7 +165,19 @@ CopyMapToNewAppvarLoop:
 	add hl, bc
 	dec a
 	jr nz, CopyMapToNewAppvarLoop
+	call _OP4ToOP1
 LoadMap:
+	call EraseArea
+	ld l, 112
+	push hl
+		ld hl, 5
+		push hl
+			ld hl, LoadingMapMessage
+			push hl
+				call gfx_PrintStringXY									; gfx_PrintStringXY(LoadingMapMessage, 5, 122);
+			pop hl
+		pop de
+	pop hl
 	call _ChkFindSym
 	ex de, hl
 	ld de, mapAddress
@@ -389,7 +414,7 @@ _HorizLine_NoClip_ASM:
 	mlt de
 	add hl, de
 	add hl, de
-	ld de, vRAM
+	ld de, screenBuffer
 	add hl, de                       ; hl -> place to draw
 _:	inc (hl)
 	inc hl

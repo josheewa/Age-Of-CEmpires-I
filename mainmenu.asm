@@ -138,8 +138,6 @@ SelectedSinglePlayer:
 			pop hl
 		pop hl
 	pop hl
-	ld hl, SelectMenuMax
-	dec (hl)
 	call SelectMenu
 	jp c, SelectedPlay
 	dec c
