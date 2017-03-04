@@ -4,11 +4,12 @@ Opened convpng.ini
 Using built-in xlibc palette...
 TranspColorIndex : 0
 TranspColor : 0xFFFF
-4:
+5:
  grass : converted! (grass.asm)
  gold : converted! (gold.asm)
  stone : converted! (stone.asm)
  tile_test : converted! (tile_test.asm)
+ tree : converted! (tree.asm)
 
 Converted in 0 s
 

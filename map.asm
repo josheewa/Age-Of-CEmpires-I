@@ -46,14 +46,16 @@ FillMapLoop:
 PlaceTrees:
 	ld hl, screenBuffer													; Check for every pixel, if it's lower than $1E, it becomes a tree
 	ld bc, 320*240
-_:	ld a, (hl)
+CheckPixelLoop:
+	ld a, (hl)
 	ld e, 0
 	cp 01Eh
-	jr nc, +_
+	jr nc, CheckPixelNotTree
 	ld e, 4
-_:	ld (hl), e
+CheckPixelNotTree:
+	ld (hl), e
 	cpi
-	jp pe, --_
+	jp pe, CheckPixelLoop
 	ld b, 3																; Food, stone, gold
 PlaceAllResourceTypesLoop:
 	ld ixh, b
@@ -179,10 +181,15 @@ LoadMap:
 		pop de
 	pop hl
 	call _ChkFindSym
+	call _ChkInRAM
+	call c, _Arc_Unarc
+	ld hl, mapAddress
+	ld (hl), 0
 	ex de, hl
-	ld de, mapAddress
 	inc hl
 	inc hl
+	inc hl
+	inc de
 	ld bc, MAP_SIZE*MAP_SIZE
 	ldir
 	ret
@@ -416,12 +423,13 @@ _HorizLine_NoClip_ASM:
 	add hl, de
 	ld de, screenBuffer
 	add hl, de                       ; hl -> place to draw
-_:	inc (hl)
+IncrementPixelLoop:
+	inc (hl)
 	inc hl
 	dec bc
 	ld a, b
 	or a, c
-	jr nz, -_
+	jr nz, IncrementPixelLoop
 	ret
 	
 _SignedCompare_ASM:

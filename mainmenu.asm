@@ -22,6 +22,16 @@ DrawMainMenu:
 			pop de
 		pop hl
 	pop hl
+	ld l, 94
+	push hl
+		ld hl, 18
+		push hl
+			ld hl, MadeByMessage
+			push hl
+				call gfx_PrintStringXY									; gfx_PrintStringXY(MadeByMessage, 18, 94);
+			pop hl
+		pop de
+	pop hl
 SelectLoopDrawPlayHelpQuit:
 	call EraseArea
 	ld de, plotSScreen
@@ -77,6 +87,8 @@ DisplayHelp:
 		pop hl
 	pop hl
 	call GetAnyKeyFast
+	ld a, 10
+	call _DelayTenTimesAms
 	jp SelectLoopDrawPlayHelpQuit
 SelectedPlay:
 	call EraseArea
@@ -119,6 +131,8 @@ SelectedPlay:
 		pop de
 	pop hl
 	call GetAnyKeyFast
+	ld a, 10
+	call _DelayTenTimesAms
 	jr SelectedPlay
 SelectedSinglePlayer:
 	ld hl, AoCEMapAppvar

@@ -9,6 +9,8 @@ GetHelp2:
 	.db "for help, controls, AI's", 0
 GetHelp3:
 	.db "and much more!", 0
+MadeByMessage:
+	.db "Made by Peter \"PT_\" Tillema", 0
 NoMultiplayer1:
 	.db "Multiplayer is not", 0
 NoMultiplayer2:

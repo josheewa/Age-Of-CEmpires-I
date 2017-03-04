@@ -7,6 +7,7 @@ OFFSET_Y_TILE0			.equ 3
 currDrawingBuffer		.equ 0E30014h
 screenBuffer			.equ vRAM+(320*240)
 mapAddress				.equ pixelShadow
+blackBuffer				.equ 0E40000h
 
 need_to_redraw_tiles	.equ 0
 

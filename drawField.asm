@@ -4,14 +4,14 @@ relocate(mpShaData)
 DrawField:
 	bit need_to_redraw_tiles, (iy+0)
 	call nz, DrawTiles
-	ld de, vRAM+(32*320)+32												; Copy the buffer to/from (32, 32)
-	ld hl, screenBuffer+(32*320)+32
+	ld de, vRAM+(32*320)+32										; Copy the buffer from (32, 64) to (32, 32)
+	ld hl, screenBuffer+(64*320)+32
 	ld b, 0
 	mlt bc
 	ld a, 240-32-32
 CopyBufferLoop:
 	ld c, b
-	inc b																; Copy 256 bytes
+	inc b														; Copy 256 bytes
 	ldir
 	ld c, 32+32
 	add hl, bc
@@ -22,13 +22,14 @@ CopyBufferLoop:
 	jr nz, CopyBufferLoop
 	ret
 DrawFieldEnd:
+.echo $-DrawField
 	
 endrelocate()
 drawtiles_loc = $
 relocate(cursorImage)
 
 DrawTiles:
-	ld b, (ix+OFFSET_X)
+	ld b, (ix+OFFSET_X)											; We start with the shadow registers active
 	bit 4, b
 	ld a, 16
 	ld c, 028h
@@ -37,12 +38,11 @@ DrawTiles:
 	ld c, 020h
 _:	ld (TopRowLeftOrRight), a
 	ld a, c
-	ld (IncrementRowXOrNot1), a
-	ld (IncrementRowXOrNot2), a
-	ld e, (ix+OFFSET_Y)														; Point to the output
+	ld (IncrementRowXOrNot), a
+	ld e, (ix+OFFSET_Y)											; Point to the output
 	ld d, 160
 	mlt de
-	ld hl, screenBuffer
+	ld hl, screenBuffer+(320*32)
 	add hl, de
 	add hl, de
 	ld d, 0
@@ -51,7 +51,7 @@ _:	ld (TopRowLeftOrRight), a
 	ld e, a
 	add hl, de
 	ld (startingPosition), hl
-	ld hl, (TopLeftYTile)													; Y*MAP_SIZE+X, point to the map data
+	ld hl, (TopLeftYTile)										; Y*MAP_SIZE+X, point to the map data
 	add hl, hl
 	add hl, hl
 	add hl, hl
@@ -66,57 +66,59 @@ _:	ld (TopRowLeftOrRight), a
 	add hl, de
 	ld de, mapAddress
 	add hl, de
-	push hl
-	pop ix
-	ld de, (TopLeftYTile)
-	ld b, 27
-	ld hl, (TopLeftXTile)
+	ld de, (TopLeftXTile)
+	ld ix, (TopLeftYTile)
+	ld a, 27
 	ld (TempSP2), sp
 	ld sp, 320
 DisplayEachRowLoop:
 ; Registers:
-;   B' = row index
+;   A' = row index
 ;   BC = length of row tile
 ;   DE = pointer to output
-;   HL = pointer to tile/black
+;   HL = pointer to tile/black tile
+;   BC' = temp
 ;   DE' = x index tile
-;   HL' = y index tile
+;   HL' = pointer to map data
+;   IX = y index tile
 ;   IY = where to draw
-;   IX = pointer to map data
-	bit 0, b													; Here are the shadow registers active
+;   SP = 320
+
+	bit 0, a													; Here are the shadow registers active
 startingPosition = $+2
 	ld iy, 0
 	jr nz, +_
 TopRowLeftOrRight = $+2
 	lea iy, iy+0
-_:	ld a, 9
+_:	ex af, af'
+	ld a, 9
 	exx
 	lea de, iy													; Populate DE to be the poiter to the output tile
 	exx
 DisplayTile:
-	ld c, a														; Check if x/y tile is within the bounds
-	ld a, d
-	or a, h
-	scf
-	jr nz, +_
+	ld iyh, a													; Check if x/y tile is within the bounds
+	ld a, d														; = Check if both DE and IX < MAP_SIZE
+	or a, ixh
+	jr nz, TileIsOutOfField
 	ld a, e
 	cp a, MAP_SIZE
-	ccf
-	jr c, +_
-	ld a, l
+	jr nc, TileIsOutOfField
+	ld a, ixl
 	cp a, MAP_SIZE
-	ccf
-_:	ld a, c
+TileIsOutOfField:
+	ld a, (hl)
 	exx															; Here are the normal registers active
-	ld hl, 0E40000h
-	jr c, +_
-	ld c, (ix)
+	ld hl, blackBuffer
+	jr nc, StartDisplayIsoTile
+	ld c, a
 	ld b, 3
 	mlt bc
 	ld hl, TilesWithResourcesPointers
 	add hl, bc
 	ld hl, (hl)
-_:	ld iy, 0
+StartDisplayIsoTile:
+	ld a, iyh
+	ld iy, 0													; Display isometric tile
 	lea bc, iy+2
 	add iy, de
 	ldir
@@ -188,37 +190,34 @@ _:	ld iy, 0
 	add hl, de
 	ex de, hl
 	exx															; Shadow registers are active here
-	lea ix, ix-(MAP_SIZE/2)
-	lea ix, ix-(MAP_SIZE/2)+1
-	inc hl
-	dec de
+	inc de
+	dec ix
+	ld bc, -MAP_SIZE+1
+	add hl, bc
 	dec a
 	jp nz, DisplayTile
-	ld a, b
+	ex af, af'
+	ld bc, MAP_SIZE*10-9
+	add hl, bc
+	ex de, hl
 	ld bc, -9
 	add hl, bc
 	ex de, hl
-	ld bc, 9+1
+	lea ix, ix+9+1
+	bit 0, a
+IncrementRowXOrNot:
+	jr nz, +_
+	inc de
+	ld bc, -MAP_SIZE+1
 	add hl, bc
-	ex de, hl
-	ld b, a
-	bit 0, b
-IncrementRowXOrNot1:
-	jr nz, +_
-	dec de
-	inc hl
-_:	exx															; Main registers are active here
-	ld de, MAP_SIZE*10-9
-IncrementRowXOrNot2:
-	jr nz, +_
-	ld de, MAP_SIZE*9-8
-_:	add ix, de
+	dec ix
+_:	exx
 	ld hl, (startingPosition)
 	ld de, 8*320
 	add hl, de
 	ld (startingPosition), hl
 	exx
-	dec b
+	dec a
 	jp nz, DisplayEachRowLoop
 TempSP2 = $+1
 	ld sp, 0

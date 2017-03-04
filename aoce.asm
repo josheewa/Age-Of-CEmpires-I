@@ -189,7 +189,7 @@ _:	pop hl
 	ld hl, _resources \.r2
 	ld bc, 320*15
 	ldir
-	ld hl, 0E40000h
+	ld hl, blackBuffer
 	ld bc, 320*(240-15)
 	ldir
 	
@@ -208,6 +208,9 @@ CheckIfPressedUp:
 	jr z, CheckIfPressedRight
 	ld a, (ix+OFFSET_Y)
 	inc a
+	inc a
+	inc a
+	inc a
 	and %00001111
 	ld (ix+OFFSET_Y), a
 	jr nz, CheckIfPressedRight
@@ -222,12 +225,18 @@ CheckIfPressedRight:
 	shift_tile0_x_right()
 	shift_tile0_y_up()
 _:	dec a
+	dec a
+	dec a
+	dec a
 	and %00011111
 	ld (ix+OFFSET_X), a
 CheckIfPressedLeft:
 	bit kpLeft, (hl)
 	jr z, CheckIfPressedDown
 	ld a, (ix+OFFSET_X)
+	inc a
+	inc a
+	inc a
 	inc a
 	and %00011111
 	ld (ix+OFFSET_X), a
@@ -243,6 +252,9 @@ CheckIfPressedDown:
 	shift_tile0_x_right()
 	shift_tile0_y_down()
 _:	dec a
+	dec a
+	dec a
+	dec a
 	and %00001111
 	ld (ix+OFFSET_Y), a
 CheckKeyPressesStop:
