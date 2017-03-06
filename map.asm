@@ -40,7 +40,8 @@ PlaceTrees:
 CheckPixelLoop:
 	ld a, (hl)
 	ld e, TileIsEmpty
-	cp a, 01Eh
+	;cp a, 01Dh
+	cp a, 0
 	jr nc, CheckPixelNotTree
 	ld e, TileIsTree
 CheckPixelNotTree:
@@ -164,14 +165,21 @@ LoadMap:
 	call _ChkInRAM
 	call c, _Arc_Unarc
 	ld hl, mapAddress
-	ld (hl), 0
 	ex de, hl
-	inc hl
 	inc hl
 	inc hl
 	inc de
 	ld bc, MAP_SIZE*MAP_SIZE
 	ldir
+; ONLY FOR TESTING STUF>>>>>>>>
+	ld hl, mapAddress
+	ld (hl), TileIsPartOfBuiling
+	inc hl
+	ld (hl), TileIsPartOfBuiling
+	ld hl, mapAddress+MAP_SIZE
+	ld (hl), BuildingHouse
+	inc hl
+	ld (hl), TileIsPartOfBuiling
 	ret
 	
 	

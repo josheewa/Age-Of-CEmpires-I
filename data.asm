@@ -55,15 +55,16 @@ BuildingsPointer:
 	.dl _miningcamp \.r2
 	.dl _towncenter \.r2
 BuildingsHeights:
-	.db _barracks_height
-	.db _farm_height
-	.db _house_height
-	.db _lumbercamp_height
-	.db _mill_height
-	.db _miningcamp_height
-	.db _towncenter_height
-BuildingsSizes:
-	.db 4, 4, 3, 3, 3, 3, 5
+	.db 32
+	.db 0
+	.db 19
+	.db 16
+	.db 19
+	.db 10
+	.db 36
+#IF BuildingsHeights & 255 > 249
+	.error "Please be sure that the lower byte of the pointer to BuildingsHeights is less than 250"
+#ENDIF
 	
 TilesWithResourcesPointers:
 	.dl _grass \.r2

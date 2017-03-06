@@ -1,0 +1,13 @@
+☑ Generate/load map
+☑ Field rendering
+☑ Resources rendering
+☑ Trees rendering
+☑ Scrolling
+□ Buildings rendering
+□ Gameplay
+□ Soldiers
+□ Moving
+□ Gathering resources
+□ Pathfinding
+□ Battles
+□ AI

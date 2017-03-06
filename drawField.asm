@@ -22,7 +22,6 @@ CopyBufferLoop:
 	jr nz, CopyBufferLoop
 	ret
 DrawFieldEnd:
-.echo $-DrawField
 	
 endrelocate()
 drawtiles_loc = $
@@ -31,7 +30,7 @@ relocate(cursorImage)
 DrawTiles:
 	scf
 	sbc hl, hl
-	;ld (hl), 2
+	ld (hl), 2
 	ld b, (ix+OFFSET_X)											; We start with the shadow registers active
 	bit 4, b
 	ld a, 16
@@ -71,36 +70,34 @@ _:	ld (TopRowLeftOrRight), a
 	add hl, de
 	ld de, (TopLeftXTile)
 	ld ix, (TopLeftYTile)
-	ld a, 27
+	ld a, 28
 	ld (TempSP2), sp
+	ld sp, 320
 DisplayEachRowLoop:
 ; Registers:
-;   A' = row index
-;   A = column index
+;   A' = tileID
 ;   BC = length of row tile
 ;   DE = pointer to output
 ;   HL = pointer to tile/black tile
-;   BC' = temp
+;   B' = column index
 ;   DE' = x index tile
 ;   HL' = pointer to map data
 ;   IX = y index tile
 ;   IY = where to draw
 ;   SP = 320
+;   MB = row index
 
 	bit 0, a													; Here are the shadow registers active
+	.db 0EDh, 06Dh												; ld mb, a
 startingPosition = $+2
 	ld iy, 0
 	jr nz, +_
 TopRowLeftOrRight = $+2
 	lea iy, iy+0
-_:	ex af, af'
-	ld a, 9
-	exx
-	lea de, iy													; Populate DE to be the poiter to the output tile
-	exx
+_:	ld a, 9
 DisplayTile:
-	ld iyh, a													; Check if x/y tile is within the bounds
-	ld a, d														; = Check if both DE and IX < MAP_SIZE
+	ld b, a
+	ld a, d
 	or a, ixh
 	jr nz, TileIsOutOfField
 	ld a, e
@@ -108,26 +105,28 @@ DisplayTile:
 	jr nc, TileIsOutOfField
 	ld a, ixl
 	cp a, MAP_SIZE
-TileIsOutOfField:
+	jr nc, TileIsOutOfField
+CheckWhatTypeOfTileItIs:
 	ld a, (hl)
-	exx															; Here are the normal registers active
-	ld hl, blackBuffer
-	jr nc, StartDisplayIsoTile
+	exx															; Here are the main registers active
+	cp a, TileIsPartOfBuiling
+	jp z, SkipDrawingOfTile
+	cp a, TileIsBuildingLeftCorner
+	jp nc, DrawBuildingInsteadOfTile
 	ld c, a
 	ld b, 3
 	mlt bc
 	ld hl, TilesWithResourcesPointers
 	add hl, bc
 	ld hl, (hl)
-	jr $+3														; Skip the "xor a, a"
-StartDisplayIsoTile:
+	jr +_
+TileIsOutOfField:
+	exx
 	xor a, a
-	.db 0EDh, 06Dh												; ld mb, a
-	ld a, iyh
-	ld iy, 0													; Display isometric tile
-	lea bc, iy+2
-	add iy, de
-	ld sp, 320
+	ld hl, 0
+_:	ex af, af'
+	lea de, iy
+	ld bc, 2
 	ldir
 	add iy, sp
 	lea de, iy-2
@@ -193,61 +192,78 @@ StartDisplayIsoTile:
 	lea de, iy-0
 	ldi
 	ldi
-TempSP2 = $+1
-	ld sp, 0
-	ld hl, 30-(320*16)
+	jr UpdateTilePositions1
+DrawBuildingInsteadOfTile:
+	sub a, BuildingBarracks
+	ld c, a
+	ld hl, BuildingsHeights
+	add a, l
+	ld l, a
+	ld l, (hl)
+	ld h, 160
+	mlt hl
+	add hl, hl
+	lea de, iy-15
+	ex de, hl
+	sbc hl, de
+	ex de, hl
+	ld b, 3
+	mlt bc
+	ld hl, BuildingsPointer
+	add hl, bc
+	ld hl, (hl)
+	; do some great stuff without push :D
+SkipDrawingOfTile:
+	lea iy, iy+32
+	jr UpdateTilePositions2
+UpdateTilePositions1:
+	ld de, 32-(320*16)
+	add iy, de
+	ex af, af'
+	cp a, TileIsTree
+	jr nz, UpdateTilePositions2
+DisplayTree:
+	ld hl, -32*320-32-14
+	lea de, iy
 	add hl, de
 	ex de, hl
-	ld iyh, a
-	ld a, mb
-	cp a, TileIsTree
-	ld a, b
-	jr nz, DontDisplayTree
-DisplayTree:
-	push de
-; IY points to the most left pixel of the first row of the next tile
-		ld hl, -32*320-32-14
-		add hl, de
-		ex de, hl
-		ld hl, _tree_up \.r2
-		ld b, 33
+	ld hl, _tree_up \.r2
+	ld b, 33
 DisplayRowOfTreeLoop:
-		ld c, b
-		ld b, 13
+	ld c, b
+	ld b, 13
 DisplayPixelsOfTreeLoop:
-		ld a, (hl)
-		inc a
-		jr z, +_
-		dec a
-		ld (de), a
-_:		inc hl
-		inc de
-		ld a, (hl)
-		inc a
-		jr z, +_
-		dec a
-		ld (de), a
-_:		inc hl
-		inc de
-		djnz DisplayPixelsOfTreeLoop
-		ld a, c
-		ld bc, 320-26
-		ex de, hl
-		add hl, bc
-		ex de, hl
-		ld b, a
-		djnz DisplayRowOfTreeLoop
-	pop de
-DontDisplayTree:
-	ld a, iyh
-	exx															; Shadow registers are active here
+	ld a, (hl)
+	inc a
+	jr z, +_
+	dec a
+	ld (de), a
+_:	inc hl
+	inc de
+	ld a, (hl)
+	inc a
+	jr z, +_
+	dec a
+	ld (de), a
+_:	inc hl
+	inc de
+	djnz DisplayPixelsOfTreeLoop
+	ld a, c
+	ld bc, 320-26
+	ex de, hl
+	add hl, bc
+	ex de, hl
+	ld b, a
+	djnz DisplayRowOfTreeLoop
+UpdateTilePositions2:
+	exx
 	inc de
 	dec ix
+	ld a, b
 	ld bc, -MAP_SIZE+1
 	add hl, bc
 	dec a
 	jp nz, DisplayTile
-	ex af, af'
 	ld bc, MAP_SIZE*10-9
 	add hl, bc
 	ex de, hl
@@ -255,6 +271,7 @@ DontDisplayTree:
 	add hl, bc
 	ex de, hl
 	lea ix, ix+9+1
+	ld a, mb
 	bit 0, a
 IncrementRowXOrNot:
 	jr nz, +_
@@ -270,6 +287,8 @@ _:	exx
 	exx
 	dec a
 	jp nz, DisplayEachRowLoop
+TempSP2 = $+1
+	ld sp, 0
 	ret
 DrawTilesEnd:
 
