@@ -1,15 +1,6 @@
 GenerateMap:
 	call EraseArea
-	ld l, 112
-	push hl
-		ld hl, 5
-		push hl
-			ld hl, GeneratingMapMessage
-			push hl
-				call gfx_PrintStringXY									; gfx_PrintStringXY(GeneratingMapMessage, 5, 122);
-			pop hl
-		pop de
-	pop hl
+	printString(GeneratingMapMessage, 5, 112)
 	ld hl, (mpTmr1Counter)
 	ld (seed_1), hl
 	ld hl, (mpTmr2Counter)
@@ -48,10 +39,10 @@ PlaceTrees:
 	ld bc, 320*240
 CheckPixelLoop:
 	ld a, (hl)
-	ld e, 0
-	cp 01Eh
+	ld e, TileIsEmpty
+	cp a, 01Eh
 	jr nc, CheckPixelNotTree
-	ld e, 4
+	ld e, TileIsTree
 CheckPixelNotTree:
 	ld (hl), e
 	cpi
@@ -114,29 +105,27 @@ PlaceResourceTypeLoop:
 		or a, (hl)
 		inc hl
 		or a, (hl)
-	pop hl
+	pop de
 	jr nz, DontDrawResource
-	lea de, iy
+	lea hl, iy
+	mlt bc
 	ld b, 3
 PlaceResource:
 	ld c, b
 	ld b, 3
 PlaceResourceRowLoop:
-	ld a, (hl)
+	ld a, (de)
 	or a, a
 	jr z, +_
 ResourceType = $+1
-	ld a, 1
-	ld (de), a
+	ld (hl), TileIsFood
 _:	inc hl
 	inc de
 	djnz PlaceResourceRowLoop
 	ld a, c
-	ex de, hl
 	inc b
 	ld c, 320-256-3
 	add hl, bc
-	ex de, hl
 	ld b, a
 	djnz PlaceResource
 DontDrawResource:
@@ -170,16 +159,7 @@ CopyMapToNewAppvarLoop:
 	call _OP4ToOP1
 LoadMap:
 	call EraseArea
-	ld l, 112
-	push hl
-		ld hl, 5
-		push hl
-			ld hl, LoadingMapMessage
-			push hl
-				call gfx_PrintStringXY									; gfx_PrintStringXY(LoadingMapMessage, 5, 122);
-			pop hl
-		pop de
-	pop hl
+	printString(LoadingMapMessage, 5, 112)
 	call _ChkFindSym
 	call _ChkInRAM
 	call c, _Arc_Unarc

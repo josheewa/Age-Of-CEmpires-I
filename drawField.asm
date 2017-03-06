@@ -29,6 +29,9 @@ drawtiles_loc = $
 relocate(cursorImage)
 
 DrawTiles:
+	scf
+	sbc hl, hl
+	;ld (hl), 2
 	ld b, (ix+OFFSET_X)											; We start with the shadow registers active
 	bit 4, b
 	ld a, 16
@@ -70,10 +73,10 @@ _:	ld (TopRowLeftOrRight), a
 	ld ix, (TopLeftYTile)
 	ld a, 27
 	ld (TempSP2), sp
-	ld sp, 320
 DisplayEachRowLoop:
 ; Registers:
 ;   A' = row index
+;   A = column index
 ;   BC = length of row tile
 ;   DE = pointer to output
 ;   HL = pointer to tile/black tile
@@ -116,11 +119,15 @@ TileIsOutOfField:
 	ld hl, TilesWithResourcesPointers
 	add hl, bc
 	ld hl, (hl)
+	jr $+3														; Skip the "xor a, a"
 StartDisplayIsoTile:
+	xor a, a
+	.db 0EDh, 06Dh												; ld mb, a
 	ld a, iyh
 	ld iy, 0													; Display isometric tile
 	lea bc, iy+2
 	add iy, de
+	ld sp, 320
 	ldir
 	add iy, sp
 	lea de, iy-2
@@ -186,9 +193,53 @@ StartDisplayIsoTile:
 	lea de, iy-0
 	ldi
 	ldi
+TempSP2 = $+1
+	ld sp, 0
 	ld hl, 30-(320*16)
 	add hl, de
 	ex de, hl
+	ld iyh, a
+	ld a, mb
+	cp a, TileIsTree
+	ld a, b
+	jr nz, DontDisplayTree
+DisplayTree:
+	push de
+; IY points to the pixel in the topleft corner of next tile
+		ld hl, -55*320-22-32
+		add hl, de
+		ex de, hl
+		ld hl, _tree \.r2
+		ld b, 65
+DisplayRowOfTreeLoop:
+		ld c, b
+		ld b, 20
+DisplayPixelsOfTreeLoop:
+		ld a, (hl)
+		inc a
+		jr z, +_
+		dec a
+		ld (de), a
+_:		inc hl
+		inc de
+		ld a, (hl)
+		inc a
+		jr z, +_
+		dec a
+		ld (de), a
+_:		inc hl
+		inc de
+		djnz DisplayPixelsOfTreeLoop
+		ld a, c
+		ld bc, 320-40
+		ex de, hl
+		add hl, bc
+		ex de, hl
+		ld b, a
+		djnz DisplayRowOfTreeLoop
+	pop de
+DontDisplayTree:
+	ld a, iyh
 	exx															; Shadow registers are active here
 	inc de
 	dec ix
@@ -219,8 +270,6 @@ _:	exx
 	exx
 	dec a
 	jp nz, DisplayEachRowLoop
-TempSP2 = $+1
-	ld sp, 0
 	ret
 DrawTilesEnd:
 

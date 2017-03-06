@@ -17,3 +17,9 @@ kpRight					.equ 2
 kpDown					.equ 0
 kpClear					.equ 6
 kpEnter					.equ 0
+
+TileIsEmpty				.equ 0
+TileIsFood				.equ 1
+TileIsGold				.equ 2
+TileIsStone				.equ 3
+TileIsTree				.equ 4

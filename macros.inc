@@ -21,3 +21,16 @@
 	inc de
 	ld (iy+OFFSET_Y_TILE0), de
 #endmacro
+
+#macro printString(message, x, y)
+	ld l, y
+	push hl
+		ld hl, x
+		push hl
+			ld hl, message
+			push hl
+				call gfx_PrintStringXY
+			pop hl
+		pop hl
+	pop hl
+#endmacro

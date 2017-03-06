@@ -78,6 +78,8 @@ ForceStopProgram:
 backupSP = $+1
 	ld sp, 0
 	call gfx_End
+	ld a, 0D1h
+	.db 0EDh, 06Dh															; ld mb, a
 	call.lis fLockFlash - 0D10000h
 	ld a, 0D0h
 	.db 0EDh, 06Dh															; ld mb, a

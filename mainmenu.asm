@@ -22,16 +22,7 @@ DrawMainMenu:
 			pop de
 		pop hl
 	pop hl
-	ld l, 94
-	push hl
-		ld hl, 18
-		push hl
-			ld hl, MadeByMessage
-			push hl
-				call gfx_PrintStringXY									; gfx_PrintStringXY(MadeByMessage, 18, 94);
-			pop hl
-		pop de
-	pop hl
+	printString(MadeByMessage, 18, 94)
 SelectLoopDrawPlayHelpQuit:
 	call EraseArea
 	ld de, plotSScreen
@@ -58,34 +49,9 @@ SelectLoopDrawPlayHelpQuit:
 	
 DisplayHelp:
 	call EraseArea
-	ld l, 112
-	push hl
-		ld hl, 5
-		push hl
-			ld hl, GetHelp1
-			push hl
-				call gfx_PrintStringXY									; gfx_PrintStringXY(GetHelp1, 5, 112);
-			pop hl
-		pop de
-	pop hl
-	ld l, 122
-	push hl
-		push de
-			ld hl, GetHelp2
-			push hl
-				call gfx_PrintStringXY									; gfx_PrintStringXY(GetHelp2, 5, 122);
-			pop hl
-		pop de
-	pop hl
-	ld l, 132
-	push hl
-		push de
-			ld hl, GetHelp3
-			push hl
-				call gfx_PrintStringXY									; gfx_PrintStringXY(GetHelp2, 5, 132);
-			pop hl
-		pop hl
-	pop hl
+	printString(GetHelp1, 5, 112)
+	printString(GetHelp2, 5, 122)
+	printString(GetHelp3, 5, 132)
 	call GetAnyKeyFast
 	ld a, 10
 	call _DelayTenTimesAms
@@ -111,25 +77,8 @@ SelectedPlay:
 	dec c
 	jr nz, SelectedSinglePlayer
 	call EraseArea
-	ld l, 112
-	push hl
-		ld hl, 5
-		push hl
-			ld hl, NoMultiplayer1
-			push hl
-				call gfx_PrintStringXY									; gfx_PrintStringXY(NoMultiplayer1, 5, 112);
-			pop hl
-		pop de
-	pop hl
-	ld l, 122
-	push hl
-		push de
-			ld hl, NoMultiplayer2
-			push hl
-				call gfx_PrintStringXY									; gfx_PrintStringXY(NoMultiplayer2, 5, 122);
-			pop hl
-		pop de
-	pop hl
+	printString(NoMultiplayer1, 5, 112)
+	printString(NoMultiplayer1, 5, 122)
 	call GetAnyKeyFast
 	ld a, 10
 	call _DelayTenTimesAms
