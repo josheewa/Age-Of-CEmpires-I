@@ -70,7 +70,7 @@ TilesWithResourcesPointers:
 	.dl _food \.r2
 	.dl _gold \.r2
 	.dl _stone \.r2
-	.dl _grass \.r2
+	.dl _grass_tree \.r2
 	
 AoCEFlags:
 	.db 0

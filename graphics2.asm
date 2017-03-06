@@ -32,4 +32,5 @@ size_graphics_appv = $-start+8+8
 .echo >> offset.asm "_food equ ",_food,"\n"
 .echo >> offset.asm "_gold equ ",_gold,"\n"
 .echo >> offset.asm "_stone equ ",_stone,"\n"
-.echo >> offset.asm "_tree equ ",_tree,"\n"
+.echo >> offset.asm "_grass_tree equ ",_grass_tree,"\n"
+.echo >> offset.asm "_tree_up equ ",_tree_up,"\n"

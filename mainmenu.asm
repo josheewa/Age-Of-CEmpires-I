@@ -78,7 +78,7 @@ SelectedPlay:
 	jr nz, SelectedSinglePlayer
 	call EraseArea
 	printString(NoMultiplayer1, 5, 112)
-	printString(NoMultiplayer1, 5, 122)
+	printString(NoMultiplayer2, 5, 122)
 	call GetAnyKeyFast
 	ld a, 10
 	call _DelayTenTimesAms

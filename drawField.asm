@@ -205,15 +205,15 @@ TempSP2 = $+1
 	jr nz, DontDisplayTree
 DisplayTree:
 	push de
-; IY points to the pixel in the topleft corner of next tile
-		ld hl, -55*320-22-32
+; IY points to the most left pixel of the first row of the next tile
+		ld hl, -32*320-32-14
 		add hl, de
 		ex de, hl
-		ld hl, _tree \.r2
-		ld b, 65
+		ld hl, _tree_up \.r2
+		ld b, 33
 DisplayRowOfTreeLoop:
 		ld c, b
-		ld b, 20
+		ld b, 13
 DisplayPixelsOfTreeLoop:
 		ld a, (hl)
 		inc a
@@ -231,7 +231,7 @@ _:		inc hl
 		inc de
 		djnz DisplayPixelsOfTreeLoop
 		ld a, c
-		ld bc, 320-40
+		ld bc, 320-26
 		ex de, hl
 		add hl, bc
 		ex de, hl

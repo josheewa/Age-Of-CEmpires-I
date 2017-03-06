@@ -20,7 +20,8 @@ _towncenter equ 24716
 _towncenter_height equ 97
 _resources equ 37134
 _grass equ 41934
-_food equ 45399
+_food equ 43944
 _gold equ 42222
-_stone equ 42509
-_tree equ 42797
+_stone equ 42510
+_grass_tree equ 42798
+_tree_up equ 43086
