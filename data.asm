@@ -55,13 +55,13 @@ BuildingsPointer:
 	.dl _miningcamp \.r2
 	.dl _towncenter \.r2
 BuildingsHeights:
+	.db 40
 	.db 32
-	.db 0
-	.db 19
-	.db 16
-	.db 19
-	.db 10
-	.db 36
+	.db 35
+	.db 32
+	.db 35
+	.db 26
+	.db 84
 #IF BuildingsHeights & 255 > 249
 	.error "Please be sure that the lower byte of the pointer to BuildingsHeights is less than 250"
 #ENDIF
