@@ -17,4 +17,5 @@ size_graphics_appv = $-start+8+8
 .echo >> offset.asm "_playhelpquit_compressed equ ",_playhelpquit_compressed,"\n"
 .echo >> offset.asm "_singlemultiplayer_compressed equ ",_singlemultiplayer_compressed,"\n"
 .echo >> offset.asm "_newloadgame_compressed equ ",_newloadgame_compressed,"\n"
+.echo >> offset.asm "_intro_compressed equ ",_intro_compressed,"\n"
 .echo >> offset.asm "_pointer equ ",_pointer,"\n"

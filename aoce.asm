@@ -68,6 +68,8 @@ gfx_Sprite_NoClip:
 	jp 177
 gfx_SetTransparentColor:
 	jp 225
+gfx_Lighten:
+	jp 237
 	
 	call _HomeUp
 	call _ClrLCDFull
@@ -79,10 +81,10 @@ backupSP = $+1
 	ld sp, 0
 	call gfx_End
 	ld a, 0D1h
-	.db 0EDh, 06Dh															; ld mb, a
+	ld mb, a
 	call.lis fLockFlash - 0D10000h
 	ld a, 0D0h
-	.db 0EDh, 06Dh															; ld mb, a
+	ld mb, a
 	ld iy, flags
 	jp _DrawStatusBar
 #include "flash.asm"
@@ -159,10 +161,6 @@ GraphicsAppvarStart = $+1
 _:	pop hl
 	djnz LoadSpritesAppvar
 	di
-	ld.sis sp, 0987Eh
-	ld a, 0D1h
-	.db 0EDh, 06Dh															; ld mb, a
-	call.lis fUnlockFlash - 0D10000h
 	ld hl, drawfield_loc
 	ld de, DrawField
 	ld bc, DrawFieldEnd - DrawField
@@ -174,6 +172,10 @@ _:	pop hl
 	ld l, lcdBpp8
 	push hl
 		call gfx_Begin
+		ld de, mpLcdPalette
+		ld hl, blackBuffer
+		ld bc, 256*2
+		ldir
 		ld l, 254
 		ex (sp), hl
 		call gfx_SetTextFGColor
@@ -182,6 +184,10 @@ _:	pop hl
 		call gfx_SetTransparentColor
 	pop hl
 	call DrawMainMenu
+	ld.sis sp, 0987Eh
+	ld a, 0D1h
+	ld mb, a
+	call.lis fUnlockFlash - 0D10000h
 	xor a, a
 	ld (ix+OFFSET_X), a
 	ld (ix+OFFSET_Y), a
@@ -198,14 +204,13 @@ _:	pop hl
 MainGameLoop:
 ; Speed: 908839/342212 cycles
 	call DrawField
-	ld ix, saveSScreen+21000
 	call GetKeyFast
 	ld iy, TopLeftXTile
 	ld l, 01Ch
 	bit kpClear, (hl)
 	jp nz, ForceStopProgram
 	ld l, 01Eh
-CheckIfPressedUp:
+CheckIfPressedUp:													; All the controls are 'reversed', if you press [LEFT], it should scroll to the right
 	bit kpUp, (hl)
 	jr z, CheckIfPressedRight
 	ld a, (ix+OFFSET_Y)
@@ -269,6 +274,7 @@ CheckKeyPressesStop:
 _:	jp MainGameLoop
 	
 #include "routines.asm"
+#include "fade.asm"
 #include "drawField.asm"
 #include "data.asm"
 #include "mainmenu.asm"

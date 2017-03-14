@@ -5,10 +5,6 @@ GenerateMap:
 	ld (seed_1), hl
 	ld hl, (mpTmr2Counter)
 	ld (seed_2), hl
-	ld de, screenBuffer
-	ld hl, 0E40000h
-	ld bc, 320*240
-	ldir
 	ld b, 255
 FillMapLoop:
 	ld ixh, b

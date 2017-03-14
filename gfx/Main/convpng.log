@@ -4,12 +4,13 @@ Opened convpng.ini
 Using built-in xlibc palette...
 TranspColorIndex : 0
 TranspColor : 0xFFFF
-5:
+6:
  AoCEI : converted! (compress: 17682 -> 5962 bytes)
  soldier : converted! (compress: 23312 -> 7010 bytes)
  playhelpquit : converted! (compress: 9050 -> 3153 bytes)
  singlemultiplayer : converted! (compress: 17138 -> 4725 bytes)
  newloadgame : converted! (compress: 17138 -> 3671 bytes)
+ intro : converted! (compress: 30627 -> 9840 bytes)
 
 --- Group gfx_main2 (ASM) ---
 Using built-in xlibc palette...

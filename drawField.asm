@@ -6,8 +6,7 @@ DrawField:
 	call nz, DrawTiles
 	ld de, vRAM+(32*320)+32										; Copy the buffer from (32, 64) to (32, 32)
 	ld hl, screenBuffer+(64*320)+32
-	ld b, 0
-	mlt bc
+	ld bc, 0
 	ld a, 240-32-32
 CopyBufferLoop:
 	ld c, b
@@ -28,19 +27,17 @@ drawtiles_loc = $
 relocate(cursorImage)
 
 DrawTiles:
-	scf
-	sbc hl, hl
-	ld (hl), 2
 	ld b, (ix+OFFSET_X)											; We start with the shadow registers active
 	bit 4, b
 	ld a, 16
-	ld c, 028h
+	ld c, 020h
 	jr z, +_
 	ld a, -16
-	ld c, 020h
+	ld c, 028h
 _:	ld (TopRowLeftOrRight), a
 	ld a, c
-	ld (IncrementRowXOrNot), a
+	ld (IncrementRowXOrNot1), a
+	ld (IncrementRowXOrNot2), a
 	ld e, (ix+OFFSET_Y)											; Point to the output
 	ld d, 160
 	mlt de
@@ -66,16 +63,16 @@ _:	ld (TopRowLeftOrRight), a
 	add hl, de
 	ld de, (TopLeftXTile)
 	add hl, de
-	ld de, mapAddress
-	add hl, de
-	ld de, (TopLeftXTile)
+	ld bc, mapAddress
+	add hl, bc
+	ld (startingMapAddress), hl
 	ld ix, (TopLeftYTile)
 	ld a, 28
 	ld (TempSP2), sp
 	ld sp, 320
 DisplayEachRowLoop:
 ; Registers:
-;   A' = tileID
+;   A' = row index
 ;   BC = length of row tile
 ;   DE = pointer to output
 ;   HL = pointer to tile/black tile
@@ -85,16 +82,15 @@ DisplayEachRowLoop:
 ;   IX = y index tile
 ;   IY = where to draw
 ;   SP = 320
-;   MB = row index
 
 	bit 0, a													; Here are the shadow registers active
-	.db 0EDh, 06Dh												; ld mb, a
 startingPosition = $+2
 	ld iy, 0
-	jr nz, +_
+	jr z, +_
 TopRowLeftOrRight = $+2
 	lea iy, iy+0
-_:	ld a, 9
+_:	ex af, af'
+	ld a, 9
 DisplayTile:
 	ld b, a
 	ld a, d
@@ -110,9 +106,7 @@ CheckWhatTypeOfTileItIs:
 	ld a, (hl)
 	exx															; Here are the main registers active
 	cp a, TileIsPartOfBuiling
-	jp z, SkipDrawingOfTile
-	cp a, TileIsBuildingLeftCorner
-	jp nc, DrawBuildingInsteadOfTile
+	jp nc, SkipDrawingOfTile
 	ld c, a
 	ld b, 3
 	mlt bc
@@ -122,10 +116,8 @@ CheckWhatTypeOfTileItIs:
 	jr +_
 TileIsOutOfField:
 	exx
-	xor a, a
-	ld hl, 0
-_:	ex af, af'
-	lea de, iy
+	ld hl, blackBuffer
+_:	lea de, iy
 	ld bc, 2
 	ldir
 	add iy, sp
@@ -192,70 +184,11 @@ _:	ex af, af'
 	lea de, iy-0
 	ldi
 	ldi
-	jr UpdateTilePositions1
-DrawBuildingInsteadOfTile:
-	sub a, BuildingBarracks
-	ld c, a
-	ld hl, BuildingsHeights
-	add a, l
-	ld l, a
-	ld l, (hl)
-	ld h, 160
-	mlt hl
-	add hl, hl
-	lea de, iy-15
-	ex de, hl
-	sbc hl, de
-	ex de, hl
-	ld b, 3
-	mlt bc
-	ld hl, BuildingsPointer
-	add hl, bc
-	ld hl, (hl)
-	; do some great stuff without push :D
-SkipDrawingOfTile:
-	lea iy, iy+32
-	jr UpdateTilePositions2
-UpdateTilePositions1:
 	ld de, 32-(320*16)
-	add iy, de
-	ex af, af'
-	cp a, TileIsTree
-	jr nz, UpdateTilePositions2
-DisplayTree:
-	ld hl, -32*320-32-14
-	lea de, iy
-	add hl, de
-	ex de, hl
-	ld hl, _tree_up \.r2
-	ld b, 33
-DisplayRowOfTreeLoop:
-	ld c, b
-	ld b, 13
-DisplayPixelsOfTreeLoop:
-	ld a, (hl)
-	inc a
-	jr z, +_
-	dec a
-	ld (de), a
-_:	inc hl
-	inc de
-	ld a, (hl)
-	inc a
-	jr z, +_
-	dec a
-	ld (de), a
-_:	inc hl
-	inc de
-	djnz DisplayPixelsOfTreeLoop
-	ld a, c
-	ld bc, 320-26
-	ex de, hl
-	add hl, bc
-	ex de, hl
-	ld b, a
-	djnz DisplayRowOfTreeLoop
-UpdateTilePositions2:
+	jr +_
+SkipDrawingOfTile:
+	ld de, 32
+_:	add iy, de
 	exx
 	inc de
 	dec ix
@@ -271,9 +204,9 @@ UpdateTilePositions2:
 	add hl, bc
 	ex de, hl
 	lea ix, ix+9+1
-	ld a, mb
+	ex af, af'
 	bit 0, a
-IncrementRowXOrNot:
+IncrementRowXOrNot1:
 	jr nz, +_
 	inc de
 	ld bc, -MAP_SIZE+1
@@ -289,6 +222,63 @@ _:	exx
 	jp nz, DisplayEachRowLoop
 TempSP2 = $+1
 	ld sp, 0
+DrawAllBuildings:										; We start here 3 tiles to the left of the upperleft corner, because buildings can be 4 tiles width
+startingMapAddress = $+2
+	ld ix, 0
+	ld bc, (MAP_SIZE-1)*3
+	add ix, bc
+	ld hl, (TopLeftXTile)
+	dec hl
+	dec hl
+	dec hl
+	ld de, (TopLeftYTile)
+	ld b, 28+(101/32)
+CheckEntireRowLoop:
+	ld c, b
+	ld b, 9+3+3											; Thus, we need to check +3 tiles at the left, and +3 tiles at the right
+CheckTileLoop:
+	ld a, h
+	or a, d
+	jr nz, SkipTile
+	ld a, l
+	cp a, MAP_SIZE
+	jr nc, SkipTile
+	ld a, e
+	cp a, MAP_SIZE
+	jr nc, SkipTile
+	ld a, (ix)
+	cp a, TileIsTree
+	jr c, SkipTile
+	exx
+	; Display tree or building
+	exx
+SkipTile:
+	inc hl
+	dec de
+	ld a, c
+	ld bc, -MAP_SIZE+1
+	add ix, bc
+	djnz CheckTileLoop
+	ld bc, -9-3-3
+	add hl, bc
+	ex de, hl
+	ld bc, 9+3+3+1
+	add hl, bc
+	ex de, hl
+	ld bc, MAP_SIZE*(9+3+3+1)-9-3-3
+	bit 0, a
+IncrementRowXOrNot2:
+	jr nz, +_
+	inc hl
+	dec de
+	ld bc, (MAP_SIZE*(9+3+3+1)-9-3-3)-MAP_SIZE+1
+_:	add ix, bc
+	ld b, a
+	djnz CheckEntireRowLoop
+
+
+	
+	
 	ret
 DrawTilesEnd:
 

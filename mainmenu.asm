@@ -1,7 +1,28 @@
 DrawMainMenu:
+	ld hl, vRAM
+	ld (hl), 094h
+	ld de, vRAM+1
+	ld bc, 320*240-1
+	ldir
+	ld hl, 32
+	push hl
+		ld l, 72
+		push hl
+			ld de, plotSScreen
+			push de
+				ld hl, _intro_compressed \.r1
+				call DecompressSprite
+				call gfx_Sprite_NoClip
+			pop de
+		pop hl
+	pop hl
+	call fadeIn
+	ld a, 100
+	call _DelayTenTimesAms
+	call fadeOut
 	ld de, vRAM
 	ld hl, 0E40000h
-	ld bc, 320*240
+	ld bc, 320*240*2
 	ldir
 	ld hl, 5
 	push hl
@@ -23,6 +44,7 @@ DrawMainMenu:
 		pop hl
 	pop hl
 	printString(MadeByMessage, 18, 94)
+	call fadeIn
 SelectLoopDrawPlayHelpQuit:
 	call EraseArea
 	ld de, plotSScreen
@@ -40,11 +62,13 @@ SelectLoopDrawPlayHelpQuit:
 	ld hl, SelectMenuMax
 	ld (hl), 2
 	call SelectMenu
-	jp c, ForceStopProgram
-	dec c
+	jr nc, ++_
+_:	call fadeOut
+	jp ForceStopProgram
+_:	dec c
 	jr z, DisplayHelp
 	dec c
-	jp z, ForceStopProgram
+	jr z, --_
 	jp SelectedPlay
 	
 DisplayHelp:

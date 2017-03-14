@@ -22,8 +22,8 @@ TileIsEmpty					.equ 0
 TileIsFood					.equ 1
 TileIsGold					.equ 2
 TileIsStone					.equ 3
-TileIsTree					.equ 4
-TileIsPartOfBuiling			.equ 5
+TileIsPartOfBuiling			.equ 4
+TileIsTree					.equ 5
 TileIsBuildingLeftCorner	.equ 6
 BuildingBarracks				.equ 6
 BuildingFarm					.equ 7
