@@ -10,6 +10,6 @@
 
 gfx_main2_transpcolor_index equ 0
 
-#include "gfx/Main/pointer.asm" ; 830 bytes
+#include "gfx/Main/pointer.asm" ; 807 bytes
 
 #endif

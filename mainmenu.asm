@@ -17,7 +17,7 @@ DrawMainMenu:
 		pop hl
 	pop hl
 	call fadeIn
-	ld a, 100
+	ld a, 255
 	call _DelayTenTimesAms
 	call fadeOut
 	ld de, vRAM
