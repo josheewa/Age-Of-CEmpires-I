@@ -1,10 +1,10 @@
 _AoCEI_compressed equ 0
-_soldier_compressed equ 5962
-_playhelpquit_compressed equ 12972
-_singlemultiplayer_compressed equ 15702
-_newloadgame_compressed equ 19689
-_intro_compressed equ 23031
-_pointer equ 32871
+_soldier_compressed equ 6889
+_playhelpquit_compressed equ 13899
+_singlemultiplayer_compressed equ 16629
+_newloadgame_compressed equ 20616
+_intro_compressed equ 23958
+_pointer equ 33798
 _barracks equ 0
 _farm equ 7778
 _house equ 12484

@@ -5,7 +5,7 @@ Using built-in xlibc palette...
 TranspColorIndex : 0
 TranspColor : 0xFFFF
 6:
- AoCEI : converted! (compress: 17682 -> 5962 bytes)
+ AoCEI : converted! (compress: 18022 -> 6889 bytes)
  soldier : converted! (compress: 23312 -> 7010 bytes)
  playhelpquit : converted! (compress: 9128 -> 2730 bytes)
  singlemultiplayer : converted! (compress: 17264 -> 3987 bytes)

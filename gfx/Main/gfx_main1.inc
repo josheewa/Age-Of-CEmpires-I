@@ -10,7 +10,7 @@
 
 gfx_main1_transpcolor_index equ 0
 
-#include "gfx/Main/AoCEI.asm" ; 5962 bytes
+#include "gfx/Main/AoCEI.asm" ; 6889 bytes
 #include "gfx/Main/soldier.asm" ; 7010 bytes
 #include "gfx/Main/playhelpquit.asm" ; 2730 bytes
 #include "gfx/Main/singlemultiplayer.asm" ; 3987 bytes

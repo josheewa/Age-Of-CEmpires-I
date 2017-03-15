@@ -6,11 +6,11 @@ DrawMainMenu:
 	ldir
 	dispCompressedImage(_intro_compressed, 72, 32)
 	call fadeIn
-	ld a, 255
+	ld a, 200
 	call _DelayTenTimesAms
 	call fadeOut
 	ld de, vRAM
-	ld hl, 0E40000h
+	ld hl, blackBuffer
 	ld bc, 320*240*2
 	ldir
 	dispCompressedImage(_AoCEI_compressed, 5, 5)
@@ -23,14 +23,12 @@ SelectLoopDrawPlayHelpQuit:
 	ld hl, SelectMenuMax
 	ld (hl), 2
 	call SelectMenu
-	jr nc, ++_
-_:	call fadeOut
-	jp ForceStopProgram
-_:	dec c
+_:	jp c, ForceStopProgramWithFadeOut
+	dec c
 	jr z, DisplayHelp
 	dec c
-	jr z, --_
-	jp SelectedPlay
+	jr z, -_
+	jr SelectedPlay
 	
 DisplayHelp:
 	call EraseArea

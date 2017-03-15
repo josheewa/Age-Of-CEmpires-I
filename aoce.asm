@@ -68,14 +68,14 @@ gfx_Sprite_NoClip:
 	jp 177
 gfx_SetTransparentColor:
 	jp 225
-gfx_Lighten:
-	jp 237
 	
 	call _HomeUp
 	call _ClrLCDFull
 	call _RunIndicOff
 	ld (backupSP), sp
-	call RunProgram
+	jp RunProgram
+ForceStopProgramWithFadeOut:
+	call fadeOut
 ForceStopProgram:
 backupSP = $+1
 	ld sp, 0
