@@ -5,28 +5,3 @@ GetKeyFast:
 _:	cp a, (hl)
 	jr nz, -_
 	ret
-	
-GetAnyKeyFast:
-	call GetKeyFast
-	ld l, 012h
-	ld a, (hl)
-	inc l
-	inc l
-	or a, (hl)
-	inc l
-	inc l
-	or a, (hl)
-	inc l
-	inc l
-	or a, (hl)
-	inc l
-	inc l
-	or a, (hl)
-	inc l
-	inc l
-	or a, (hl)
-	inc l
-	inc l
-	or a, (hl)
-	jr z, GetAnyKeyFast
-	ret

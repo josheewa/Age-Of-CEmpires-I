@@ -9,7 +9,7 @@ TranspColor : 0xFFFF
  soldier : converted! (compress: 23312 -> 7010 bytes)
  playhelpquit : converted! (compress: 9128 -> 2730 bytes)
  singlemultiplayer : converted! (compress: 17264 -> 3987 bytes)
- newloadgame : converted! (compress: 19314 -> 3977 bytes)
+ newloadgame : converted! (compress: 15248 -> 3342 bytes)
  intro : converted! (compress: 30627 -> 9840 bytes)
 
 --- Group gfx_main2 (ASM) ---
