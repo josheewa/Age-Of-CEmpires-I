@@ -4,18 +4,7 @@ DrawMainMenu:
 	ld de, vRAM+1
 	ld bc, 320*240-1
 	ldir
-	ld hl, 32
-	push hl
-		ld l, 72
-		push hl
-			ld de, plotSScreen
-			push de
-				ld hl, _intro_compressed \.r1
-				call DecompressSprite
-				call gfx_Sprite_NoClip
-			pop de
-		pop hl
-	pop hl
+	dispCompressedImage(_intro_compressed, 72, 32)
 	call fadeIn
 	ld a, 255
 	call _DelayTenTimesAms
@@ -24,41 +13,13 @@ DrawMainMenu:
 	ld hl, 0E40000h
 	ld bc, 320*240*2
 	ldir
-	ld hl, 5
-	push hl
-		push hl
-			ld de, plotSScreen
-			push de
-				ld hl, _AoCEI_compressed \.r1
-				call DecompressSprite
-				call gfx_Sprite_NoClip									; gfx_Sprite_NoClip(_AoCEI_compressed, 5, 5);
-			pop de
-		pop hl
-		ld hl, 215
-		push hl
-			push de
-				ld hl, _soldier_compressed \.r1
-				call DecompressSprite
-				call gfx_Sprite_NoClip									; gfx_Sprite_NoClip(_soldier_compressed, 215, 5);
-			pop de
-		pop hl
-	pop hl
+	dispCompressedImage(_AoCEI_compressed, 5, 5)
+	dispCompressedImage(_soldier_compressed, 215, 5)
 	printString(MadeByMessage, 18, 94)
 	call fadeIn
 SelectLoopDrawPlayHelpQuit:
 	call EraseArea
-	ld de, plotSScreen
-	ld l, 110
-	push hl
-		ld hl, 50
-		push hl
-			push de
-				ld hl, _playhelpquit_compressed \.r1
-				call DecompressSprite
-				call gfx_Sprite_NoClip									; gfx_Sprite_NoClip(_playhelpquit_compressed, 50, 110);
-			pop hl
-		pop hl
-	pop hl
+	dispCompressedImage(_playhelpquit_compressed, 50, 110)
 	ld hl, SelectMenuMax
 	ld (hl), 2
 	call SelectMenu
@@ -80,18 +41,7 @@ DisplayHelp:
 	jp SelectLoopDrawPlayHelpQuit
 SelectedPlay:
 	call EraseArea
-	ld l, 110
-	push hl
-		ld hl, 50
-		push hl
-			ld de, saveSScreen
-			push de
-				ld hl, _singlemultiplayer_compressed \.r1
-				call DecompressSprite
-				call gfx_Sprite_NoClip									; gfx_Sprite_NoClip(_singlemultiplayer_compressed, 50, 110);
-			pop hl
-		pop hl
-	pop hl
+	dispCompressedImage(_singlemultiplayer_compressed, 50, 110)
 	ld hl, SelectMenuMax
 	ld (hl), 1
 	call SelectMenu
@@ -109,18 +59,7 @@ SelectedSinglePlayer:
 	call _ChkFindSym
 	jr c, +_
 	call EraseArea
-	ld l, 110
-	push hl
-		ld hl, 50
-		push hl
-			ld de, saveSScreen
-			push de
-				ld hl, _newloadgame_compressed \.r1
-				call DecompressSprite
-				call gfx_Sprite_NoClip									; gfx_Sprite_NoClip(_newloadgame_compressed, 50, 110);
-			pop hl
-		pop hl
-	pop hl
+	dispCompressedImage(_newloadgame_compressed, 50, 110)
 	call SelectMenu
 	jp c, SelectedPlay
 	dec c

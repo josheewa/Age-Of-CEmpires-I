@@ -34,3 +34,24 @@
 		pop hl
 	pop hl
 #endmacro
+
+#macro dispCompressedImage(pointer, x, y)
+#IF x==y
+	ld hl, x
+	push hl
+		push hl
+#ELSE
+	ld l, y
+	push hl
+		ld hl, x
+		push hl
+#ENDIF
+			ld de, plotSScreen
+			push de
+				ld hl, pointer \.r1
+				call DecompressSprite
+				call gfx_Sprite_NoClip
+			pop de
+		pop hl
+	pop hl
+#endmacro
