@@ -110,7 +110,7 @@ ResourcesType7:
 	.db 0, 0, 1
 	.db 0, 1, 1
 	
-pal_sprites:
+pal_sprites:																; Don't worry, it's just the xLIBC palette
 	.dw $0000, $0081, $0102, $0183, $0204, $0285, $0306, $0387
 	.dw $0408, $0489, $050A, $058B, $060C, $068D, $070E, $078F
 	.dw $0810, $0891, $0912, $0993, $0A14, $0A95, $0B16, $0B97

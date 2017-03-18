@@ -23,19 +23,19 @@ SelectLoopDrawPlayHelpQuit:
 	ld hl, SelectMenuMax
 	ld (hl), 2
 	call SelectMenu
-_:	jp c, ForceStopProgramWithFadeOut
+	jr c, +_
 	dec c
 	jr z, DisplayHelp
 	dec c
-	jr z, -_
-	jr SelectedPlay
+	jr nz, SelectedPlay
+_:	jp ForceStopProgramWithFadeOut
 	
 DisplayHelp:
 	call EraseArea
 	printString(GetHelp1, 5, 112)
 	printString(GetHelp2, 5, 122)
 	printString(GetHelp3, 5, 132)
-	call _GetKey
+	call GetKeyAnyFast
 	jp SelectLoopDrawPlayHelpQuit
 SelectedPlay:
 	call EraseArea
@@ -49,7 +49,7 @@ SelectedPlay:
 	call EraseArea
 	printString(NoMultiplayer1, 5, 112)
 	printString(NoMultiplayer2, 5, 122)
-	call _GetKey
+	call GetKeyAnyFast
 	jr SelectedPlay
 SelectedSinglePlayer:
 	ld hl, AoCEMapAppvar
@@ -108,29 +108,28 @@ SelectLoop:
 	pop bc
 	ld b, c
 KeyLoop:
-	call _GetCSC
-	ld d, a
-	cp a, skDown
-	jr nz, +_
+	call GetKeyAnyFast
+	ld l, 01Eh
+	bit kpDown, (hl)
+	jr z, +_
 	ld a, c
 SelectMenuMax = $+1
 	cp a, 2
 	jr z, +_
 	inc c
 	jr EraseCursor
-_:	ld a, d
-	cp a, skUp
-	jr nz, +_
+_:	bit kpUp, (hl)
+	jr z, +_
 	ld a, c
 	or a, a
 	jr z, +_
 	dec c
 	jr EraseCursor
-_:	ld a, d
-	cp a, skEnter
-	ret z	
-_:	cp a, skClear
-	jr nz, KeyLoop
+_:	ld l, 01Ch
+	bit kpEnter, (hl)
+	ret nz
+_:	bit kpClear, (hl)
+	jr z, KeyLoop
 	scf
 	ret
 	
