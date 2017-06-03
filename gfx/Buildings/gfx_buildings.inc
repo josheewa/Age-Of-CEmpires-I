@@ -8,14 +8,15 @@
 #define dw .dw
 #define dl .dl
 
+#include "gfx_buildings.asm"
 gfx_buildings_transpcolor_index equ 0
 
-#include "gfx/Buildings/barracks.asm" ; 7778 bytes
-#include "gfx/Buildings/farm.asm" ; 4706 bytes
-#include "gfx/Buildings/house.asm" ; 3330 bytes
-#include "gfx/Buildings/lumbercamp.asm" ; 3138 bytes
-#include "gfx/Buildings/mill.asm" ; 3330 bytes
-#include "gfx/Buildings/miningcamp.asm" ; 2754 bytes
-#include "gfx/Buildings/towncenter.asm" ; 12930 bytes
+#include "barracks.asm" ; 7778 bytes
+#include "farm.asm" ; 4706 bytes
+#include "house.asm" ; 3330 bytes
+#include "lumbercamp.asm" ; 3138 bytes
+#include "mill.asm" ; 3330 bytes
+#include "miningcamp.asm" ; 2754 bytes
+#include "towncenter.asm" ; 12930 bytes
 
 #endif

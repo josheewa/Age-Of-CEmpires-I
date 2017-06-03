@@ -8,8 +8,10 @@
 #define dw .dw
 #define dl .dl
 
+#include "gfx2/Buildings/gfx_buildings.asm"
 gfx_buildings_transpcolor_index equ 0
 
-#include "logo.asm" ; 258 bytes
+#include "gfx2/Buildings/test1.asm" ; 930 bytes
+#include "gfx2/Buildings/test2.asm" ; 1026 bytes
 
 #endif

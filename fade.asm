@@ -34,7 +34,7 @@ fadeLcd:
         ld      (__flSubCalc),hl
         ld      c,32
 flOuter:
-        ld      b,0           				; B = number of colours in palette
+        ld      b,0                           ; B = number of colours in palette
         ld      iy,mpLcdPalette
         ld      ix,pal_sprites                  ; IX => palette being used
 flInner:
@@ -90,19 +90,19 @@ flSkipB:
         inc iy \ inc iy
         pop     bc
         djnz    flInner
-		ld b, 4
+        ld b, 4
 Wait0Loop:
-		ld d, b
-		ld b, 0
+        ld d, b
+        ld b, 0
 Wait1Loop:
-		ld e, b
-		ld b, 0
+        ld e, b
+        ld b, 0
 Wait2Loop:
-		djnz Wait2Loop
-		ld b, e
-		djnz Wait1Loop
-		ld b, d
-		djnz Wait0Loop
+        djnz Wait2Loop
+        ld b, e
+        djnz Wait1Loop
+        ld b, d
+        djnz Wait0Loop
         dec     c
         jr      nz,flOuter
         ret
