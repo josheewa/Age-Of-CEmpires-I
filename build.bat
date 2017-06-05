@@ -18,7 +18,8 @@ del "relocation_table2.asm"
 call :colorEcho 73 "Building graphics appvars..."
 tools\spasm -E -L graphics1.asm bin\AOCEGFX1.8xv
 tools\spasm -E -L graphics2.asm bin\AOCEGFX2.8xv
-C:\programming\PHP\cli\php.exe edit.php remove
+call :editFile AOCEGFX1.lab
+call :editFile AOCEGFX2.lab
 call :colorEcho 73 "Building main program..."
 tools\spasm -E -T -L aoce.asm bin\aoce.8xp
 call :colorEcho 73 "Compressing main program..."
@@ -37,3 +38,21 @@ echo off
 findstr /v /a:%1 /R "^$" "%~2" nul
 del "%~2" > nul 2>&1i
 echo.
+exit /b
+
+:editFile
+cd bin
+set filename=%1%
+if exist temp.txt del "temp.txt"
+for /f "delims=," %%a in (%filename%) do (
+    set string=%%a
+    set substring1=!string:~0,1!
+    set substring2=!string:~1,1!
+    if !substring1! NEQ _ set string=""
+    if !substring2!==_ set string=""
+    if !string! NEQ "" echo !string! >> temp.txt
+)
+del "%filename%
+ren temp.txt %filename%
+cd ..
+exit /b

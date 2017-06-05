@@ -26,7 +26,7 @@ exit /b
 
 :editFile
 set filename=%1%
-del "temp.txt"
+if exist temp.txt del "temp.txt"
 for /f "delims=^" %%a in (%filename%) do (
     set string=%%a
     set substring=!string:~0,8!

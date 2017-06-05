@@ -95,45 +95,45 @@ Listing for file "C:\programming\Assembly\AoCE\macros.inc"
 Listing for file "aoce.asm"
     4 00:0000 -  -  -  -  #include "bin/AOCEGFX1.lab"
 Listing for file "C:\programming\Assembly\AoCE\bin\AOCEGFX1.lab"
-    1 00:0000 -  -  -  -  _AOCEI_COMPRESSED = $0000
-    2 00:0000 -  -  -  -  _AOCEI_COMPRESSED_SIZE = $1AE9
-    3 00:0000 -  -  -  -  _AOCEI_HEIGHT = $0055
-    4 00:0000 -  -  -  -  _AOCEI_WIDTH = $00D4
-    5 00:0000 -  -  -  -  _INTRO_COMPRESSED = $5D96
-    6 00:0000 -  -  -  -  _INTRO_COMPRESSED_SIZE = $2670
-    7 00:0000 -  -  -  -  _INTRO_HEIGHT = $00AF
-    8 00:0000 -  -  -  -  _INTRO_WIDTH = $00AF
-    9 00:0000 -  -  -  -  _NEWLOADGAME_COMPRESSED = $5088
-   10 00:0000 -  -  -  -  _NEWLOADGAME_COMPRESSED_SIZE = $0D0E
-   11 00:0000 -  -  -  -  _NEWLOADGAME_HEIGHT = $007E
-   12 00:0000 -  -  -  -  _NEWLOADGAME_WIDTH = $0079
-   13 00:0000 -  -  -  -  _PLAYHELPQUIT_COMPRESSED = $364B
-   14 00:0000 -  -  -  -  _PLAYHELPQUIT_COMPRESSED_SIZE = $0AAA
-   15 00:0000 -  -  -  -  _PLAYHELPQUIT_HEIGHT = $0075
-   16 00:0000 -  -  -  -  _PLAYHELPQUIT_WIDTH = $004E
-   17 00:0000 -  -  -  -  _POINTER = $8406
-   18 00:0000 -  -  -  -  _POINTER_HEIGHT = $0023
-   19 00:0000 -  -  -  -  _POINTER_WIDTH = $0017
-   20 00:0000 -  -  -  -  _SINGLEMULTIPLAYER_COMPRESSED = $40F5
-   21 00:0000 -  -  -  -  _SINGLEMULTIPLAYER_COMPRESSED_SIZE = $0F93
-   22 00:0000 -  -  -  -  _SINGLEMULTIPLAYER_HEIGHT = $007E
-   23 00:0000 -  -  -  -  _SINGLEMULTIPLAYER_WIDTH = $0089
-   24 00:0000 -  -  -  -  _SOLDIER_COMPRESSED = $1AE9
-   25 00:0000 -  -  -  -  _SOLDIER_COMPRESSED_SIZE = $1B62
-   26 00:0000 -  -  -  -  _SOLDIER_HEIGHT = $00DE
-   27 00:0000 -  -  -  -  _SOLDIER_WIDTH = $0069
+    1 00:0000 -  -  -  -  _AOCEI_COMPRESSED = $0000 
+    2 00:0000 -  -  -  -  _AOCEI_COMPRESSED_SIZE = $1AE9 
+    3 00:0000 -  -  -  -  _AOCEI_HEIGHT = $0055 
+    4 00:0000 -  -  -  -  _AOCEI_WIDTH = $00D4 
+    5 00:0000 -  -  -  -  _INTRO_COMPRESSED = $5D96 
+    6 00:0000 -  -  -  -  _INTRO_COMPRESSED_SIZE = $2670 
+    7 00:0000 -  -  -  -  _INTRO_HEIGHT = $00AF 
+    8 00:0000 -  -  -  -  _INTRO_WIDTH = $00AF 
+    9 00:0000 -  -  -  -  _NEWLOADGAME_COMPRESSED = $5088 
+   10 00:0000 -  -  -  -  _NEWLOADGAME_COMPRESSED_SIZE = $0D0E 
+   11 00:0000 -  -  -  -  _NEWLOADGAME_HEIGHT = $007E 
+   12 00:0000 -  -  -  -  _NEWLOADGAME_WIDTH = $0079 
+   13 00:0000 -  -  -  -  _PLAYHELPQUIT_COMPRESSED = $364B 
+   14 00:0000 -  -  -  -  _PLAYHELPQUIT_COMPRESSED_SIZE = $0AAA 
+   15 00:0000 -  -  -  -  _PLAYHELPQUIT_HEIGHT = $0075 
+   16 00:0000 -  -  -  -  _PLAYHELPQUIT_WIDTH = $004E 
+   17 00:0000 -  -  -  -  _POINTER = $8406 
+   18 00:0000 -  -  -  -  _POINTER_HEIGHT = $0023 
+   19 00:0000 -  -  -  -  _POINTER_WIDTH = $0017 
+   20 00:0000 -  -  -  -  _SINGLEMULTIPLAYER_COMPRESSED = $40F5 
+   21 00:0000 -  -  -  -  _SINGLEMULTIPLAYER_COMPRESSED_SIZE = $0F93 
+   22 00:0000 -  -  -  -  _SINGLEMULTIPLAYER_HEIGHT = $007E 
+   23 00:0000 -  -  -  -  _SINGLEMULTIPLAYER_WIDTH = $0089 
+   24 00:0000 -  -  -  -  _SOLDIER_COMPRESSED = $1AE9 
+   25 00:0000 -  -  -  -  _SOLDIER_COMPRESSED_SIZE = $1B62 
+   26 00:0000 -  -  -  -  _SOLDIER_HEIGHT = $00DE 
+   27 00:0000 -  -  -  -  _SOLDIER_WIDTH = $0069 
 Listing for file "aoce.asm"
     5 00:0000 -  -  -  -  #include "bin/AOCEGFX2.lab"
 Listing for file "C:\programming\Assembly\AoCE\bin\AOCEGFX2.lab"
-    1 00:0000 -  -  -  -  _TEST1 = $0000
-    2 00:0000 -  -  -  -  _TEST1_HEIGHT = $001D
-    3 00:0000 -  -  -  -  _TEST1_WIDTH = $0020
-    4 00:0000 -  -  -  -  _TEST2 = $03A2
-    5 00:0000 -  -  -  -  _TEST2_HEIGHT = $0020
-    6 00:0000 -  -  -  -  _TEST2_WIDTH = $0020
-    7 00:0000 -  -  -  -  _TILE1 = $07A4
-    8 00:0000 -  -  -  -  _TILE1_HEIGHT = $0011
-    9 00:0000 -  -  -  -  _TILE1_WIDTH = $0020
+    1 00:0000 -  -  -  -  _TEST1 = $0000 
+    2 00:0000 -  -  -  -  _TEST1_HEIGHT = $001D 
+    3 00:0000 -  -  -  -  _TEST1_WIDTH = $0020 
+    4 00:0000 -  -  -  -  _TEST2 = $03A2 
+    5 00:0000 -  -  -  -  _TEST2_HEIGHT = $0020 
+    6 00:0000 -  -  -  -  _TEST2_WIDTH = $0020 
+    7 00:0000 -  -  -  -  _TILE1 = $07A4 
+    8 00:0000 -  -  -  -  _TILE1_HEIGHT = $0011 
+    9 00:0000 -  -  -  -  _TILE1_WIDTH = $0020 
 Listing for file "aoce.asm"
     6 00:0000 -  -  -  -  #include "relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
