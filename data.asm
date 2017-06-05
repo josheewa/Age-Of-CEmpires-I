@@ -20,7 +20,7 @@ GeneratingMapMessage:
 LoadingMapMessage:
     .db "Loading map...", 0
 GraphicsAppvar:
-    .db AppVarObj, "AOCEGFX0"
+    .db AppVarObj, "AOCEGFX0", 0
 AoCEMapAppvar:
     .db AppVarObj, "AOCEMAP", 0
 GraphicsAppvarNotFound:
@@ -45,6 +45,13 @@ AmountOfMaxPeople:
     .db 10
 AmountOfBuildings:
     .db 0
+
+TilePointers:
+    .dl _tile1 \.r2
+    .dl 0
+    .dl 0
+    .dl 0
+    .dl 0
     
 AoCEFlags:
     .db 0

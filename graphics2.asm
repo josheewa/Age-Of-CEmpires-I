@@ -2,6 +2,7 @@ start2:
 #define db .db
 #define equ .equ
 #include "gfx2/Buildings/gfx_buildings.inc"
+#include "gfx2/Tiles/gfx_tiles.inc"
 
 size_graphics_appv = $-start2+8+8
 

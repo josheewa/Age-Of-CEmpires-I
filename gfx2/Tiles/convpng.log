@@ -1,0 +1,16 @@
+Opened convpng.ini
+
+--- Group gfx_tiles (ASM) ---
+Using built-in xlibc palette...
+TranspColorIndex : 0
+TranspColor : 0xFFFF
+1:
+ tile1 : converted! (tile1.asm)
+
+Converted in 0 s
+
+[warning] image quality might be too low.
+please try grouping similar images, reducing image colors, 
+or selecting a better palette if conversion is not ideal.
+
+Finished!

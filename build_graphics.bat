@@ -8,6 +8,8 @@ cd gfx2\Main
 convpng
 cd ..\Buildings
 convpng
+cd ..\Tiles
+convpng
 cd ..\..
 C:\programming\PHP\cli\php.exe edit.php edit
 exit

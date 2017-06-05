@@ -21,8 +21,12 @@ tools\spasm -E -L graphics2.asm bin\AOCEGFX2.8xv
 C:\programming\PHP\cli\php.exe edit.php remove
 call :colorEcho 73 "Building main program..."
 tools\spasm -E -T -L aoce.asm bin\aoce.8xp
+call :colorEcho 73 "Compressing main program..."
 tools\convhex -x bin\aoce.8xp
+call :colorEcho 73 "Cleaning up..."
 del "bin\aoce.8xp"
+del "bin\AOCEGFX1.lab"
+del "bin\AOCEGFX2.lab"
 ren bin\aoce_.8xp aoce.8xp
 pause
 exit

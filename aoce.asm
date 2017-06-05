@@ -89,6 +89,7 @@ gfx_Sprite_NoClip:
 gfx_SetTransparentColor:
     jp 225
     
+Main:
     call _HomeUp
     call _ClrLCDFull
     call _RunIndicOff
@@ -111,7 +112,6 @@ backupSP = $+1
     jp _JForceCmd
 #include "flash.asm"
 RunProgram:
-    di
     or a, a
     sbc hl, hl
     ex de, hl
@@ -148,11 +148,10 @@ LoadSpritesAppvar:
         call _GetKey
         jp ForceStopProgram
 _:      call _ChkInRAM
-        call nc, _Arc_Unarc
-        call _ChkFindSym
-        ld hl, 20
-        add hl, de
-        ld (GraphicsAppvarStart), hl
+        call c, _Arc_Unarc
+        inc de
+        inc de
+        ld (GraphicsAppvarStart), de
     pop bc
     ld d, b
     ld e, 3
@@ -183,21 +182,17 @@ GraphicsAppvarStart = $+1
     jr ChangeRelocationTableLoop
 _:  pop hl
     djnz LoadSpritesAppvar
-    ld hl, drawfield_loc
-    ld de, DrawField
-    ld bc, DrawFieldEnd - DrawField
-    ldir
-    ld de, DrawTiles
-    ld bc, DrawTilesEnd - DrawTiles
-    ldir
-    ld ix, saveSScreen+21000
+    ld hl, AoCEMapAppvar
+    call _Mov9ToOP1
+    call _ChkFindSym
+    call nc, _DelVarArc
     ld l, lcdBpp8
     push hl
         call gfx_Begin
         ld de, mpLcdPalette
         ld hl, blackBuffer
         ld bc, 256*2
-        ldir
+        ;ldir
         ld l, 254
         ex (sp), hl
         call gfx_SetTextFGColor
@@ -205,7 +200,10 @@ _:  pop hl
         ex (sp), hl
         call gfx_SetTransparentColor
     pop hl
-    call MainMenu
+    ;call MainMenu
+    call GenerateMap
+    ld ix, saveSScreen+21000
+    di
     ld.sis sp, 0987Eh
     ld a, 0D1h
     ld mb, a
@@ -215,21 +213,23 @@ _:  pop hl
     ld (ix+OFFSET_Y), a
     ld iy, AoCEFlags
     set need_to_redraw_tiles, (iy+0)
-    ld de, vRAM
-    ld hl, _resources \.r2
-    ld bc, 320*15
+    ld hl, drawfield_loc
+    ld de, DrawField
+    ld bc, DrawFieldEnd - DrawField
     ldir
-    ld hl, blackBuffer
-    ld bc, 320*(240-15)
+    ld de, DrawTiles
+    ld bc, DrawTilesEnd - DrawTiles
     ldir
     
 MainGameLoop:
+    ld hl, 0D52C00h
+    ld (mpLcdBase), hl
     call DrawField
     call GetKeyFast
     ld iy, TopLeftXTile
     ld l, 01Ch
     bit kpClear, (hl)
-    jp nz, ForceStopProgram
+    jp z, ForceStopProgram
     ld l, 01Eh
 CheckIfPressedUp:             ; All the controls are 'reversed', if you press [LEFT], it should scroll to the right
     bit kpUp, (hl)
@@ -252,7 +252,7 @@ CheckIfPressedRight:
     jr nz, +_
     shift_tile0_x_right()
     shift_tile0_y_up()
-_: dec a
+_:  dec a
     dec a
     dec a
     dec a

@@ -1,6 +1,6 @@
 <?php
     if ($argv[1] == "edit") {
-        $names = array("gfx2/Buildings/gfx_buildings.inc", "gfx2/Main/gfx_main1.inc", "gfx2/Main/gfx_main2.inc");
+        $names = array("gfx2/Buildings/gfx_buildings.inc", "gfx2/Main/gfx_main1.inc", "gfx2/Main/gfx_main2.inc", "gfx2/Tiles/gfx_tiles.inc");
         foreach ($names as $name) {
             $file = fopen($name, "r");
             $output = array();

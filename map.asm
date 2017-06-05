@@ -1,5 +1,10 @@
 GenerateMap:
     call EraseArea
+    ld hl, screenBuffer
+    ld (hl), 1
+    ld de, screenBuffer+1
+    ld bc, 320*240-1
+    ldir
     printString(GeneratingMapMessage, 5, 112)
     ld hl, (mpTmr1Counter)
     ld (seed_1), hl
@@ -19,6 +24,8 @@ PlaceTreesLoop:
         mlt hl
         add hl, hl
     pop de
+    add hl, de
+    ld de, screenBuffer
     add hl, de
     ld (hl), TILE_TREE
     ld b, ixh
@@ -113,24 +120,32 @@ DontDrawResource:
     ld b, ixh
     dec b
     jp nz, PlaceAllResourceTypesLoop
-    call _ChkFindSym
-    call nc, _DelVarArc
-    ld hl, MAP_SIZE*MAP_SIZE
+; All the resources are now placed, so copy them to the map appvar
+    ld hl, MAP_SIZE*MAP_SIZE*2
     call _EnoughMem
     jp c, ForceStopProgram
     ex de, hl
     call _CreateAppvar
-    ld bc, 0
     ld hl, screenBuffer
     inc de
     inc de
-    ld a, MAP_SIZE
+    ld ixh, MAP_SIZE
 CopyMapToNewAppvarLoop:
-    ld c, MAP_SIZE
-    ldir
-    ld c, 320-MAP_SIZE
-    add hl, bc
+    ld b, MAP_SIZE
+CopyRowLoop:
+    ld a, (hl)
+    ld (de), a
+    inc de
     dec a
+    jr z, +_
+    ld a, 200
+_:  ld (de), a
+    inc hl
+    inc de
+    djnz CopyRowLoop
+    ld bc, 320-MAP_SIZE
+    add hl, bc
+    dec ixh
     jr nz, CopyMapToNewAppvarLoop
     call _OP4ToOP1
 LoadMap:
@@ -143,8 +158,7 @@ LoadMap:
     ex de, hl
     inc hl
     inc hl
-    inc de
-    ld bc, MAP_SIZE*MAP_SIZE
+    ld bc, MAP_SIZE*MAP_SIZE*2
     ldir
     ret
         
