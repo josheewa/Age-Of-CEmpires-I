@@ -121,6 +121,8 @@ DontDrawResource:
     dec b
     jp nz, PlaceAllResourceTypesLoop
 ; All the resources are now placed, so copy them to the map appvar
+    ld hl, AoCEMapAppvar
+    call _Mov9ToOP1
     ld hl, MAP_SIZE*MAP_SIZE*2
     call _EnoughMem
     jp c, ForceStopProgram
@@ -151,14 +153,20 @@ _:  ld (de), a
 LoadMap:
     call EraseArea
     printString(LoadingMapMessage, 5, 112)
+    ld hl, AoCEMapAppvar
+    call _Mov9ToOP1
     call _ChkFindSym
     call _ChkInRAM
     call c, _Arc_Unarc
     ld hl, mapAddress
+    ; TEMP!!!
+    ld (hl), TILE_BUILDING_1
+    inc hl
     ex de, hl
     inc hl
     inc hl
-    ld bc, MAP_SIZE*MAP_SIZE*2
+    inc hl
+    ld bc, MAP_SIZE*MAP_SIZE*2-1
     ldir
     ret
         

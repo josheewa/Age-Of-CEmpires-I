@@ -90,6 +90,7 @@ gfx_SetTransparentColor:
     jp 225
     
 Main:
+    di
     call _HomeUp
     call _ClrLCDFull
     call _RunIndicOff
@@ -107,9 +108,7 @@ backupSP = $+1
     ld a, 0D0h
     ld mb, a
     ld iy, flags
-    call _DrawStatusBar
-    ld a, kClear
-    jp _JForceCmd
+    jp _DrawStatusBar
 #include "flash.asm"
 RunProgram:
     or a, a
@@ -131,61 +130,13 @@ RunProgram:
     ld l, 030h
     set 0, (hl)
     set 3, (hl)
-    ld b, 2
-    ld ix, GraphicsAppvar
-LoadSpritesAppvar:
-    push bc
-        inc (ix+8)
-        lea hl, ix
-        call _Mov9ToOP1
-        call _ChkFindSym
-        jr nc, +_
-        ld hl, GraphicsAppvarNotFound
-        call _PutS
-        call _NewLine
-        lea hl, ix+1
-        call _PutS
-        call _GetKey
-        jp ForceStopProgram
-_:      call _ChkInRAM
-        call c, _Arc_Unarc
-        inc de
-        inc de
-        ld (GraphicsAppvarStart), de
-    pop bc
-    ld d, b
-    ld e, 3
-    dec d
-    mlt de
-    ld hl, RelocationTables
-    add hl, de
-    ld hl, (hl)
-ChangeRelocationTableLoop:
-    push hl
-        ld hl, (hl)
-        ld a, h
-        and a, l
-        inc a
-        jr z, +_
-        push hl
-            ld hl, (hl)
-GraphicsAppvarStart = $+1
-            ld de, 0
-            add hl, de
-            ex de, hl
-        pop hl
-        ld (hl), de
-    pop hl
-    inc hl
-    inc hl
-    inc hl
-    jr ChangeRelocationTableLoop
-_:  pop hl
-    djnz LoadSpritesAppvar
     ld hl, AoCEMapAppvar
     call _Mov9ToOP1
     call _ChkFindSym
     call nc, _DelVarArc
+    ld hl, GraphicsAppvar1
+    ld de, RelocationTable1
+    call LoadGraphicsAppvar
     ld l, lcdBpp8
     push hl
         call gfx_Begin
@@ -200,8 +151,11 @@ _:  pop hl
         ex (sp), hl
         call gfx_SetTransparentColor
     pop hl
-    call MainMenu
+    ;call MainMenu
     call GenerateMap
+    ld hl, GraphicsAppvar2
+    ld de, RelocationTable2
+    call LoadGraphicsAppvar
     ld ix, saveSScreen+21000
     di
     ld.sis sp, 0987Eh
@@ -224,6 +178,9 @@ _:  pop hl
 MainGameLoop:
     ld hl, 0D52C00h
     ld (mpLcdBase), hl
+    scf
+    sbc hl, hl
+    ld (hl), 2
     call DrawField
     call GetKeyFast
     ld iy, TopLeftXTile

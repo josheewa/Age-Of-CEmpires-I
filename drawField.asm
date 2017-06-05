@@ -73,16 +73,17 @@ _:  ld (TopRowLeftOrRight), a
     ld sp, lcdWidth
 DisplayEachRowLoop:
 ; Registers:
-;   A' = row index
-;   BC = length of row tile
-;   DE = pointer to output
-;   HL = pointer to tile/black tile
-;   B' = column index
+;   A   = height of tile/building
+;   BC  = length of row tile
+;   DE  = pointer to output
+;   HL  = pointer to tile/black tile
+;   A'  = row index
+;   B'  = column index
 ;   DE' = x index tile
 ;   HL' = pointer to map data
-;   IX = y index tile
-;   IY = where to draw
-;   SP = SCREEN_WIDTH
+;   IX  = y index tile
+;   IY  = pointer to output
+;   SP  = SCREEN_WIDTH
 
     bit 0, a                                                    ; Here are the shadow registers active
 startingPosition = $+2
@@ -107,15 +108,23 @@ CheckWhatTypeOfTileItIs:
     or a, a
     jp z, SkipDrawingOfTile
     ld c, a
-    ld b, 3
+    ld b, 7
     mlt bc
-    ld hl, TilePointers-3
+    ld hl, TilePointers-7
     add hl, bc
-    ld hl, (hl)
+    ld de, (hl)                                                 ; Offset from the current position, if the tile/building has a height
+    add iy, de
+    inc hl
+    inc hl
+    inc hl
+    ld a, (hl)                                                  ; Height of the tile
+    inc hl
+    ld hl, (hl)                                                 ; Pointer to the tile
     jr +_
 TileIsOutOfField:
     exx
     ld hl, blackBuffer
+    ld a, 1
 _:  lea de, iy
     ld bc, 2
     ldir
@@ -147,10 +156,12 @@ _:  lea de, iy
     lea de, iy-14
     ld c, 30
     ldir
-    add iy, sp
+_:  add iy, sp
     lea de, iy-15
     ld c, 32
     ldir
+    dec a
+    jr nz, -_
     add iy, sp
     lea de, iy-14
     ld c, 30

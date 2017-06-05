@@ -19,17 +19,16 @@ GeneratingMapMessage:
     .db "Generating map...", 0
 LoadingMapMessage:
     .db "Loading map...", 0
-GraphicsAppvar:
-    .db AppVarObj, "AOCEGFX0", 0
+GraphicsAppvar1:
+    .db AppVarObj, "AOCEGFX1"
+GraphicsAppvar2:
+    .db AppVarObj, "AOCEGFX2"
 AoCEMapAppvar:
     .db AppVarObj, "AOCEMAP", 0
 GraphicsAppvarNotFound:
     .db "Can't find appvar:", 0
 LoadingMessage:
     .db "Loading...", 0
-    
-RelocationTables:
-    .dl RelocationTable2, RelocationTable1
     
 AmountOfWood:
     .dl 0
@@ -47,11 +46,19 @@ AmountOfBuildings:
     .db 0
 
 TilePointers:
-    .dl _tile1 \.r2
-    .dl 0
-    .dl 0
-    .dl 0
-    .dl 0
+    .dl 0                         \ .db 1                  \ .dl _grass \.r2
+    .dl 0                         \ .db 1                  \ .dl _food  \.r2
+    .dl 0                         \ .db 1                  \ .dl _gold  \.r2
+    .dl 0                         \ .db 1                  \ .dl _stone \.r2
+    .dl 0                         \ .db 1                  \ .dl _food  \.r2
+    .dl -(_test1_height - 16)*320 \ .db _test1_height - 15 \ .dl _test1 \.r2
+    .dl -(_test2_height - 16)*320 \ .db _test2_height - 15 \ .dl _test2 \.r2
+    
+TileHeights:
+    .db 0
+    .db 0
+    .db 0
+    .db 0
     
 AoCEFlags:
     .db 0
