@@ -200,7 +200,7 @@ _:  pop hl
         ex (sp), hl
         call gfx_SetTransparentColor
     pop hl
-    ;call MainMenu
+    call MainMenu
     call GenerateMap
     ld ix, saveSScreen+21000
     di
