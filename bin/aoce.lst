@@ -14,47 +14,45 @@ Listing for file "C:\programming\Assembly\AoCE\defines.asm"
     9 00:0000 -  -  -  -  mapAddress                  .equ pixelShadow
    10 00:0000 -  -  -  -  blackBuffer                 .equ 0E40000h
    11 00:0000 -  -  -  -  
-   12 00:0000 -  -  -  -  need_to_redraw_tiles        .equ 0
-   13 00:0000 -  -  -  -  
-   14 00:0000 -  -  -  -  kpUp                        .equ 3
-   15 00:0000 -  -  -  -  kpLeft                      .equ 1
-   16 00:0000 -  -  -  -  kpRight                     .equ 2
-   17 00:0000 -  -  -  -  kpDown                      .equ 0
-   18 00:0000 -  -  -  -  kpClear                     .equ 6
-   19 00:0000 -  -  -  -  kpEnter                     .equ 0
-   20 00:0000 -  -  -  -  
-   21 00:0000 -  -  -  -  ; Only 2 walkable tiles
-   22 00:0000 -  -  -  -  TILE_EMPTY                  .equ 0
-   23 00:0000 -  -  -  -  TILE_GRASS                  .equ 1
-   24 00:0000 -  -  -  -  
-   25 00:0000 -  -  -  -  ; These are not walkable tiles
-   26 00:0000 -  -  -  -  TILE_FOOD                   .equ 2
-   27 00:0000 -  -  -  -  TILE_GOLD                   .equ 3
-   28 00:0000 -  -  -  -  TILE_STONE                  .equ 4
-   29 00:0000 -  -  -  -  TILE_TREE                   .equ 5
-   30 00:0000 -  -  -  -  TILE_BUILDING_1             .equ 6
+   12 00:0000 -  -  -  -  kpUp                        .equ 3
+   13 00:0000 -  -  -  -  kpLeft                      .equ 1
+   14 00:0000 -  -  -  -  kpRight                     .equ 2
+   15 00:0000 -  -  -  -  kpDown                      .equ 0
+   16 00:0000 -  -  -  -  kpClear                     .equ 6
+   17 00:0000 -  -  -  -  kpEnter                     .equ 0
+   18 00:0000 -  -  -  -  
+   19 00:0000 -  -  -  -  ; Only 2 walkable tiles
+   20 00:0000 -  -  -  -  TILE_EMPTY                  .equ 0
+   21 00:0000 -  -  -  -  TILE_GRASS                  .equ 1
+   22 00:0000 -  -  -  -  
+   23 00:0000 -  -  -  -  ; These are not walkable tiles
+   24 00:0000 -  -  -  -  TILE_FOOD                   .equ 2
+   25 00:0000 -  -  -  -  TILE_GOLD                   .equ 3
+   26 00:0000 -  -  -  -  TILE_STONE                  .equ 4
+   27 00:0000 -  -  -  -  TILE_TREE                   .equ 5
+   28 00:0000 -  -  -  -  TILE_BUILDING_1             .equ 6
 Listing for file "aoce.asm"
     3 00:0000 -  -  -  -  #include "macros.inc"
 Listing for file "C:\programming\Assembly\AoCE\macros.inc"
-    1 00:0000 -  -  -  -  #macro shift_tile0_x_left()
+    1 00:0000 -  -  -  -  #macro ScrollLeft()
     2 00:0000             	ld de, (iy+OFFSET_X_TILE0)
     3 00:0000             	dec de
     4 00:0000             	ld (iy+OFFSET_X_TILE0), de
     5 00:0000             #endmacro
     6 00:0000 -  -  -  -  
-    7 00:0000 -  -  -  -  #macro shift_tile0_x_right()
+    7 00:0000 -  -  -  -  #macro ScrollRight()
     8 00:0000             	ld de, (iy+OFFSET_X_TILE0)
     9 00:0000             	inc de
    10 00:0000             	ld (iy+OFFSET_X_TILE0), de
    11 00:0000             #endmacro
    12 00:0000 -  -  -  -  
-   13 00:0000 -  -  -  -  #macro shift_tile0_y_up()
+   13 00:0000 -  -  -  -  #macro ScrollUp()
    14 00:0000             	ld de, (iy+OFFSET_Y_TILE0)
    15 00:0000             	dec de
    16 00:0000             	ld (iy+OFFSET_Y_TILE0), de
    17 00:0000             #endmacro
    18 00:0000 -  -  -  -  
-   19 00:0000 -  -  -  -  #macro shift_tile0_y_down()
+   19 00:0000 -  -  -  -  #macro ScrollDown()
    20 00:0000             	ld de, (iy+OFFSET_Y_TILE0)
    21 00:0000             	inc de
    22 00:0000             	ld (iy+OFFSET_Y_TILE0), de
@@ -135,15 +133,18 @@ Listing for file "C:\programming\Assembly\AoCE\bin\AOCEGFX2.lab"
     7 00:0000 -  -  -  -  _GRASS = $081A 
     8 00:0000 -  -  -  -  _GRASS_HEIGHT = $0011 
     9 00:0000 -  -  -  -  _GRASS_WIDTH = $0020 
-   10 00:0000 -  -  -  -  _STONE = $093A 
-   11 00:0000 -  -  -  -  _STONE_HEIGHT = $0011 
-   12 00:0000 -  -  -  -  _STONE_WIDTH = $0020 
-   13 00:0000 -  -  -  -  _TEST1 = $0000 
-   14 00:0000 -  -  -  -  _TEST1_HEIGHT = $001D 
-   15 00:0000 -  -  -  -  _TEST1_WIDTH = $0020 
-   16 00:0000 -  -  -  -  _TEST2 = $02BE 
-   17 00:0000 -  -  -  -  _TEST2_HEIGHT = $0020 
-   18 00:0000 -  -  -  -  _TEST2_WIDTH = $0020 
+   10 00:0000 -  -  -  -  _RESOURCES = $0A57 
+   11 00:0000 -  -  -  -  _RESOURCES_HEIGHT = $000F 
+   12 00:0000 -  -  -  -  _RESOURCES_WIDTH = $0140 
+   13 00:0000 -  -  -  -  _STONE = $093A 
+   14 00:0000 -  -  -  -  _STONE_HEIGHT = $0011 
+   15 00:0000 -  -  -  -  _STONE_WIDTH = $0020 
+   16 00:0000 -  -  -  -  _TEST1 = $0000 
+   17 00:0000 -  -  -  -  _TEST1_HEIGHT = $001D 
+   18 00:0000 -  -  -  -  _TEST1_WIDTH = $0020 
+   19 00:0000 -  -  -  -  _TEST2 = $02BE 
+   20 00:0000 -  -  -  -  _TEST2_HEIGHT = $0020 
+   21 00:0000 -  -  -  -  _TEST2_WIDTH = $0020 
 Listing for file "aoce.asm"
     6 00:0000 -  -  -  -  #include "relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
@@ -264,7 +265,7 @@ Listing for file "aoce.asm"
               69 6C 6C 65 
               6D 61 00 -      .db "Age of CEmpires I - By Peter \"PT_\" Tillema", 0
    32 D1:A9B3 -  -  -  -  AoCEStart:
-   33 D1:A9B3 21 04 AE D1     ld hl, LibLoadAppVar
+   33 D1:A9B3 21 00 AE D1     ld hl, LibLoadAppVar
    34 D1:A9B7 CD 20 03 02     call _Mov9ToOP1
    35 D1:A9BB 3E 15 -  -      ld a, AppVarObj
    36 D1:A9BD 32 F8 05 D0     ld (OP1), a
@@ -290,7 +291,7 @@ Listing for file "aoce.asm"
    56 D1:A9EB -  -  -  -  NotFound:
    57 D1:A9EB CD 14 08 02     call _ClrScrn
    58 D1:A9EF CD 28 08 02     call _HomeUp
-   59 D1:A9F3 21 00 AE D1     ld hl, MissingAppVar
+   59 D1:A9F3 21 FC AD D1     ld hl, MissingAppVar
    60 D1:A9F7 CD C0 07 02     call _PutS
    61 D1:A9FB CD F0 07 02     call _NewLine
    62 D1:A9FF C3 C0 07 02     jp _PutS
@@ -326,956 +327,954 @@ Listing for file "aoce.asm"
    90 D1:AA3C C3 E1 00 00     jp 225
    91 D1:AA40 -  -  -  -      
    92 D1:AA40 -  -  -  -  Main:
-   93 D1:AA40 F3 -  -  -      di
-   94 D1:AA41 CD 28 08 02     call _HomeUp
-   95 D1:AA45 CD 08 08 02     call _ClrLCDFull
-   96 D1:AA49 CD 48 08 02     call _RunIndicOff
-   97 D1:AA4D ED 73 5B AA 
+   93 D1:AA40 CD 28 08 02     call _HomeUp
+   94 D1:AA44 CD 08 08 02     call _ClrLCDFull
+   95 D1:AA48 CD 48 08 02     call _RunIndicOff
+   96 D1:AA4C ED 73 5F AA 
               D1 -  -  -      ld (backupSP), sp
-   98 D1:AA52 C3 EC AA D1     jp RunProgram
-   99 D1:AA56 -  -  -  -  ForceStopProgramWithFadeOut:
-  100 D1:AA56 CD 87 B1 D1     call fadeOut
-  101 D1:AA5A -  -  -  -  ForceStopProgram:
-  102 D1:AA5A -  -  -  -      ;call gfx_End
-  103 D1:AA5A -  -  -  -  backupSP = $+1
-  104 D1:AA5A 31 00 00 00     ld sp, 0
-  105 D1:AA5E 3E D1 -  -      ld a, 0D1h
-  106 D1:AA60 ED 6D -  -      ld mb, a
-  107 D1:AA62 49 CD 86 AA     call.lis fLockFlash & 0FFFFh
-  108 D1:AA66 3E D0 -  -      ld a, 0D0h
-  109 D1:AA68 ED 6D -  -      ld mb, a
-  110 D1:AA6A FD 21 80 00 
+   97 D1:AA51 C3 F0 AA D1     jp RunProgram
+   98 D1:AA55 -  -  -  -  ForceStopProgramWithFadeOut:
+   99 D1:AA55 CD 83 B1 D1     call fadeOut
+  100 D1:AA59 -  -  -  -  ForceStopProgram:
+  101 D1:AA59 CD 10 AA D1     call gfx_End
+  102 D1:AA5D F3 -  -  -      di
+  103 D1:AA5E -  -  -  -  backupSP = $+1
+  104 D1:AA5E 31 00 00 00     ld sp, 0
+  105 D1:AA62 3E D1 -  -      ld a, 0D1h
+  106 D1:AA64 ED 6D -  -      ld mb, a
+  107 D1:AA66 49 CD 8A AA     call.lis fLockFlash & 0FFFFh
+  108 D1:AA6A 3E D0 -  -      ld a, 0D0h
+  109 D1:AA6C ED 6D -  -      ld mb, a
+  110 D1:AA6E FD 21 80 00 
               D0 -  -  -      ld iy, flags
-  111 D1:AA6F C3 3C 1A 02     jp _DrawStatusBar
-  112 D1:AA73 -  -  -  -  #include "flash.asm"
+  111 D1:AA73 C3 3C 1A 02     jp _DrawStatusBar
+  112 D1:AA77 -  -  -  -  #include "flash.asm"
 Listing for file "C:\programming\Assembly\AoCE\flash.asm"
-    1 D1:AA73 -  -  -  -  .assume ADL=0
-    2 D1:AA73 -  -  -  -  fUnlockFlash:
-    3 D1:AA73 3E 8C -  -      ld a, 08Ch
-    4 D1:AA75 ED 39 24 -      out0 (024h), a
-    5 D1:AA78 0E 04 -  -      ld c, 4
-    6 D1:AA7A ED 38 06 -      in0 a, (6)
-    7 D1:AA7D B1 -  -  -      or c
-    8 D1:AA7E ED 39 06 -      out0 (6), a
-    9 D1:AA81 ED 09 28 -      out0 (028h), c
-   10 D1:AA84 49 C9 -  -      ret.l
-   11 D1:AA86 -  -  -  -  fLockFlash:
-   12 D1:AA86 AF -  -  -      xor    a, a
-   13 D1:AA87 ED 39 28 -      out0 (028h), a
-   14 D1:AA8A ED 38 06 -      in0 a, (6)
-   15 D1:AA8D CB 97 -  -      res 2, a
-   16 D1:AA8F ED 39 06 -      out0 (6), a
-   17 D1:AA92 3E 88 -  -      ld a, 088h
-   18 D1:AA94 ED 39 24 -      out0(024h), a
-   19 D1:AA97 49 C9 -  -      ret.l
-   20 D1:AA99 -  -  -  -  .assume ADL=1
-   21 D1:AA99 -  -  -  -      
-   22 D1:AA99 -  -  -  -  fCopyRAMToFlash:
-   23 D1:AA99 3E 3C -  -      ld a, 03Ch
-   24 D1:AA9B CD E3 AA D1     call fMemorySafeErase
-   25 D1:AA9F 3E 3D -  -      ld a, 03Dh
-   26 D1:AAA1 CD E3 AA D1     call fMemorySafeErase
-   27 D1:AAA5 3E 3E -  -      ld a, 03Eh
-   28 D1:AAA7 CD E3 AA D1     call fMemorySafeErase
-   29 D1:AAAB 3E 3F -  -      ld a, 03Fh
-   30 D1:AAAD CD E3 AA D1     call fMemorySafeErase
-   31 D1:AAB1 21 01 00 D0     ld hl, 0D00001h
-   32 D1:AAB5 36 A5 -  -      ld (hl), 0A5h
-   33 D1:AAB7 2B -  -  -      dec hl
-   34 D1:AAB8 36 5A -  -      ld (hl), 05Ah
-   35 D1:AABA 11 00 00 3C     ld de, 03C0000h
-   36 D1:AABE 01 00 00 04     ld bc, 040000h
-   37 D1:AAC2 C3 E0 02 00     jp _WriteFlash
-   38 D1:AAC6 -  -  -  -      
-   39 D1:AAC6 -  -  -  -  fRestoreFlashToRAM:
-   40 D1:AAC6 -  -  -  -  ; restore RAM state
-   41 D1:AAC6 21 00 00 3C     ld hl, $3C0000
-   42 D1:AACA 11 00 00 D0     ld de, ramStart + 0000000h
-   43 D1:AACE 01 7C 88 01     ld bc, $01887C
-   44 D1:AAD2 ED B0 -  -      ldir
-   45 D1:AAD4 21 00 00 3E     ld hl, $3E0000
-   46 D1:AAD8 11 00 00 D2     ld de, ramStart+020000h
-   47 D1:AADC 01 00 00 02     ld bc, $020000
-   48 D1:AAE0 ED B0 -  -      ldir
-   49 D1:AAE2 C9 -  -  -      ret
-   50 D1:AAE3 -  -  -  -  fMemorySafeErase:
-   51 D1:AAE3 01 F8 00 00     ld bc,$0000F8
-   52 D1:AAE7 C5 -  -  -      push bc
-   53 D1:AAE8 C3 DC 02 00         jp _EraseFlashSector
+    1 D1:AA77 -  -  -  -  .assume ADL=0
+    2 D1:AA77 -  -  -  -  fUnlockFlash:
+    3 D1:AA77 3E 8C -  -      ld a, 08Ch
+    4 D1:AA79 ED 39 24 -      out0 (024h), a
+    5 D1:AA7C 0E 04 -  -      ld c, 4
+    6 D1:AA7E ED 38 06 -      in0 a, (6)
+    7 D1:AA81 B1 -  -  -      or c
+    8 D1:AA82 ED 39 06 -      out0 (6), a
+    9 D1:AA85 ED 09 28 -      out0 (028h), c
+   10 D1:AA88 49 C9 -  -      ret.l
+   11 D1:AA8A -  -  -  -  fLockFlash:
+   12 D1:AA8A AF -  -  -      xor    a, a
+   13 D1:AA8B ED 39 28 -      out0 (028h), a
+   14 D1:AA8E ED 38 06 -      in0 a, (6)
+   15 D1:AA91 CB 97 -  -      res 2, a
+   16 D1:AA93 ED 39 06 -      out0 (6), a
+   17 D1:AA96 3E 88 -  -      ld a, 088h
+   18 D1:AA98 ED 39 24 -      out0(024h), a
+   19 D1:AA9B 49 C9 -  -      ret.l
+   20 D1:AA9D -  -  -  -  .assume ADL=1
+   21 D1:AA9D -  -  -  -      
+   22 D1:AA9D -  -  -  -  fCopyRAMToFlash:
+   23 D1:AA9D 3E 3C -  -      ld a, 03Ch
+   24 D1:AA9F CD E7 AA D1     call fMemorySafeErase
+   25 D1:AAA3 3E 3D -  -      ld a, 03Dh
+   26 D1:AAA5 CD E7 AA D1     call fMemorySafeErase
+   27 D1:AAA9 3E 3E -  -      ld a, 03Eh
+   28 D1:AAAB CD E7 AA D1     call fMemorySafeErase
+   29 D1:AAAF 3E 3F -  -      ld a, 03Fh
+   30 D1:AAB1 CD E7 AA D1     call fMemorySafeErase
+   31 D1:AAB5 21 01 00 D0     ld hl, 0D00001h
+   32 D1:AAB9 36 A5 -  -      ld (hl), 0A5h
+   33 D1:AABB 2B -  -  -      dec hl
+   34 D1:AABC 36 5A -  -      ld (hl), 05Ah
+   35 D1:AABE 11 00 00 3C     ld de, 03C0000h
+   36 D1:AAC2 01 00 00 04     ld bc, 040000h
+   37 D1:AAC6 C3 E0 02 00     jp _WriteFlash
+   38 D1:AACA -  -  -  -      
+   39 D1:AACA -  -  -  -  fRestoreFlashToRAM:
+   40 D1:AACA -  -  -  -  ; restore RAM state
+   41 D1:AACA 21 00 00 3C     ld hl, $3C0000
+   42 D1:AACE 11 00 00 D0     ld de, ramStart + 0000000h
+   43 D1:AAD2 01 7C 88 01     ld bc, $01887C
+   44 D1:AAD6 ED B0 -  -      ldir
+   45 D1:AAD8 21 00 00 3E     ld hl, $3E0000
+   46 D1:AADC 11 00 00 D2     ld de, ramStart+020000h
+   47 D1:AAE0 01 00 00 02     ld bc, $020000
+   48 D1:AAE4 ED B0 -  -      ldir
+   49 D1:AAE6 C9 -  -  -      ret
+   50 D1:AAE7 -  -  -  -  fMemorySafeErase:
+   51 D1:AAE7 01 F8 00 00     ld bc,$0000F8
+   52 D1:AAEB C5 -  -  -      push bc
+   53 D1:AAEC C3 DC 02 00         jp _EraseFlashSector
 Listing for file "aoce.asm"
-  113 D1:AAEC -  -  -  -  RunProgram:
-  114 D1:AAEC C3 5A AA D1     jp ForceStopProgram
-  115 D1:AAF0 B7 -  -  -      or a, a
-  116 D1:AAF1 ED 62 -  -      sbc hl, hl
-  117 D1:AAF3 EB -  -  -      ex de, hl
-  118 D1:AAF4 21 30 00 F2     ld hl, mpTmrCtrl
-  119 D1:AAF8 36 02 -  -      ld (hl), %00000010
-  120 D1:AAFA 23 -  -  -      inc hl
-  121 D1:AAFB CB CE -  -      set 1, (hl)
-  122 D1:AAFD CB D6 -  -      set 2, (hl)
-  123 D1:AAFF 2E 00 -  -      ld l, 0
-  124 D1:AB01 ED 1F -  -      ld (hl), de
-  125 D1:AB03 2C -  -  -      inc l
-  126 D1:AB04 ED 1F -  -      ld (hl), de
-  127 D1:AB06 2E 10 -  -      ld l, 010h
-  128 D1:AB08 ED 1F -  -      ld (hl), de
-  129 D1:AB0A 23 -  -  -      inc hl
-  130 D1:AB0B ED 1F -  -      ld (hl), de
-  131 D1:AB0D 2E 30 -  -      ld l, 030h
-  132 D1:AB0F CB C6 -  -      set 0, (hl)
-  133 D1:AB11 CB DE -  -      set 3, (hl)
-  134 D1:AB13 37 -  -  -      scf
-  135 D1:AB14 ED 62 -  -      sbc hl, hl
-  136 D1:AB16 36 02 -  -      ld (hl), 2
-  137 D1:AB18 CD FC 04 02     call _memchk
-  138 D1:AB1C 21 CE AE D1     ld hl, AoCEMapAppvar
-  139 D1:AB20 CD 20 03 02     call _Mov9ToOP1
-  140 D1:AB24 CD 0C 05 02     call _ChkFindSym
-  141 D1:AB28 D4 34 14 02     call nc, _DelVarArc
-  142 D1:AB2C 21 BC AE D1     ld hl, GraphicsAppvar1
-  143 D1:AB30 11 7B B7 D1     ld de, RelocationTable1
-  144 D1:AB34 CD 10 B5 D1     call LoadGraphicsAppvar
-  145 D1:AB38 2E 27 -  -      ld l, lcdBpp8
-  146 D1:AB3A E5 -  -  -      push hl
-  147 D1:AB3B CD 0C AA D1         call gfx_Begin
-  148 D1:AB3F 11 00 02 E3         ld de, mpLcdPalette
-  149 D1:AB43 21 00 00 E4         ld hl, blackBuffer
-  150 D1:AB47 01 00 02 00         ld bc, 256*2
-  151 D1:AB4B -  -  -  -          ;ldir
-  152 D1:AB4B 2E FE -  -          ld l, 254
-  153 D1:AB4D E3 -  -  -          ex (sp), hl
-  154 D1:AB4E CD 2C AA D1         call gfx_SetTextFGColor
-  155 D1:AB52 2E FF -  -          ld l, 255
-  156 D1:AB54 E3 -  -  -          ex (sp), hl
-  157 D1:AB55 CD 3C AA D1         call gfx_SetTransparentColor
-  158 D1:AB59 E1 -  -  -      pop hl
-  159 D1:AB5A -  -  -  -      ;call MainMenu
-  160 D1:AB5A CD 5F AC D1     call GenerateMap
-  161 D1:AB5E 21 C5 AE D1     ld hl, GraphicsAppvar2
-  162 D1:AB62 11 92 B7 D1     ld de, RelocationTable2
-  163 D1:AB66 CD 10 B5 D1     call LoadGraphicsAppvar
-  164 D1:AB6A DD 21 27 3C 
+  113 D1:AAF0 -  -  -  -  RunProgram:
+  114 D1:AAF0 B7 -  -  -      or a, a
+  115 D1:AAF1 ED 62 -  -      sbc hl, hl
+  116 D1:AAF3 EB -  -  -      ex de, hl
+  117 D1:AAF4 21 30 00 F2     ld hl, mpTmrCtrl
+  118 D1:AAF8 36 02 -  -      ld (hl), %00000010
+  119 D1:AAFA 23 -  -  -      inc hl
+  120 D1:AAFB CB CE -  -      set 1, (hl)
+  121 D1:AAFD CB D6 -  -      set 2, (hl)
+  122 D1:AAFF 2E 00 -  -      ld l, 0
+  123 D1:AB01 ED 1F -  -      ld (hl), de
+  124 D1:AB03 2C -  -  -      inc l
+  125 D1:AB04 ED 1F -  -      ld (hl), de
+  126 D1:AB06 2E 10 -  -      ld l, 010h
+  127 D1:AB08 ED 1F -  -      ld (hl), de
+  128 D1:AB0A 23 -  -  -      inc hl
+  129 D1:AB0B ED 1F -  -      ld (hl), de
+  130 D1:AB0D 2E 30 -  -      ld l, 030h
+  131 D1:AB0F CB C6 -  -      set 0, (hl)
+  132 D1:AB11 CB DE -  -      set 3, (hl)
+  133 D1:AB13 21 CA AE D1     ld hl, AoCEMapAppvar
+  134 D1:AB17 CD 20 03 02     call _Mov9ToOP1
+  135 D1:AB1B CD 0C 05 02     call _ChkFindSym
+  136 D1:AB1F D4 34 14 02     call nc, _DelVarArc
+  137 D1:AB23 21 B8 AE D1     ld hl, GraphicsAppvar1
+  138 D1:AB27 11 65 B7 D1     ld de, RelocationTable1
+  139 D1:AB2B CD 0C B5 D1     call LoadGraphicsAppvar
+  140 D1:AB2F 2E 27 -  -      ld l, lcdBpp8
+  141 D1:AB31 E5 -  -  -      push hl
+  142 D1:AB32 CD 0C AA D1         call gfx_Begin
+  143 D1:AB36 11 00 02 E3         ld de, mpLcdPalette
+  144 D1:AB3A 21 00 00 E4         ld hl, blackBuffer
+  145 D1:AB3E 01 00 02 00         ld bc, 256*2
+  146 D1:AB42 -  -  -  -          ;ldir
+  147 D1:AB42 2E FE -  -          ld l, 254
+  148 D1:AB44 E3 -  -  -          ex (sp), hl
+  149 D1:AB45 CD 2C AA D1         call gfx_SetTextFGColor
+  150 D1:AB49 2E FF -  -          ld l, 255
+  151 D1:AB4B E3 -  -  -          ex (sp), hl
+  152 D1:AB4C CD 3C AA D1         call gfx_SetTransparentColor
+  153 D1:AB50 E1 -  -  -      pop hl
+  154 D1:AB51 -  -  -  -      ;call MainMenu
+  155 D1:AB51 CD 5B AC D1     call GenerateMap
+  156 D1:AB55 21 C1 AE D1     ld hl, GraphicsAppvar2
+  157 D1:AB59 11 7C B7 D1     ld de, RelocationTable2
+  158 D1:AB5D CD 0C B5 D1     call LoadGraphicsAppvar
+  159 D1:AB61 DD 21 27 3C 
               D1 -  -  -      ld ix, saveSScreen+21000
-  165 D1:AB6F F3 -  -  -      di
-  166 D1:AB70 40 31 7E 98     ld.sis sp, 0987Eh
-  167 D1:AB74 3E D1 -  -      ld a, 0D1h
-  168 D1:AB76 ED 6D -  -      ld mb, a
-  169 D1:AB78 49 CD 73 AA     call.lis fUnlockFlash & 0FFFFh
-  170 D1:AB7C AF -  -  -      xor a, a
-  171 D1:AB7D DD 77 00 -      ld (ix+OFFSET_X), a
-  172 D1:AB80 DD 77 01 -      ld (ix+OFFSET_Y), a
-  173 D1:AB83 FD 21 39 AF 
-              D1 -  -  -      ld iy, AoCEFlags
-  174 D1:AB88 FD CB 00 C6     set need_to_redraw_tiles, (iy+0)
-  175 D1:AB8C 21 62 B5 D1     ld hl, drawfield_loc
-  176 D1:AB90 11 10 00 E1     ld de, DrawField
-  177 D1:AB94 01 34 00 00     ld bc, DrawFieldEnd - DrawField
-  178 D1:AB98 ED B0 -  -      ldir
-  179 D1:AB9A 11 00 08 E3     ld de, DrawTiles
-  180 D1:AB9E 01 83 01 00     ld bc, DrawTilesEnd - DrawTiles
-  181 D1:ABA2 ED B0 -  -      ldir
-  182 D1:ABA4 -  -  -  -      
-  183 D1:ABA4 -  -  -  -  MainGameLoop:
-  184 D1:ABA4 21 00 2C D5     ld hl, 0D52C00h
-  185 D1:ABA8 22 10 00 E3     ld (mpLcdBase), hl
-  186 D1:ABAC 37 -  -  -      scf
-  187 D1:ABAD ED 62 -  -      sbc hl, hl
-  188 D1:ABAF 36 02 -  -      ld (hl), 2
-  189 D1:ABB1 CD 10 00 E1     call DrawField
-  190 D1:ABB5 CD E5 B4 D1     call GetKeyFast
-  191 D1:ABB9 FD 21 3A AF 
+  160 D1:AB66 F3 -  -  -      di
+  161 D1:AB67 40 31 7E 98     ld.sis sp, 0987Eh
+  162 D1:AB6B 3E D1 -  -      ld a, 0D1h
+  163 D1:AB6D ED 6D -  -      ld mb, a
+  164 D1:AB6F 49 CD 77 AA     call.lis fUnlockFlash & 0FFFFh
+  165 D1:AB73 AF -  -  -      xor a, a
+  166 D1:AB74 DD 77 00 -      ld (ix+OFFSET_X), a
+  167 D1:AB77 DD 77 01 -      ld (ix+OFFSET_Y), a
+  168 D1:AB7A 21 5E B5 D1     ld hl, drawfield_loc
+  169 D1:AB7E 11 00 08 E3     ld de, DrawField
+  170 D1:AB82 01 66 01 00     ld bc, DrawFieldEnd - DrawField
+  171 D1:AB86 ED B0 -  -      ldir
+  172 D1:AB88 11 10 00 E1     ld de, DrawTiles
+  173 D1:AB8C 01 3F 00 00     ld bc, DrawTilesEnd - DrawTiles
+  174 D1:AB90 ED B0 -  -      ldir
+  175 D1:AB92 21 00 2C D5     ld hl, vRAM+(320*240)
+  176 D1:AB96 22 14 00 E3     ld (currDrawingBuffer), hl
+  177 D1:AB9A -  -  -  -      
+  178 D1:AB9A -  -  -  -  MainGameLoop:
+  179 D1:AB9A 37 -  -  -      scf
+  180 D1:AB9B ED 62 -  -      sbc hl, hl
+  181 D1:AB9D -  -  -  -      ;ld (hl), 2
+  182 D1:AB9D CD 00 08 E3     call DrawField
+  183 D1:ABA1 CD E1 B4 D1     call GetKeyFast
+  184 D1:ABA5 DD 21 27 3C 
+              D1 -  -  -      ld ix, saveSScreen+21000
+  185 D1:ABAA FD 21 36 AF 
               D1 -  -  -      ld iy, TopLeftXTile
-  192 D1:ABBE 2E 1C -  -      ld l, 01Ch
-  193 D1:ABC0 CB 76 -  -      bit kpClear, (hl)
-  194 D1:ABC2 CA 5A AA D1     jp z, ForceStopProgram
-  195 D1:ABC6 2E 1E -  -      ld l, 01Eh
-  196 D1:ABC8 -  -  -  -  CheckIfPressedUp:             ; All the controls are 'reversed', if you press [LEFT], it should scroll to the right
-  197 D1:ABC8 CB 5E -  -      bit kpUp, (hl)
-  198 D1:ABCA 28 1C -  -      jr z, CheckIfPressedRight
-  199 D1:ABCC DD 7E 01 -      ld a, (ix+OFFSET_Y)
-  200 D1:ABCF 3C -  -  -      inc a
-  201 D1:ABD0 3C -  -  -      inc a
-  202 D1:ABD1 3C -  -  -      inc a
-  203 D1:ABD2 3C -  -  -      inc a
-  204 D1:ABD3 E6 0F -  -      and %00001111
-  205 D1:ABD5 DD 77 01 -      ld (ix+OFFSET_Y), a
-  206 D1:ABD8 20 0E -  -      jr nz, CheckIfPressedRight
-  207 D1:ABDA FD 17 00 1B 
-              FD 1F 00 -      shift_tile0_x_left()
+  186 D1:ABAF 2E 1C -  -      ld l, 01Ch
+  187 D1:ABB1 CB 76 -  -      bit kpClear, (hl)
+  188 D1:ABB3 C2 59 AA D1     jp nz, ForceStopProgram
+  189 D1:ABB7 2E 1E -  -      ld l, 01Eh
+  190 D1:ABB9 -  -  -  -  CheckIfPressedUp:                                   ; All the controls are 'reversed', if you press [LEFT], it should scroll to the right
+  191 D1:ABB9 CB 5E -  -      bit kpUp, (hl)
+  192 D1:ABBB 28 1C -  -      jr z, CheckIfPressedRight
+  193 D1:ABBD DD 7E 01 -      ld a, (ix+OFFSET_Y)
+  194 D1:ABC0 3C -  -  -      inc a
+  195 D1:ABC1 3C -  -  -      inc a
+  196 D1:ABC2 3C -  -  -      inc a
+  197 D1:ABC3 3C -  -  -      inc a
+  198 D1:ABC4 E6 0F -  -      and %00001111
+  199 D1:ABC6 DD 77 01 -      ld (ix+OFFSET_Y), a
+  200 D1:ABC9 20 0E -  -      jr nz, CheckIfPressedRight
+  201 D1:ABCB FD 17 00 1B 
+              FD 1F 00 -      ScrollLeft()
 Listing for file "aoce.asm"
-  208 D1:ABE1 FD 17 03 1B 
-              FD 1F 03 -      shift_tile0_y_up()
-  209 D1:ABE8 -  -  -  -  CheckIfPressedRight:
-  210 D1:ABE8 CB 56 -  -      bit kpRight, (hl)
-  211 D1:ABEA 28 1D -  -      jr z, CheckIfPressedLeft
-  212 D1:ABEC DD 7E 00 -      ld a, (ix+OFFSET_X)
-  213 D1:ABEF B7 -  -  -      or a, a
-  214 D1:ABF0 20 0E -  -      jr nz, +_
-  215 D1:ABF2 FD 17 00 13 
-              FD 1F 00 -      shift_tile0_x_right()
-  216 D1:ABF9 FD 17 03 1B 
-              FD 1F 03 -      shift_tile0_y_up()
-  217 D1:AC00 3D -  -  -  _:  dec a
-  218 D1:AC01 3D -  -  -      dec a
-  219 D1:AC02 3D -  -  -      dec a
-  220 D1:AC03 3D -  -  -      dec a
-  221 D1:AC04 E6 1F -  -      and %00011111
-  222 D1:AC06 DD 77 00 -      ld (ix+OFFSET_X), a
-  223 D1:AC09 -  -  -  -  CheckIfPressedLeft:
-  224 D1:AC09 CB 4E -  -      bit kpLeft, (hl)
-  225 D1:AC0B 28 1C -  -      jr z, CheckIfPressedDown
-  226 D1:AC0D DD 7E 00 -      ld a, (ix+OFFSET_X)
-  227 D1:AC10 3C -  -  -      inc a
-  228 D1:AC11 3C -  -  -      inc a
-  229 D1:AC12 3C -  -  -      inc a
-  230 D1:AC13 3C -  -  -      inc a
-  231 D1:AC14 E6 1F -  -      and %00011111
-  232 D1:AC16 DD 77 00 -      ld (ix+OFFSET_X), a
-  233 D1:AC19 20 0E -  -      jr nz, CheckIfPressedDown
-  234 D1:AC1B FD 17 00 1B 
-              FD 1F 00 -      shift_tile0_x_left()
-  235 D1:AC22 FD 17 03 13 
-              FD 1F 03 -      shift_tile0_y_down()
-  236 D1:AC29 -  -  -  -  CheckIfPressedDown:
-  237 D1:AC29 CB 46 -  -      bit kpDown, (hl)
-  238 D1:AC2B 28 1D -  -      jr z, CheckKeyPressesStop
-  239 D1:AC2D DD 7E 01 -      ld a, (ix+OFFSET_Y)
-  240 D1:AC30 B7 -  -  -      or a, a
-  241 D1:AC31 20 0E -  -      jr nz, +_
-  242 D1:AC33 FD 17 00 13 
-              FD 1F 00 -      shift_tile0_x_right()
-  243 D1:AC3A FD 17 03 13 
-              FD 1F 03 -      shift_tile0_y_down()
-  244 D1:AC41 3D -  -  -  _: dec a
-  245 D1:AC42 3D -  -  -      dec a
-  246 D1:AC43 3D -  -  -      dec a
-  247 D1:AC44 3D -  -  -      dec a
-  248 D1:AC45 E6 0F -  -      and %00001111
-  249 D1:AC47 DD 77 01 -      ld (ix+OFFSET_Y), a
-  250 D1:AC4A -  -  -  -  CheckKeyPressesStop:
-  251 D1:AC4A FD 21 39 AF 
-              D1 -  -  -      ld iy, AoCEFlags
-  252 D1:AC4F FD CB 00 86     res need_to_redraw_tiles, (iy+0)
-  253 D1:AC53 7E -  -  -      ld a, (hl)
-  254 D1:AC54 B7 -  -  -      or a, a
-  255 D1:AC55 28 04 -  -      jr z, +_
-  256 D1:AC57 FD CB 00 C6     set need_to_redraw_tiles, (iy+0)
-  257 D1:AC5B C3 A4 AB D1 _:  jp MainGameLoop
-  258 D1:AC5F -  -  -  -      
-  259 D1:AC5F -  -  -  -  #include "map.asm"
+  202 D1:ABD2 FD 17 03 1B 
+              FD 1F 03 -      ScrollUp()
+  203 D1:ABD9 -  -  -  -  CheckIfPressedRight:
+  204 D1:ABD9 CB 56 -  -      bit kpRight, (hl)
+  205 D1:ABDB 28 1D -  -      jr z, CheckIfPressedLeft
+  206 D1:ABDD DD 7E 00 -      ld a, (ix+OFFSET_X)
+  207 D1:ABE0 B7 -  -  -      or a, a
+  208 D1:ABE1 20 0E -  -      jr nz, +_
+  209 D1:ABE3 FD 17 00 13 
+              FD 1F 00 -      ScrollRight()
+  210 D1:ABEA FD 17 03 1B 
+              FD 1F 03 -      ScrollUp()
+  211 D1:ABF1 3D -  -  -  _:  dec a
+  212 D1:ABF2 3D -  -  -      dec a
+  213 D1:ABF3 3D -  -  -      dec a
+  214 D1:ABF4 3D -  -  -      dec a
+  215 D1:ABF5 E6 1F -  -      and %00011111
+  216 D1:ABF7 DD 77 00 -      ld (ix+OFFSET_X), a
+  217 D1:ABFA -  -  -  -  CheckIfPressedLeft:
+  218 D1:ABFA CB 4E -  -      bit kpLeft, (hl)
+  219 D1:ABFC 28 1C -  -      jr z, CheckIfPressedDown
+  220 D1:ABFE DD 7E 00 -      ld a, (ix+OFFSET_X)
+  221 D1:AC01 3C -  -  -      inc a
+  222 D1:AC02 3C -  -  -      inc a
+  223 D1:AC03 3C -  -  -      inc a
+  224 D1:AC04 3C -  -  -      inc a
+  225 D1:AC05 E6 1F -  -      and %00011111
+  226 D1:AC07 DD 77 00 -      ld (ix+OFFSET_X), a
+  227 D1:AC0A 20 0E -  -      jr nz, CheckIfPressedDown
+  228 D1:AC0C FD 17 00 1B 
+              FD 1F 00 -      ScrollLeft()
+  229 D1:AC13 FD 17 03 13 
+              FD 1F 03 -      ScrollDown()
+  230 D1:AC1A -  -  -  -  CheckIfPressedDown:
+  231 D1:AC1A CB 46 -  -      bit kpDown, (hl)
+  232 D1:AC1C 28 1D -  -      jr z, CheckKeyPressesStop
+  233 D1:AC1E DD 7E 01 -      ld a, (ix+OFFSET_Y)
+  234 D1:AC21 B7 -  -  -      or a, a
+  235 D1:AC22 20 0E -  -      jr nz, +_
+  236 D1:AC24 FD 17 00 13 
+              FD 1F 00 -      ScrollRight()
+  237 D1:AC2B FD 17 03 13 
+              FD 1F 03 -      ScrollDown()
+  238 D1:AC32 3D -  -  -  _:  dec a
+  239 D1:AC33 3D -  -  -      dec a
+  240 D1:AC34 3D -  -  -      dec a
+  241 D1:AC35 3D -  -  -      dec a
+  242 D1:AC36 E6 0F -  -      and %00001111
+  243 D1:AC38 DD 77 01 -      ld (ix+OFFSET_Y), a
+  244 D1:AC3B -  -  -  -  CheckKeyPressesStop:
+  245 D1:AC3B 21 00 00 D4     ld hl, vRAM
+  246 D1:AC3F ED 5B 10 00 
+              E3 -  -  -      ld de, (mpLcdBase)
+  247 D1:AC44 B7 -  -  -      or a, a
+  248 D1:AC45 ED 52 -  -      sbc hl, de
+  249 D1:AC47 19 -  -  -      add hl, de
+  250 D1:AC48 20 04 -  -      jr nz, +_
+  251 D1:AC4A 21 00 2C D5     ld hl, vRAM+(320*240)
+  252 D1:AC4E ED 53 14 00 
+              E3 -  -  -  _:  ld (currDrawingBuffer), de
+  253 D1:AC53 22 10 00 E3     ld (mpLcdBase), hl
+  254 D1:AC57 C3 9A AB D1     jp MainGameLoop
+  255 D1:AC5B -  -  -  -      
+  256 D1:AC5B -  -  -  -  #include "map.asm"
 Listing for file "C:\programming\Assembly\AoCE\map.asm"
-    1 D1:AC5F -  -  -  -  GenerateMap:
-    2 D1:AC5F CD 63 B4 D1     call EraseArea
-    3 D1:AC63 21 00 2C D5     ld hl, screenBuffer
-    4 D1:AC67 36 01 -  -      ld (hl), 1
-    5 D1:AC69 11 01 2C D5     ld de, screenBuffer+1
-    6 D1:AC6D 01 FF 2B 01     ld bc, 320*240-1
-    7 D1:AC71 ED B0 -  -      ldir
-    8 D1:AC73 2E 70 E5 21 
+    1 D1:AC5B -  -  -  -  GenerateMap:
+    2 D1:AC5B CD 5F B4 D1     call EraseArea
+    3 D1:AC5F 21 00 2C D5     ld hl, screenBuffer
+    4 D1:AC63 36 01 -  -      ld (hl), 1
+    5 D1:AC65 11 01 2C D5     ld de, screenBuffer+1
+    6 D1:AC69 01 FF 2B 01     ld bc, 320*240-1
+    7 D1:AC6D ED B0 -  -      ldir
+    8 D1:AC6F 2E 70 E5 21 
               05 00 00 E5 
-              21 9B AE D1 
+              21 97 AE D1 
               E5 CD 24 AA 
               D1 E1 E1 E1     printString(GeneratingMapMessage, 5, 112)
 Listing for file "C:\programming\Assembly\AoCE\map.asm"
-    9 D1:AC87 2A 00 00 F2     ld hl, (mpTmr1Counter)
-   10 D1:AC8B 22 FA AD D1     ld (seed_1), hl
-   11 D1:AC8F 2A 10 00 F2     ld hl, (mpTmr2Counter)
-   12 D1:AC93 22 FD AD D1     ld (seed_2), hl
-   13 D1:AC97 06 00 -  -      ld b, 0
-   14 D1:AC99 -  -  -  -  PlaceTreesLoop:
-   15 D1:AC99 DD 60 -  -      ld ixh, b
-   16 D1:AC9B CD D9 AD D1     call prng24
-   17 D1:AC9F 01 80 00 00     ld bc, MAP_SIZE
-   18 D1:ACA3 CD 44 01 00     call __idvrmu
-   19 D1:ACA7 E5 -  -  -      push hl
-   20 D1:ACA8 CD D9 AD D1         call prng24
-   21 D1:ACAC 01 80 00 00         ld bc, MAP_SIZE
-   22 D1:ACB0 CD 44 01 00         call __idvrmu
-   23 D1:ACB4 26 A0 -  -          ld h, 160
-   24 D1:ACB6 ED 6C -  -          mlt hl
-   25 D1:ACB8 29 -  -  -          add hl, hl
-   26 D1:ACB9 D1 -  -  -      pop de
-   27 D1:ACBA 19 -  -  -      add hl, de
-   28 D1:ACBB 11 00 2C D5     ld de, screenBuffer
-   29 D1:ACBF 19 -  -  -      add hl, de
-   30 D1:ACC0 36 05 -  -      ld (hl), TILE_TREE
-   31 D1:ACC2 DD 44 -  -      ld b, ixh
-   32 D1:ACC4 10 D3 -  -      djnz PlaceTreesLoop
-   33 D1:ACC6 06 03 -  -      ld b, 3                                                                ; Food, stone, gold
-   34 D1:ACC8 -  -  -  -  PlaceAllResourceTypesLoop:
-   35 D1:ACC8 DD 60 -  -      ld ixh, b
-   36 D1:ACCA 06 0F -  -      ld b, 15                                                            ; Place 15 resources of each
-   37 D1:ACCC -  -  -  -  PlaceResourceTypeLoop:
-   38 D1:ACCC DD 68 -  -      ld ixl, b
-   39 D1:ACCE CD D9 AD D1     call prng24
-   40 D1:ACD2 01 07 00 00     ld bc, 7
-   41 D1:ACD6 CD 44 01 00     call __idvrmu
-   42 D1:ACDA E5 -  -  -      push hl
-   43 D1:ACDB D1 -  -  -      pop de
-   44 D1:ACDC 29 -  -  -      add hl, hl
-   45 D1:ACDD 29 -  -  -      add hl, hl
-   46 D1:ACDE 29 -  -  -      add hl, hl
-   47 D1:ACDF 19 -  -  -      add hl, de
-   48 D1:ACE0 11 40 AF D1     ld de, ResourcesType1
-   49 D1:ACE4 19 -  -  -      add hl, de
-   50 D1:ACE5 E5 -  -  -      push hl
-   51 D1:ACE6 CD D9 AD D1         call prng24
-   52 D1:ACEA 01 58 00 00         ld bc, MAP_SIZE-20-20
-   53 D1:ACEE CD 44 01 00         call __idvrmu
-   54 D1:ACF2 7D -  -  -          ld a, l
-   55 D1:ACF3 C6 14 -  -          add a, 20
-   56 D1:ACF5 6F -  -  -          ld l, a
-   57 D1:ACF6 26 A0 -  -          ld h, 160
-   58 D1:ACF8 ED 6C -  -          mlt hl
-   59 D1:ACFA 29 -  -  -          add hl, hl
-   60 D1:ACFB E5 -  -  -          push hl
-   61 D1:ACFC CD D9 AD D1             call prng24
-   62 D1:AD00 01 58 00 00             ld bc, MAP_SIZE-20-20
-   63 D1:AD04 CD 44 01 00             call __idvrmu
-   64 D1:AD08 7D -  -  -              ld a, l
-   65 D1:AD09 C6 14 -  -              add a, 20
-   66 D1:AD0B 6F -  -  -              ld l, a
-   67 D1:AD0C D1 -  -  -          pop de
-   68 D1:AD0D 19 -  -  -          add hl, de
-   69 D1:AD0E 11 00 2C D5         ld de, screenBuffer
-   70 D1:AD12 19 -  -  -          add hl, de
-   71 D1:AD13 E5 -  -  -          push hl
-   72 D1:AD14 FD E1 -  -          pop iy
-   73 D1:AD16 11 3E 01 00         ld de, 320-2
-   74 D1:AD1A 7E -  -  -          ld a, (hl)                                                        ; Check if one of the 9 blocks is already a tree/part of resource
-   75 D1:AD1B 23 -  -  -          inc hl
-   76 D1:AD1C B6 -  -  -          or a, (hl)
-   77 D1:AD1D 23 -  -  -          inc hl
-   78 D1:AD1E B6 -  -  -          or a, (hl)
-   79 D1:AD1F 19 -  -  -          add hl, de
-   80 D1:AD20 B6 -  -  -          or a, (hl)
-   81 D1:AD21 23 -  -  -          inc hl
-   82 D1:AD22 B6 -  -  -          or a, (hl)
-   83 D1:AD23 23 -  -  -          inc hl
-   84 D1:AD24 B6 -  -  -          or a, (hl)
-   85 D1:AD25 19 -  -  -          add hl, de
-   86 D1:AD26 B6 -  -  -          or a, (hl)
-   87 D1:AD27 23 -  -  -          inc hl
-   88 D1:AD28 B6 -  -  -          or a, (hl)
-   89 D1:AD29 23 -  -  -          inc hl
-   90 D1:AD2A B6 -  -  -          or a, (hl)
-   91 D1:AD2B D1 -  -  -      pop de
-   92 D1:AD2C 20 1C -  -      jr nz, DontDrawResource
-   93 D1:AD2E ED 23 00 -      lea hl, iy
-   94 D1:AD31 ED 4C -  -      mlt bc
-   95 D1:AD33 06 03 -  -      ld b, 3
-   96 D1:AD35 -  -  -  -  PlaceResource:
-   97 D1:AD35 48 -  -  -      ld c, b
-   98 D1:AD36 06 03 -  -      ld b, 3
-   99 D1:AD38 -  -  -  -  PlaceResourceRowLoop:
-  100 D1:AD38 1A -  -  -      ld a, (de)
-  101 D1:AD39 B7 -  -  -      or a, a
-  102 D1:AD3A 28 02 -  -      jr z, +_
-  103 D1:AD3C -  -  -  -  ResourceType = $+1
-  104 D1:AD3C 36 02 -  -      ld (hl), TILE_FOOD
-  105 D1:AD3E 23 -  -  -  _:  inc hl
-  106 D1:AD3F 13 -  -  -      inc de
-  107 D1:AD40 10 F6 -  -      djnz PlaceResourceRowLoop
-  108 D1:AD42 79 -  -  -      ld a, c
-  109 D1:AD43 04 -  -  -      inc b
-  110 D1:AD44 0E 3D -  -      ld c, 320-256-3
-  111 D1:AD46 09 -  -  -      add hl, bc
-  112 D1:AD47 47 -  -  -      ld b, a
-  113 D1:AD48 10 EB -  -      djnz PlaceResource
-  114 D1:AD4A -  -  -  -  DontDrawResource:
-  115 D1:AD4A DD 45 -  -      ld b, ixl
-  116 D1:AD4C 05 -  -  -      dec b
-  117 D1:AD4D C2 CC AC D1     jp nz, PlaceResourceTypeLoop
-  118 D1:AD51 21 3D AD D1     ld hl, ResourceType
-  119 D1:AD55 34 -  -  -      inc (hl)
-  120 D1:AD56 DD 44 -  -      ld b, ixh
-  121 D1:AD58 05 -  -  -      dec b
-  122 D1:AD59 C2 C8 AC D1     jp nz, PlaceAllResourceTypesLoop
-  123 D1:AD5D -  -  -  -  ; All the resources are now placed, so copy them to the map appvar
-  124 D1:AD5D 21 CE AE D1     ld hl, AoCEMapAppvar
-  125 D1:AD61 CD 20 03 02     call _Mov9ToOP1
-  126 D1:AD65 21 00 80 00     ld hl, MAP_SIZE*MAP_SIZE*2
-  127 D1:AD69 CD 1C 05 02     call _EnoughMem
-  128 D1:AD6D DA 5A AA D1     jp c, ForceStopProgram
-  129 D1:AD71 EB -  -  -      ex de, hl
-  130 D1:AD72 CD 30 13 02     call _CreateAppvar
-  131 D1:AD76 21 00 2C D5     ld hl, screenBuffer
-  132 D1:AD7A 13 -  -  -      inc de
-  133 D1:AD7B 13 -  -  -      inc de
-  134 D1:AD7C DD 26 80 -      ld ixh, MAP_SIZE
-  135 D1:AD7F -  -  -  -  CopyMapToNewAppvarLoop:
-  136 D1:AD7F 06 80 -  -      ld b, MAP_SIZE
-  137 D1:AD81 -  -  -  -  CopyRowLoop:
-  138 D1:AD81 7E -  -  -      ld a, (hl)
-  139 D1:AD82 12 -  -  -      ld (de), a
-  140 D1:AD83 13 -  -  -      inc de
-  141 D1:AD84 3D -  -  -      dec a
-  142 D1:AD85 28 02 -  -      jr z, +_
-  143 D1:AD87 3E C8 -  -      ld a, 200
-  144 D1:AD89 12 -  -  -  _:  ld (de), a
-  145 D1:AD8A 23 -  -  -      inc hl
-  146 D1:AD8B 13 -  -  -      inc de
-  147 D1:AD8C 10 F3 -  -      djnz CopyRowLoop
-  148 D1:AD8E 01 C0 00 00     ld bc, 320-MAP_SIZE
-  149 D1:AD92 09 -  -  -      add hl, bc
-  150 D1:AD93 DD 25 -  -      dec ixh
-  151 D1:AD95 20 E8 -  -      jr nz, CopyMapToNewAppvarLoop
-  152 D1:AD97 CD C8 02 02     call _OP4ToOP1
-  153 D1:AD9B -  -  -  -  LoadMap:
-  154 D1:AD9B CD 63 B4 D1     call EraseArea
-  155 D1:AD9F 2E 70 E5 21 
+    9 D1:AC83 2A 00 00 F2     ld hl, (mpTmr1Counter)
+   10 D1:AC87 22 F6 AD D1     ld (seed_1), hl
+   11 D1:AC8B 2A 10 00 F2     ld hl, (mpTmr2Counter)
+   12 D1:AC8F 22 F9 AD D1     ld (seed_2), hl
+   13 D1:AC93 06 00 -  -      ld b, 0
+   14 D1:AC95 -  -  -  -  PlaceTreesLoop:
+   15 D1:AC95 DD 60 -  -      ld ixh, b
+   16 D1:AC97 CD D5 AD D1     call prng24
+   17 D1:AC9B 01 80 00 00     ld bc, MAP_SIZE
+   18 D1:AC9F CD 44 01 00     call __idvrmu
+   19 D1:ACA3 E5 -  -  -      push hl
+   20 D1:ACA4 CD D5 AD D1         call prng24
+   21 D1:ACA8 01 80 00 00         ld bc, MAP_SIZE
+   22 D1:ACAC CD 44 01 00         call __idvrmu
+   23 D1:ACB0 26 A0 -  -          ld h, 160
+   24 D1:ACB2 ED 6C -  -          mlt hl
+   25 D1:ACB4 29 -  -  -          add hl, hl
+   26 D1:ACB5 D1 -  -  -      pop de
+   27 D1:ACB6 19 -  -  -      add hl, de
+   28 D1:ACB7 11 00 2C D5     ld de, screenBuffer
+   29 D1:ACBB 19 -  -  -      add hl, de
+   30 D1:ACBC 36 05 -  -      ld (hl), TILE_TREE
+   31 D1:ACBE DD 44 -  -      ld b, ixh
+   32 D1:ACC0 10 D3 -  -      djnz PlaceTreesLoop
+   33 D1:ACC2 06 03 -  -      ld b, 3                                                                ; Food, stone, gold
+   34 D1:ACC4 -  -  -  -  PlaceAllResourceTypesLoop:
+   35 D1:ACC4 DD 60 -  -      ld ixh, b
+   36 D1:ACC6 06 0F -  -      ld b, 15                                                            ; Place 15 resources of each
+   37 D1:ACC8 -  -  -  -  PlaceResourceTypeLoop:
+   38 D1:ACC8 DD 68 -  -      ld ixl, b
+   39 D1:ACCA CD D5 AD D1     call prng24
+   40 D1:ACCE 01 07 00 00     ld bc, 7
+   41 D1:ACD2 CD 44 01 00     call __idvrmu
+   42 D1:ACD6 E5 -  -  -      push hl
+   43 D1:ACD7 D1 -  -  -      pop de
+   44 D1:ACD8 29 -  -  -      add hl, hl
+   45 D1:ACD9 29 -  -  -      add hl, hl
+   46 D1:ACDA 29 -  -  -      add hl, hl
+   47 D1:ACDB 19 -  -  -      add hl, de
+   48 D1:ACDC 11 3C AF D1     ld de, ResourcesType1
+   49 D1:ACE0 19 -  -  -      add hl, de
+   50 D1:ACE1 E5 -  -  -      push hl
+   51 D1:ACE2 CD D5 AD D1         call prng24
+   52 D1:ACE6 01 58 00 00         ld bc, MAP_SIZE-20-20
+   53 D1:ACEA CD 44 01 00         call __idvrmu
+   54 D1:ACEE 7D -  -  -          ld a, l
+   55 D1:ACEF C6 14 -  -          add a, 20
+   56 D1:ACF1 6F -  -  -          ld l, a
+   57 D1:ACF2 26 A0 -  -          ld h, 160
+   58 D1:ACF4 ED 6C -  -          mlt hl
+   59 D1:ACF6 29 -  -  -          add hl, hl
+   60 D1:ACF7 E5 -  -  -          push hl
+   61 D1:ACF8 CD D5 AD D1             call prng24
+   62 D1:ACFC 01 58 00 00             ld bc, MAP_SIZE-20-20
+   63 D1:AD00 CD 44 01 00             call __idvrmu
+   64 D1:AD04 7D -  -  -              ld a, l
+   65 D1:AD05 C6 14 -  -              add a, 20
+   66 D1:AD07 6F -  -  -              ld l, a
+   67 D1:AD08 D1 -  -  -          pop de
+   68 D1:AD09 19 -  -  -          add hl, de
+   69 D1:AD0A 11 00 2C D5         ld de, screenBuffer
+   70 D1:AD0E 19 -  -  -          add hl, de
+   71 D1:AD0F E5 -  -  -          push hl
+   72 D1:AD10 FD E1 -  -          pop iy
+   73 D1:AD12 11 3E 01 00         ld de, 320-2
+   74 D1:AD16 7E -  -  -          ld a, (hl)                                                        ; Check if one of the 9 blocks is already a tree/part of resource
+   75 D1:AD17 23 -  -  -          inc hl
+   76 D1:AD18 B6 -  -  -          or a, (hl)
+   77 D1:AD19 23 -  -  -          inc hl
+   78 D1:AD1A B6 -  -  -          or a, (hl)
+   79 D1:AD1B 19 -  -  -          add hl, de
+   80 D1:AD1C B6 -  -  -          or a, (hl)
+   81 D1:AD1D 23 -  -  -          inc hl
+   82 D1:AD1E B6 -  -  -          or a, (hl)
+   83 D1:AD1F 23 -  -  -          inc hl
+   84 D1:AD20 B6 -  -  -          or a, (hl)
+   85 D1:AD21 19 -  -  -          add hl, de
+   86 D1:AD22 B6 -  -  -          or a, (hl)
+   87 D1:AD23 23 -  -  -          inc hl
+   88 D1:AD24 B6 -  -  -          or a, (hl)
+   89 D1:AD25 23 -  -  -          inc hl
+   90 D1:AD26 B6 -  -  -          or a, (hl)
+   91 D1:AD27 D1 -  -  -      pop de
+   92 D1:AD28 20 1C -  -      jr nz, DontDrawResource
+   93 D1:AD2A ED 23 00 -      lea hl, iy
+   94 D1:AD2D ED 4C -  -      mlt bc
+   95 D1:AD2F 06 03 -  -      ld b, 3
+   96 D1:AD31 -  -  -  -  PlaceResource:
+   97 D1:AD31 48 -  -  -      ld c, b
+   98 D1:AD32 06 03 -  -      ld b, 3
+   99 D1:AD34 -  -  -  -  PlaceResourceRowLoop:
+  100 D1:AD34 1A -  -  -      ld a, (de)
+  101 D1:AD35 B7 -  -  -      or a, a
+  102 D1:AD36 28 02 -  -      jr z, +_
+  103 D1:AD38 -  -  -  -  ResourceType = $+1
+  104 D1:AD38 36 02 -  -      ld (hl), TILE_FOOD
+  105 D1:AD3A 23 -  -  -  _:  inc hl
+  106 D1:AD3B 13 -  -  -      inc de
+  107 D1:AD3C 10 F6 -  -      djnz PlaceResourceRowLoop
+  108 D1:AD3E 79 -  -  -      ld a, c
+  109 D1:AD3F 04 -  -  -      inc b
+  110 D1:AD40 0E 3D -  -      ld c, 320-256-3
+  111 D1:AD42 09 -  -  -      add hl, bc
+  112 D1:AD43 47 -  -  -      ld b, a
+  113 D1:AD44 10 EB -  -      djnz PlaceResource
+  114 D1:AD46 -  -  -  -  DontDrawResource:
+  115 D1:AD46 DD 45 -  -      ld b, ixl
+  116 D1:AD48 05 -  -  -      dec b
+  117 D1:AD49 C2 C8 AC D1     jp nz, PlaceResourceTypeLoop
+  118 D1:AD4D 21 39 AD D1     ld hl, ResourceType
+  119 D1:AD51 34 -  -  -      inc (hl)
+  120 D1:AD52 DD 44 -  -      ld b, ixh
+  121 D1:AD54 05 -  -  -      dec b
+  122 D1:AD55 C2 C4 AC D1     jp nz, PlaceAllResourceTypesLoop
+  123 D1:AD59 -  -  -  -  ; All the resources are now placed, so copy them to the map appvar
+  124 D1:AD59 21 CA AE D1     ld hl, AoCEMapAppvar
+  125 D1:AD5D CD 20 03 02     call _Mov9ToOP1
+  126 D1:AD61 21 00 80 00     ld hl, MAP_SIZE*MAP_SIZE*2
+  127 D1:AD65 CD 1C 05 02     call _EnoughMem
+  128 D1:AD69 DA 59 AA D1     jp c, ForceStopProgram
+  129 D1:AD6D EB -  -  -      ex de, hl
+  130 D1:AD6E CD 30 13 02     call _CreateAppvar
+  131 D1:AD72 21 00 2C D5     ld hl, screenBuffer
+  132 D1:AD76 13 -  -  -      inc de
+  133 D1:AD77 13 -  -  -      inc de
+  134 D1:AD78 DD 26 80 -      ld ixh, MAP_SIZE
+  135 D1:AD7B -  -  -  -  CopyMapToNewAppvarLoop:
+  136 D1:AD7B 06 80 -  -      ld b, MAP_SIZE
+  137 D1:AD7D -  -  -  -  CopyRowLoop:
+  138 D1:AD7D 7E -  -  -      ld a, (hl)
+  139 D1:AD7E 12 -  -  -      ld (de), a
+  140 D1:AD7F 13 -  -  -      inc de
+  141 D1:AD80 3D -  -  -      dec a
+  142 D1:AD81 28 02 -  -      jr z, +_
+  143 D1:AD83 3E C8 -  -      ld a, 200
+  144 D1:AD85 12 -  -  -  _:  ld (de), a
+  145 D1:AD86 23 -  -  -      inc hl
+  146 D1:AD87 13 -  -  -      inc de
+  147 D1:AD88 10 F3 -  -      djnz CopyRowLoop
+  148 D1:AD8A 01 C0 00 00     ld bc, 320-MAP_SIZE
+  149 D1:AD8E 09 -  -  -      add hl, bc
+  150 D1:AD8F DD 25 -  -      dec ixh
+  151 D1:AD91 20 E8 -  -      jr nz, CopyMapToNewAppvarLoop
+  152 D1:AD93 CD C8 02 02     call _OP4ToOP1
+  153 D1:AD97 -  -  -  -  LoadMap:
+  154 D1:AD97 CD 5F B4 D1     call EraseArea
+  155 D1:AD9B 2E 70 E5 21 
               05 00 00 E5 
-              21 AD AE D1 
+              21 A9 AE D1 
               E5 CD 24 AA 
               D1 E1 E1 E1     printString(LoadingMapMessage, 5, 112)
-  156 D1:ADB3 21 CE AE D1     ld hl, AoCEMapAppvar
-  157 D1:ADB7 CD 20 03 02     call _Mov9ToOP1
-  158 D1:ADBB CD 0C 05 02     call _ChkFindSym
-  159 D1:ADBF CD 98 1F 02     call _ChkInRAM
-  160 D1:ADC3 DC 48 14 02     call c, _Arc_Unarc
-  161 D1:ADC7 21 F6 31 D0     ld hl, mapAddress
-  162 D1:ADCB -  -  -  -      ; TEMP!!!
-  163 D1:ADCB 36 06 -  -      ld (hl), TILE_BUILDING_1
-  164 D1:ADCD 23 -  -  -      inc hl
-  165 D1:ADCE EB -  -  -      ex de, hl
-  166 D1:ADCF 23 -  -  -      inc hl
-  167 D1:ADD0 23 -  -  -      inc hl
-  168 D1:ADD1 23 -  -  -      inc hl
-  169 D1:ADD2 01 FF 7F 00     ld bc, MAP_SIZE*MAP_SIZE*2-1
-  170 D1:ADD6 ED B0 -  -      ldir
-  171 D1:ADD8 C9 -  -  -      ret
-  172 D1:ADD9 -  -  -  -          
-  173 D1:ADD9 -  -  -  -  prng24:
-  174 D1:ADD9 ED 5B FA AD 
+  156 D1:ADAF 21 CA AE D1     ld hl, AoCEMapAppvar
+  157 D1:ADB3 CD 20 03 02     call _Mov9ToOP1
+  158 D1:ADB7 CD 0C 05 02     call _ChkFindSym
+  159 D1:ADBB CD 98 1F 02     call _ChkInRAM
+  160 D1:ADBF DC 48 14 02     call c, _Arc_Unarc
+  161 D1:ADC3 21 F6 31 D0     ld hl, mapAddress
+  162 D1:ADC7 -  -  -  -      ; TEMP!!!
+  163 D1:ADC7 36 06 -  -      ld (hl), TILE_BUILDING_1
+  164 D1:ADC9 23 -  -  -      inc hl
+  165 D1:ADCA EB -  -  -      ex de, hl
+  166 D1:ADCB 23 -  -  -      inc hl
+  167 D1:ADCC 23 -  -  -      inc hl
+  168 D1:ADCD 23 -  -  -      inc hl
+  169 D1:ADCE 01 FF 7F 00     ld bc, MAP_SIZE*MAP_SIZE*2-1
+  170 D1:ADD2 ED B0 -  -      ldir
+  171 D1:ADD4 C9 -  -  -      ret
+  172 D1:ADD5 -  -  -  -          
+  173 D1:ADD5 -  -  -  -  prng24:
+  174 D1:ADD5 ED 5B F6 AD 
               D1 -  -  -      ld de, (seed_1)
-  175 D1:ADDE B7 -  -  -      or a, a
-  176 D1:ADDF ED 62 -  -      sbc hl, hl
-  177 D1:ADE1 19 -  -  -      add hl, de
-  178 D1:ADE2 29 -  -  -      add hl, hl
-  179 D1:ADE3 29 -  -  -      add hl, hl
-  180 D1:ADE4 2C -  -  -      inc l
-  181 D1:ADE5 19 -  -  -      add hl, de
-  182 D1:ADE6 22 FA AD D1     ld (seed_1), hl
-  183 D1:ADEA 2A FD AD D1     ld hl, (seed_2)
-  184 D1:ADEE 29 -  -  -      add hl, hl
-  185 D1:ADEF 9F -  -  -      sbc a, a
-  186 D1:ADF0 E6 1B -  -      and %00011011
-  187 D1:ADF2 AD -  -  -      xor a, l
-  188 D1:ADF3 6F -  -  -      ld l, a
-  189 D1:ADF4 22 FD AD D1     ld (seed_2), hl
-  190 D1:ADF8 19 -  -  -      add hl, de
-  191 D1:ADF9 C9 -  -  -      ret
-  192 D1:ADFA -  -  -  -      
-  193 D1:ADFA -  -  -  -  seed_1:
-  194 D1:ADFA 00 00 00 -      .dl 0
-  195 D1:ADFD -  -  -  -  seed_2:
-  196 D1:ADFD 00 00 00 -      .dl 0
+  175 D1:ADDA B7 -  -  -      or a, a
+  176 D1:ADDB ED 62 -  -      sbc hl, hl
+  177 D1:ADDD 19 -  -  -      add hl, de
+  178 D1:ADDE 29 -  -  -      add hl, hl
+  179 D1:ADDF 29 -  -  -      add hl, hl
+  180 D1:ADE0 2C -  -  -      inc l
+  181 D1:ADE1 19 -  -  -      add hl, de
+  182 D1:ADE2 22 F6 AD D1     ld (seed_1), hl
+  183 D1:ADE6 2A F9 AD D1     ld hl, (seed_2)
+  184 D1:ADEA 29 -  -  -      add hl, hl
+  185 D1:ADEB 9F -  -  -      sbc a, a
+  186 D1:ADEC E6 1B -  -      and %00011011
+  187 D1:ADEE AD -  -  -      xor a, l
+  188 D1:ADEF 6F -  -  -      ld l, a
+  189 D1:ADF0 22 F9 AD D1     ld (seed_2), hl
+  190 D1:ADF4 19 -  -  -      add hl, de
+  191 D1:ADF5 C9 -  -  -      ret
+  192 D1:ADF6 -  -  -  -      
+  193 D1:ADF6 -  -  -  -  seed_1:
+  194 D1:ADF6 00 00 00 -      .dl 0
+  195 D1:ADF9 -  -  -  -  seed_2:
+  196 D1:ADF9 00 00 00 -      .dl 0
 Listing for file "aoce.asm"
-  260 D1:AE00 -  -  -  -  #include "data.asm"
+  257 D1:ADFC -  -  -  -  #include "data.asm"
 Listing for file "C:\programming\Assembly\AoCE\data.asm"
-    1 D1:AE00 -  -  -  -  MissingAppVar:
-    2 D1:AE00 4E 65 65 64     .db "Need"
-    3 D1:AE04 -  -  -  -  LibLoadAppVar:
-    4 D1:AE04 20 4C 69 62 
+    1 D1:ADFC -  -  -  -  MissingAppVar:
+    2 D1:ADFC 4E 65 65 64     .db "Need"
+    3 D1:AE00 -  -  -  -  LibLoadAppVar:
+    4 D1:AE00 20 4C 69 62 
               4C 6F 61 64 
               00 -  -  -      .db " LibLoad", 0
-    5 D1:AE0D 74 69 6E 79 
+    5 D1:AE09 74 69 6E 79 
               2E 63 63 2F 
               63 6C 69 62 
               73 00 -  -      .db "tiny.cc/clibs", 0
-    6 D1:AE1B -  -  -  -  GetHelp1:
-    7 D1:AE1B 43 68 65 63 
+    6 D1:AE17 -  -  -  -  GetHelp1:
+    7 D1:AE17 43 68 65 63 
               6B 20 68 74 
               74 70 3A 2F 
               2F 74 69 6E 
               79 2E 63 63 
               2F 61 6F 63 
               65 00 -  -      .db "Check http://tiny.cc/aoce", 0
-    8 D1:AE35 -  -  -  -  GetHelp2:
-    9 D1:AE35 66 6F 72 20 
+    8 D1:AE31 -  -  -  -  GetHelp2:
+    9 D1:AE31 66 6F 72 20 
               68 65 6C 70 
               2C 20 63 6F 
               6E 74 72 6F 
               6C 73 2C 20 
               41 49 27 73 
               00 -  -  -      .db "for help, controls, AI's", 0
-   10 D1:AE4E -  -  -  -  GetHelp3:
-   11 D1:AE4E 61 6E 64 20 
+   10 D1:AE4A -  -  -  -  GetHelp3:
+   11 D1:AE4A 61 6E 64 20 
               6D 75 63 68 
               20 6D 6F 72 
               65 21 00 -      .db "and much more!", 0
-   12 D1:AE5D -  -  -  -  MadeByMessage:
-   13 D1:AE5D 4D 61 64 65 
+   12 D1:AE59 -  -  -  -  MadeByMessage:
+   13 D1:AE59 4D 61 64 65 
               20 62 79 20 
               50 65 74 65 
               72 20 22 50 
               54 5F 22 20 
               54 69 6C 6C 
               65 6D 61 00     .db "Made by Peter \"PT_\" Tillema", 0
-   14 D1:AE79 -  -  -  -  NoMultiplayer1:
-   15 D1:AE79 4D 75 6C 74 
+   14 D1:AE75 -  -  -  -  NoMultiplayer1:
+   15 D1:AE75 4D 75 6C 74 
               69 70 6C 61 
               79 65 72 20 
               69 73 20 6E 
               6F 74 00 -      .db "Multiplayer is not", 0
-   16 D1:AE8C -  -  -  -  NoMultiplayer2:
-   17 D1:AE8C 73 75 70 70 
+   16 D1:AE88 -  -  -  -  NoMultiplayer2:
+   17 D1:AE88 73 75 70 70 
               6F 72 74 65 
               64 20 79 65 
               74 21 00 -      .db "supported yet!", 0
-   18 D1:AE9B -  -  -  -  GeneratingMapMessage:
-   19 D1:AE9B 47 65 6E 65 
+   18 D1:AE97 -  -  -  -  GeneratingMapMessage:
+   19 D1:AE97 47 65 6E 65 
               72 61 74 69 
               6E 67 20 6D 
               61 70 2E 2E 
               2E 00 -  -      .db "Generating map...", 0
-   20 D1:AEAD -  -  -  -  LoadingMapMessage:
-   21 D1:AEAD 4C 6F 61 64 
+   20 D1:AEA9 -  -  -  -  LoadingMapMessage:
+   21 D1:AEA9 4C 6F 61 64 
               69 6E 67 20 
               6D 61 70 2E 
               2E 2E 00 -      .db "Loading map...", 0
-   22 D1:AEBC -  -  -  -  GraphicsAppvar1:
-   23 D1:AEBC 15 41 4F 43 
+   22 D1:AEB8 -  -  -  -  GraphicsAppvar1:
+   23 D1:AEB8 15 41 4F 43 
               45 47 46 58 
               31 -  -  -      .db AppVarObj, "AOCEGFX1"
-   24 D1:AEC5 -  -  -  -  GraphicsAppvar2:
-   25 D1:AEC5 15 41 4F 43 
+   24 D1:AEC1 -  -  -  -  GraphicsAppvar2:
+   25 D1:AEC1 15 41 4F 43 
               45 47 46 58 
               32 -  -  -      .db AppVarObj, "AOCEGFX2"
-   26 D1:AECE -  -  -  -  AoCEMapAppvar:
-   27 D1:AECE 15 41 4F 43 
+   26 D1:AECA -  -  -  -  AoCEMapAppvar:
+   27 D1:AECA 15 41 4F 43 
               45 4D 41 50 
               00 -  -  -      .db AppVarObj, "AOCEMAP", 0
-   28 D1:AED7 -  -  -  -  GraphicsAppvarNotFound:
-   29 D1:AED7 43 61 6E 27 
+   28 D1:AED3 -  -  -  -  GraphicsAppvarNotFound:
+   29 D1:AED3 43 61 6E 27 
               74 20 66 69 
               6E 64 20 61 
               70 70 76 61 
               72 3A 00 -      .db "Can't find appvar:", 0
-   30 D1:AEEA -  -  -  -  LoadingMessage:
-   31 D1:AEEA 4C 6F 61 64 
+   30 D1:AEE6 -  -  -  -  LoadingMessage:
+   31 D1:AEE6 4C 6F 61 64 
               69 6E 67 2E 
               2E 2E 00 -      .db "Loading...", 0
-   32 D1:AEF5 -  -  -  -      
-   33 D1:AEF5 -  -  -  -  AmountOfWood:
-   34 D1:AEF5 00 00 00 -      .dl 0
-   35 D1:AEF8 -  -  -  -  AmountOfFood:
-   36 D1:AEF8 00 00 00 -      .dl 0
-   37 D1:AEFB -  -  -  -  AmountOfGold:
-   38 D1:AEFB 00 00 00 -      .dl 0
-   39 D1:AEFE -  -  -  -  AmountOfStone:
-   40 D1:AEFE 00 00 00 -      .dl 0
-   41 D1:AF01 -  -  -  -  AmountOfPeople:
-   42 D1:AF01 02 -  -  -      .db 2
-   43 D1:AF02 -  -  -  -  AmountOfMaxPeople:
-   44 D1:AF02 0A -  -  -      .db 10
-   45 D1:AF03 -  -  -  -  AmountOfBuildings:
-   46 D1:AF03 00 -  -  -      .db 0
-   47 D1:AF04 -  -  -  -  
-   48 D1:AF04 -  -  -  -  TilePointers:
-   49 D1:AF04 00 00 00 01 
+   32 D1:AEF1 -  -  -  -      
+   33 D1:AEF1 -  -  -  -  AmountOfWood:
+   34 D1:AEF1 00 00 00 -      .dl 0
+   35 D1:AEF4 -  -  -  -  AmountOfFood:
+   36 D1:AEF4 00 00 00 -      .dl 0
+   37 D1:AEF7 -  -  -  -  AmountOfGold:
+   38 D1:AEF7 00 00 00 -      .dl 0
+   39 D1:AEFA -  -  -  -  AmountOfStone:
+   40 D1:AEFA 00 00 00 -      .dl 0
+   41 D1:AEFD -  -  -  -  AmountOfPeople:
+   42 D1:AEFD 02 -  -  -      .db 2
+   43 D1:AEFE -  -  -  -  AmountOfMaxPeople:
+   44 D1:AEFE 0A -  -  -      .db 10
+   45 D1:AEFF -  -  -  -  AmountOfBuildings:
+   46 D1:AEFF 00 -  -  -      .db 0
+   47 D1:AF00 -  -  -  -  
+   48 D1:AF00 -  -  -  -  TilePointers:
+   49 D1:AF00 00 00 00 01 
               1A 08 00 -      .dl 0                         \ .db 1                  \ .dl _grass \.r2
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\data.asm"
-   50 D1:AF0B 00 00 00 01 
+   50 D1:AF07 00 00 00 01 
               DC 05 00 -      .dl 0                         \ .db 1                  \ .dl _food  \.r2
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\data.asm"
-   51 D1:AF12 00 00 00 01 
+   51 D1:AF0E 00 00 00 01 
               FC 06 00 -      .dl 0                         \ .db 1                  \ .dl _gold  \.r2
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\data.asm"
-   52 D1:AF19 00 00 00 01 
+   52 D1:AF15 00 00 00 01 
               3A 09 00 -      .dl 0                         \ .db 1                  \ .dl _stone \.r2
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\data.asm"
-   53 D1:AF20 00 00 00 01 
+   53 D1:AF1C 00 00 00 01 
               DC 05 00 -      .dl 0                         \ .db 1                  \ .dl _food  \.r2
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\data.asm"
-   54 D1:AF27 C0 EF FF 0E 
+   54 D1:AF23 C0 EF FF 0E 
               00 00 00 -      .dl -(_test1_height - 16)*320 \ .db _test1_height - 15 \ .dl _test1 \.r2
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\data.asm"
-   55 D1:AF2E 00 EC FF 11 
+   55 D1:AF2A 00 EC FF 11 
               BE 02 00 -      .dl -(_test2_height - 16)*320 \ .db _test2_height - 15 \ .dl _test2 \.r2
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\data.asm"
-   56 D1:AF35 -  -  -  -      
-   57 D1:AF35 -  -  -  -  TileHeights:
-   58 D1:AF35 00 -  -  -      .db 0
-   59 D1:AF36 00 -  -  -      .db 0
-   60 D1:AF37 00 -  -  -      .db 0
-   61 D1:AF38 00 -  -  -      .db 0
-   62 D1:AF39 -  -  -  -      
-   63 D1:AF39 -  -  -  -  AoCEFlags:
-   64 D1:AF39 00 -  -  -      .db 0
-   65 D1:AF3A -  -  -  -      
-   66 D1:AF3A -  -  -  -  TopLeftXTile:
-   67 D1:AF3A F6 FF FF -      .dl -10
-   68 D1:AF3D -  -  -  -  TopLeftYTile:
-   69 D1:AF3D FD FF FF -      .dl -3
-   70 D1:AF40 -  -  -  -      
-   71 D1:AF40 -  -  -  -  ResourcesType1:
-   72 D1:AF40 00 01 00 -      .db 0, 1, 0
-   73 D1:AF43 00 01 01 -      .db 0, 1, 1
-   74 D1:AF46 01 01 01 -      .db 1, 1, 1
-   75 D1:AF49 -  -  -  -  ResourcesType2:
-   76 D1:AF49 01 00 00 -      .db 1, 0, 0
-   77 D1:AF4C 00 01 00 -      .db 0, 1, 0
-   78 D1:AF4F 00 01 01 -      .db 0, 1, 1
-   79 D1:AF52 -  -  -  -  ResourcesType3:
-   80 D1:AF52 00 00 00 -      .db 0, 0, 0
-   81 D1:AF55 01 01 00 -      .db 1, 1, 0
-   82 D1:AF58 00 00 00 -      .db 0, 0, 0
-   83 D1:AF5B -  -  -  -  ResourcesType4:
-   84 D1:AF5B 01 01 01 -      .db 1, 1, 1
-   85 D1:AF5E 00 01 00 -      .db 0, 1, 0
-   86 D1:AF61 00 00 00 -      .db 0, 0, 0
-   87 D1:AF64 -  -  -  -  ResourcesType5:
-   88 D1:AF64 00 00 00 -      .db 0, 0, 0
-   89 D1:AF67 00 00 01 -      .db 0, 0, 1
-   90 D1:AF6A 01 01 01 -      .db 1, 1, 1
-   91 D1:AF6D -  -  -  -  ResourcesType6:
-   92 D1:AF6D 00 00 00 -      .db 0, 0, 0
-   93 D1:AF70 00 01 00 -      .db 0, 1, 0
-   94 D1:AF73 00 00 00 -      .db 0, 0, 0
-   95 D1:AF76 -  -  -  -  ResourcesType7:
-   96 D1:AF76 00 00 00 -      .db 0, 0, 0
-   97 D1:AF79 00 00 01 -      .db 0, 0, 1
-   98 D1:AF7C 00 01 01 -      .db 0, 1, 1
-   99 D1:AF7F -  -  -  -      
-  100 D1:AF7F -  -  -  -  pal_sprites:                                                                ; Don't worry, it's just the xLIBC palette
-  101 D1:AF7F 00 00 81 00 
+   56 D1:AF31 -  -  -  -      
+   57 D1:AF31 -  -  -  -  TileHeights:
+   58 D1:AF31 00 -  -  -      .db 0
+   59 D1:AF32 00 -  -  -      .db 0
+   60 D1:AF33 00 -  -  -      .db 0
+   61 D1:AF34 00 -  -  -      .db 0
+   62 D1:AF35 -  -  -  -      
+   63 D1:AF35 -  -  -  -  AoCEFlags:
+   64 D1:AF35 00 -  -  -      .db 0
+   65 D1:AF36 -  -  -  -      
+   66 D1:AF36 -  -  -  -  TopLeftXTile:
+   67 D1:AF36 F6 FF FF -      .dl -10
+   68 D1:AF39 -  -  -  -  TopLeftYTile:
+   69 D1:AF39 FD FF FF -      .dl -3
+   70 D1:AF3C -  -  -  -      
+   71 D1:AF3C -  -  -  -  ResourcesType1:
+   72 D1:AF3C 00 01 00 -      .db 0, 1, 0
+   73 D1:AF3F 00 01 01 -      .db 0, 1, 1
+   74 D1:AF42 01 01 01 -      .db 1, 1, 1
+   75 D1:AF45 -  -  -  -  ResourcesType2:
+   76 D1:AF45 01 00 00 -      .db 1, 0, 0
+   77 D1:AF48 00 01 00 -      .db 0, 1, 0
+   78 D1:AF4B 00 01 01 -      .db 0, 1, 1
+   79 D1:AF4E -  -  -  -  ResourcesType3:
+   80 D1:AF4E 00 00 00 -      .db 0, 0, 0
+   81 D1:AF51 01 01 00 -      .db 1, 1, 0
+   82 D1:AF54 00 00 00 -      .db 0, 0, 0
+   83 D1:AF57 -  -  -  -  ResourcesType4:
+   84 D1:AF57 01 01 01 -      .db 1, 1, 1
+   85 D1:AF5A 00 01 00 -      .db 0, 1, 0
+   86 D1:AF5D 00 00 00 -      .db 0, 0, 0
+   87 D1:AF60 -  -  -  -  ResourcesType5:
+   88 D1:AF60 00 00 00 -      .db 0, 0, 0
+   89 D1:AF63 00 00 01 -      .db 0, 0, 1
+   90 D1:AF66 01 01 01 -      .db 1, 1, 1
+   91 D1:AF69 -  -  -  -  ResourcesType6:
+   92 D1:AF69 00 00 00 -      .db 0, 0, 0
+   93 D1:AF6C 00 01 00 -      .db 0, 1, 0
+   94 D1:AF6F 00 00 00 -      .db 0, 0, 0
+   95 D1:AF72 -  -  -  -  ResourcesType7:
+   96 D1:AF72 00 00 00 -      .db 0, 0, 0
+   97 D1:AF75 00 00 01 -      .db 0, 0, 1
+   98 D1:AF78 00 01 01 -      .db 0, 1, 1
+   99 D1:AF7B -  -  -  -      
+  100 D1:AF7B -  -  -  -  pal_sprites:                                                                ; Don't worry, it's just the xLIBC palette
+  101 D1:AF7B 00 00 81 00 
               02 01 83 01 
               04 02 85 02 
               06 03 87 03     .dw $0000, $0081, $0102, $0183, $0204, $0285, $0306, $0387
-  102 D1:AF8F 08 04 89 04 
+  102 D1:AF8B 08 04 89 04 
               0A 05 8B 05 
               0C 06 8D 06 
               0E 07 8F 07     .dw $0408, $0489, $050A, $058B, $060C, $068D, $070E, $078F
-  103 D1:AF9F 10 08 91 08 
+  103 D1:AF9B 10 08 91 08 
               12 09 93 09 
               14 0A 95 0A 
               16 0B 97 0B     .dw $0810, $0891, $0912, $0993, $0A14, $0A95, $0B16, $0B97
-  104 D1:AFAF 18 0C 99 0C 
+  104 D1:AFAB 18 0C 99 0C 
               1A 0D 9B 0D 
               1C 0E 9D 0E 
               1E 0F 9F 0F     .dw $0C18, $0C99, $0D1A, $0D9B, $0E1C, $0E9D, $0F1E, $0F9F
-  105 D1:AFBF 00 10 81 10 
+  105 D1:AFBB 00 10 81 10 
               02 11 83 11 
               04 12 85 12 
               06 13 87 13     .dw $1000, $1081, $1102, $1183, $1204, $1285, $1306, $1387
-  106 D1:AFCF 08 14 89 14 
+  106 D1:AFCB 08 14 89 14 
               0A 15 8B 15 
               0C 16 8D 16 
               0E 17 8F 17     .dw $1408, $1489, $150A, $158B, $160C, $168D, $170E, $178F
-  107 D1:AFDF 10 18 91 18 
+  107 D1:AFDB 10 18 91 18 
               12 19 93 19 
               14 1A 95 1A 
               16 1B 97 1B     .dw $1810, $1891, $1912, $1993, $1A14, $1A95, $1B16, $1B97
-  108 D1:AFEF 18 1C 99 1C 
+  108 D1:AFEB 18 1C 99 1C 
               1A 1D 9B 1D 
               1C 1E 9D 1E 
               1E 1F 9F 1F     .dw $1C18, $1C99, $1D1A, $1D9B, $1E1C, $1E9D, $1F1E, $1F9F
-  109 D1:AFFF 20 20 A1 20 
+  109 D1:AFFB 20 20 A1 20 
               22 21 A3 21 
               24 22 A5 22 
               26 23 A7 23     .dw $2020, $20A1, $2122, $21A3, $2224, $22A5, $2326, $23A7
-  110 D1:B00F 28 24 A9 24 
+  110 D1:B00B 28 24 A9 24 
               2A 25 AB 25 
               2C 26 AD 26 
               2E 27 AF 27     .dw $2428, $24A9, $252A, $25AB, $262C, $26AD, $272E, $27AF
-  111 D1:B01F 30 28 B1 28 
+  111 D1:B01B 30 28 B1 28 
               32 29 B3 29 
               34 2A B5 2A 
               36 2B B7 2B     .dw $2830, $28B1, $2932, $29B3, $2A34, $2AB5, $2B36, $2BB7
-  112 D1:B02F 38 2C B9 2C 
+  112 D1:B02B 38 2C B9 2C 
               3A 2D BB 2D 
               3C 2E BD 2E 
               3E 2F BF 2F     .dw $2C38, $2CB9, $2D3A, $2DBB, $2E3C, $2EBD, $2F3E, $2FBF
-  113 D1:B03F 20 30 A1 30 
+  113 D1:B03B 20 30 A1 30 
               22 31 A3 31 
               24 32 A5 32 
               26 33 A7 33     .dw $3020, $30A1, $3122, $31A3, $3224, $32A5, $3326, $33A7
-  114 D1:B04F 28 34 A9 34 
+  114 D1:B04B 28 34 A9 34 
               2A 35 AB 35 
               2C 36 AD 36 
               2E 37 AF 37     .dw $3428, $34A9, $352A, $35AB, $362C, $36AD, $372E, $37AF
-  115 D1:B05F 30 38 B1 38 
+  115 D1:B05B 30 38 B1 38 
               32 39 B3 39 
               34 3A B5 3A 
               36 3B B7 3B     .dw $3830, $38B1, $3932, $39B3, $3A34, $3AB5, $3B36, $3BB7
-  116 D1:B06F 38 3C B9 3C 
+  116 D1:B06B 38 3C B9 3C 
               3A 3D BB 3D 
               3C 3E BD 3E 
               3E 3F BF 3F     .dw $3C38, $3CB9, $3D3A, $3DBB, $3E3C, $3EBD, $3F3E, $3FBF
-  117 D1:B07F 40 40 C1 40 
+  117 D1:B07B 40 40 C1 40 
               42 41 C3 41 
               44 42 C5 42 
               46 43 C7 43     .dw $4040, $40C1, $4142, $41C3, $4244, $42C5, $4346, $43C7
-  118 D1:B08F 48 44 C9 44 
+  118 D1:B08B 48 44 C9 44 
               4A 45 CB 45 
               4C 46 CD 46 
               4E 47 CF 47     .dw $4448, $44C9, $454A, $45CB, $464C, $46CD, $474E, $47CF
-  119 D1:B09F 50 48 D1 48 
+  119 D1:B09B 50 48 D1 48 
               52 49 D3 49 
               54 4A D5 4A 
               56 4B D7 4B     .dw $4850, $48D1, $4952, $49D3, $4A54, $4AD5, $4B56, $4BD7
-  120 D1:B0AF 58 4C D9 4C 
+  120 D1:B0AB 58 4C D9 4C 
               5A 4D DB 4D 
               5C 4E DD 4E 
               5E 4F DF 4F     .dw $4C58, $4CD9, $4D5A, $4DDB, $4E5C, $4EDD, $4F5E, $4FDF
-  121 D1:B0BF 40 50 C1 50 
+  121 D1:B0BB 40 50 C1 50 
               42 51 C3 51 
               44 52 C5 52 
               46 53 C7 53     .dw $5040, $50C1, $5142, $51C3, $5244, $52C5, $5346, $53C7
-  122 D1:B0CF 48 54 C9 54 
+  122 D1:B0CB 48 54 C9 54 
               4A 55 CB 55 
               4C 56 CD 56 
               4E 57 CF 57     .dw $5448, $54C9, $554A, $55CB, $564C, $56CD, $574E, $57CF
-  123 D1:B0DF 50 58 D1 58 
+  123 D1:B0DB 50 58 D1 58 
               52 59 D3 59 
               54 5A D5 5A 
               56 5B D7 5B     .dw $5850, $58D1, $5952, $59D3, $5A54, $5AD5, $5B56, $5BD7
-  124 D1:B0EF 58 5C D9 5C 
+  124 D1:B0EB 58 5C D9 5C 
               5A 5D DB 5D 
               5C 5E DD 5E 
               5E 5F DF 5F     .dw $5C58, $5CD9, $5D5A, $5DDB, $5E5C, $5EDD, $5F5E, $5FDF
-  125 D1:B0FF 60 60 E1 60 
+  125 D1:B0FB 60 60 E1 60 
               62 61 E3 61 
               64 62 E5 62 
               66 63 E7 63     .dw $6060, $60E1, $6162, $61E3, $6264, $62E5, $6366, $63E7
-  126 D1:B10F 68 64 E9 64 
+  126 D1:B10B 68 64 E9 64 
               6A 65 EB 65 
               6C 66 ED 66 
               6E 67 EF 67     .dw $6468, $64E9, $656A, $65EB, $666C, $66ED, $676E, $67EF
-  127 D1:B11F 70 68 F1 68 
+  127 D1:B11B 70 68 F1 68 
               72 69 F3 69 
               74 6A F5 6A 
               76 6B F7 6B     .dw $6870, $68F1, $6972, $69F3, $6A74, $6AF5, $6B76, $6BF7
-  128 D1:B12F 78 6C F9 6C 
+  128 D1:B12B 78 6C F9 6C 
               7A 6D FB 6D 
               7C 6E FD 6E 
               7E 6F FF 6F     .dw $6C78, $6CF9, $6D7A, $6DFB, $6E7C, $6EFD, $6F7E, $6FFF
-  129 D1:B13F 60 70 E1 70 
+  129 D1:B13B 60 70 E1 70 
               62 71 E3 71 
               64 72 E5 72 
               66 73 E7 73     .dw $7060, $70E1, $7162, $71E3, $7264, $72E5, $7366, $73E7
-  130 D1:B14F 68 74 E9 74 
+  130 D1:B14B 68 74 E9 74 
               6A 75 EB 75 
               6C 76 ED 76 
               6E 77 EF 77     .dw $7468, $74E9, $756A, $75EB, $766C, $76ED, $776E, $77EF
-  131 D1:B15F 70 78 F1 78 
+  131 D1:B15B 70 78 F1 78 
               72 79 F3 79 
               74 7A F5 7A 
               76 7B F7 7B     .dw $7870, $78F1, $7972, $79F3, $7A74, $7AF5, $7B76, $7BF7
-  132 D1:B16F 78 7C F9 7C 
+  132 D1:B16B 78 7C F9 7C 
               7A 7D FB 7D 
               7C 7E FD 7E 
               7E 7F FF FF     .dw $7C78, $7CF9, $7D7A, $7DFB, $7E7C, $7EFD, $7F7E, $FFFF
 Listing for file "aoce.asm"
-  261 D1:B17F -  -  -  -  #include "fade.asm"
+  258 D1:B17B -  -  -  -  #include "fade.asm"
 Listing for file "C:\programming\Assembly\AoCE\fade.asm"
-    1 D1:B17F -  -  -  -  ;------------------------------------------------
-    2 D1:B17F -  -  -  -  ; fadeIn - fade the screen in
-    3 D1:B17F -  -  -  -  ;   input:  none
-    4 D1:B17F -  -  -  -  ;   output: none
-    5 D1:B17F -  -  -  -  ;------------------------------------------------
-    6 D1:B17F -  -  -  -  fadeIn:
-    7 D1:B17F 21 85 B1 D1         ld      hl,fadeInSub
-    8 D1:B183 18 0F -  -          jr      fadeLcd
-    9 D1:B185 -  -  -  -  fadeInSub:
-   10 D1:B185 0D -  -  -          dec     c
-   11 D1:B186 C9 -  -  -          ret
-   12 D1:B187 -  -  -  -  
-   13 D1:B187 -  -  -  -  ;------------------------------------------------
-   14 D1:B187 -  -  -  -  ; fadeOut - fade the screen out by slowing erasing the palette
-   15 D1:B187 -  -  -  -  ;   input:  none
-   16 D1:B187 -  -  -  -  ;   output: none
-   17 D1:B187 -  -  -  -  ;------------------------------------------------
-   18 D1:B187 -  -  -  -  fadeOut:
-   19 D1:B187 21 8D B1 D1         ld      hl,fadeOutSub
-   20 D1:B18B 18 07 -  -          jr      fadeLcd
-   21 D1:B18D -  -  -  -  fadeOutSub:
-   22 D1:B18D 79 -  -  -          ld      a,c
-   23 D1:B18E D6 20 -  -          sub     32
-   24 D1:B190 ED 44 -  -          neg
-   25 D1:B192 4F -  -  -          ld      c,a
-   26 D1:B193 C9 -  -  -          ret
-   27 D1:B194 -  -  -  -  
-   28 D1:B194 -  -  -  -  ;------------------------------------------------
-   29 D1:B194 -  -  -  -  ; fadeLcd - fade the screen out or in
-   30 D1:B194 -  -  -  -  ;   input:  HL => routine to calculate RGB modifier
-   31 D1:B194 -  -  -  -  ;   output: none
-   32 D1:B194 -  -  -  -  ;------------------------------------------------
-   33 D1:B194 -  -  -  -  fadeLcd:
-   34 D1:B194 22 A8 B1 D1         ld      (__flSubCalc),hl
-   35 D1:B198 0E 20 -  -          ld      c,32
-   36 D1:B19A -  -  -  -  flOuter:
-   37 D1:B19A 06 00 -  -          ld      b,0                           ; B = number of colours in palette
-   38 D1:B19C FD 21 00 02 
+    1 D1:B17B -  -  -  -  ;------------------------------------------------
+    2 D1:B17B -  -  -  -  ; fadeIn - fade the screen in
+    3 D1:B17B -  -  -  -  ;   input:  none
+    4 D1:B17B -  -  -  -  ;   output: none
+    5 D1:B17B -  -  -  -  ;------------------------------------------------
+    6 D1:B17B -  -  -  -  fadeIn:
+    7 D1:B17B 21 81 B1 D1         ld      hl,fadeInSub
+    8 D1:B17F 18 0F -  -          jr      fadeLcd
+    9 D1:B181 -  -  -  -  fadeInSub:
+   10 D1:B181 0D -  -  -          dec     c
+   11 D1:B182 C9 -  -  -          ret
+   12 D1:B183 -  -  -  -  
+   13 D1:B183 -  -  -  -  ;------------------------------------------------
+   14 D1:B183 -  -  -  -  ; fadeOut - fade the screen out by slowing erasing the palette
+   15 D1:B183 -  -  -  -  ;   input:  none
+   16 D1:B183 -  -  -  -  ;   output: none
+   17 D1:B183 -  -  -  -  ;------------------------------------------------
+   18 D1:B183 -  -  -  -  fadeOut:
+   19 D1:B183 21 89 B1 D1         ld      hl,fadeOutSub
+   20 D1:B187 18 07 -  -          jr      fadeLcd
+   21 D1:B189 -  -  -  -  fadeOutSub:
+   22 D1:B189 79 -  -  -          ld      a,c
+   23 D1:B18A D6 20 -  -          sub     32
+   24 D1:B18C ED 44 -  -          neg
+   25 D1:B18E 4F -  -  -          ld      c,a
+   26 D1:B18F C9 -  -  -          ret
+   27 D1:B190 -  -  -  -  
+   28 D1:B190 -  -  -  -  ;------------------------------------------------
+   29 D1:B190 -  -  -  -  ; fadeLcd - fade the screen out or in
+   30 D1:B190 -  -  -  -  ;   input:  HL => routine to calculate RGB modifier
+   31 D1:B190 -  -  -  -  ;   output: none
+   32 D1:B190 -  -  -  -  ;------------------------------------------------
+   33 D1:B190 -  -  -  -  fadeLcd:
+   34 D1:B190 22 A4 B1 D1         ld      (__flSubCalc),hl
+   35 D1:B194 0E 20 -  -          ld      c,32
+   36 D1:B196 -  -  -  -  flOuter:
+   37 D1:B196 06 00 -  -          ld      b,0                           ; B = number of colours in palette
+   38 D1:B198 FD 21 00 02 
               E3 -  -  -          ld      iy,mpLcdPalette
-   39 D1:B1A1 DD 21 7F AF 
+   39 D1:B19D DD 21 7B AF 
               D1 -  -  -          ld      ix,pal_sprites                  ; IX => palette being used
-   40 D1:B1A6 -  -  -  -  flInner:
-   41 D1:B1A6 C5 -  -  -          push    bc
-   42 D1:B1A7 -  -  -  -  __flSubCalc             = $+1
-   43 D1:B1A7 CD 00 00 00         call    $000000
-   44 D1:B1AB 21 00 00 00         ld      hl,0
-   45 D1:B1AF -  -  -  -          ; red
-   46 D1:B1AF DD 7E 01 -          ld      a,(ix+1)
-   47 D1:B1B2 0F 0F -  -          rrca \ rrca
-   48 D1:B1B4 E6 1F -  -          and     %00011111
-   49 D1:B1B6 91 -  -  -          sub     c
-   50 D1:B1B7 30 01 -  -          jr      nc,flSkipR
-   51 D1:B1B9 AF -  -  -          xor     a
-   52 D1:B1BA -  -  -  -  flSkipR:
-   53 D1:B1BA 07 07 -  -          rlca \ rlca
-   54 D1:B1BC 6F -  -  -          ld      l,a
-   55 D1:B1BD -  -  -  -          ; green
-   56 D1:B1BD DD 5E 01 -          ld      e,(ix+1)
-   57 D1:B1C0 DD 56 00 -          ld      d,(ix)
-   58 D1:B1C3 CB 22 CB 13         sla d \ rl e
-   59 D1:B1C7 CB 22 CB 13         sla d \ rl e
-   60 D1:B1CB CB 22 CB 13         sla d \ rl e
-   61 D1:B1CF 7B -  -  -          ld      a,e
-   62 D1:B1D0 E6 1F -  -          and     %00011111
-   63 D1:B1D2 91 -  -  -          sub     c
-   64 D1:B1D3 30 01 -  -          jr      nc,flSkipG
-   65 D1:B1D5 AF -  -  -          xor     a
-   66 D1:B1D6 -  -  -  -  flSkipG:
-   67 D1:B1D6 16 00 -  -          ld      d,0
-   68 D1:B1D8 5F -  -  -          ld      e,a
-   69 D1:B1D9 CB 3B CB 1A         srl e \ rr d
-   70 D1:B1DD CB 3B CB 1A         srl e \ rr d
-   71 D1:B1E1 CB 3B CB 1A         srl e \ rr d
-   72 D1:B1E5 7D -  -  -          ld      a,l
-   73 D1:B1E6 B3 -  -  -          or      e
-   74 D1:B1E7 6F -  -  -          ld      l,a
-   75 D1:B1E8 7C -  -  -          ld      a,h
-   76 D1:B1E9 B2 -  -  -          or      d
-   77 D1:B1EA 67 -  -  -          ld      h,a
-   78 D1:B1EB -  -  -  -          ; blue
-   79 D1:B1EB DD 7E 00 -          ld      a,(ix)
-   80 D1:B1EE E6 1F -  -          and     %00011111
-   81 D1:B1F0 91 -  -  -          sub     c
-   82 D1:B1F1 30 01 -  -          jr      nc,flSkipB
-   83 D1:B1F3 AF -  -  -          xor     a
-   84 D1:B1F4 -  -  -  -  flSkipB:
-   85 D1:B1F4 B4 -  -  -          or      h
-   86 D1:B1F5 67 -  -  -          ld      h,a
-   87 D1:B1F6 FD 74 00 -          ld      (iy),h
-   88 D1:B1F9 FD 75 01 -          ld      (iy+1),l
-   89 D1:B1FC DD 23 DD 23         inc ix \ inc ix
-   90 D1:B200 FD 23 FD 23         inc iy \ inc iy
-   91 D1:B204 C1 -  -  -          pop     bc
-   92 D1:B205 10 9F -  -          djnz    flInner
-   93 D1:B207 06 04 -  -          ld b, 4
-   94 D1:B209 -  -  -  -  Wait0Loop:
-   95 D1:B209 50 -  -  -          ld d, b
-   96 D1:B20A 06 00 -  -          ld b, 0
-   97 D1:B20C -  -  -  -  Wait1Loop:
-   98 D1:B20C 58 -  -  -          ld e, b
-   99 D1:B20D 06 00 -  -          ld b, 0
-  100 D1:B20F -  -  -  -  Wait2Loop:
-  101 D1:B20F 10 FE -  -          djnz Wait2Loop
-  102 D1:B211 43 -  -  -          ld b, e
-  103 D1:B212 10 F8 -  -          djnz Wait1Loop
-  104 D1:B214 42 -  -  -          ld b, d
-  105 D1:B215 10 F2 -  -          djnz Wait0Loop
-  106 D1:B217 0D -  -  -          dec     c
-  107 D1:B218 20 80 -  -          jr      nz,flOuter
-  108 D1:B21A C9 -  -  -          ret
+   40 D1:B1A2 -  -  -  -  flInner:
+   41 D1:B1A2 C5 -  -  -          push    bc
+   42 D1:B1A3 -  -  -  -  __flSubCalc             = $+1
+   43 D1:B1A3 CD 00 00 00         call    $000000
+   44 D1:B1A7 21 00 00 00         ld      hl,0
+   45 D1:B1AB -  -  -  -          ; red
+   46 D1:B1AB DD 7E 01 -          ld      a,(ix+1)
+   47 D1:B1AE 0F 0F -  -          rrca \ rrca
+   48 D1:B1B0 E6 1F -  -          and     %00011111
+   49 D1:B1B2 91 -  -  -          sub     c
+   50 D1:B1B3 30 01 -  -          jr      nc,flSkipR
+   51 D1:B1B5 AF -  -  -          xor     a
+   52 D1:B1B6 -  -  -  -  flSkipR:
+   53 D1:B1B6 07 07 -  -          rlca \ rlca
+   54 D1:B1B8 6F -  -  -          ld      l,a
+   55 D1:B1B9 -  -  -  -          ; green
+   56 D1:B1B9 DD 5E 01 -          ld      e,(ix+1)
+   57 D1:B1BC DD 56 00 -          ld      d,(ix)
+   58 D1:B1BF CB 22 CB 13         sla d \ rl e
+   59 D1:B1C3 CB 22 CB 13         sla d \ rl e
+   60 D1:B1C7 CB 22 CB 13         sla d \ rl e
+   61 D1:B1CB 7B -  -  -          ld      a,e
+   62 D1:B1CC E6 1F -  -          and     %00011111
+   63 D1:B1CE 91 -  -  -          sub     c
+   64 D1:B1CF 30 01 -  -          jr      nc,flSkipG
+   65 D1:B1D1 AF -  -  -          xor     a
+   66 D1:B1D2 -  -  -  -  flSkipG:
+   67 D1:B1D2 16 00 -  -          ld      d,0
+   68 D1:B1D4 5F -  -  -          ld      e,a
+   69 D1:B1D5 CB 3B CB 1A         srl e \ rr d
+   70 D1:B1D9 CB 3B CB 1A         srl e \ rr d
+   71 D1:B1DD CB 3B CB 1A         srl e \ rr d
+   72 D1:B1E1 7D -  -  -          ld      a,l
+   73 D1:B1E2 B3 -  -  -          or      e
+   74 D1:B1E3 6F -  -  -          ld      l,a
+   75 D1:B1E4 7C -  -  -          ld      a,h
+   76 D1:B1E5 B2 -  -  -          or      d
+   77 D1:B1E6 67 -  -  -          ld      h,a
+   78 D1:B1E7 -  -  -  -          ; blue
+   79 D1:B1E7 DD 7E 00 -          ld      a,(ix)
+   80 D1:B1EA E6 1F -  -          and     %00011111
+   81 D1:B1EC 91 -  -  -          sub     c
+   82 D1:B1ED 30 01 -  -          jr      nc,flSkipB
+   83 D1:B1EF AF -  -  -          xor     a
+   84 D1:B1F0 -  -  -  -  flSkipB:
+   85 D1:B1F0 B4 -  -  -          or      h
+   86 D1:B1F1 67 -  -  -          ld      h,a
+   87 D1:B1F2 FD 74 00 -          ld      (iy),h
+   88 D1:B1F5 FD 75 01 -          ld      (iy+1),l
+   89 D1:B1F8 DD 23 DD 23         inc ix \ inc ix
+   90 D1:B1FC FD 23 FD 23         inc iy \ inc iy
+   91 D1:B200 C1 -  -  -          pop     bc
+   92 D1:B201 10 9F -  -          djnz    flInner
+   93 D1:B203 06 04 -  -          ld b, 4
+   94 D1:B205 -  -  -  -  Wait0Loop:
+   95 D1:B205 50 -  -  -          ld d, b
+   96 D1:B206 06 00 -  -          ld b, 0
+   97 D1:B208 -  -  -  -  Wait1Loop:
+   98 D1:B208 58 -  -  -          ld e, b
+   99 D1:B209 06 00 -  -          ld b, 0
+  100 D1:B20B -  -  -  -  Wait2Loop:
+  101 D1:B20B 10 FE -  -          djnz Wait2Loop
+  102 D1:B20D 43 -  -  -          ld b, e
+  103 D1:B20E 10 F8 -  -          djnz Wait1Loop
+  104 D1:B210 42 -  -  -          ld b, d
+  105 D1:B211 10 F2 -  -          djnz Wait0Loop
+  106 D1:B213 0D -  -  -          dec     c
+  107 D1:B214 20 80 -  -          jr      nz,flOuter
+  108 D1:B216 C9 -  -  -          ret
 Listing for file "aoce.asm"
-  262 D1:B21B -  -  -  -  #include "drawGame.asm"
+  259 D1:B217 -  -  -  -  #include "drawGame.asm"
 Listing for file "C:\programming\Assembly\AoCE\drawGame.asm"
-    1 D1:B21B -  -  -  -  DrawGame:
-    2 D1:B21B 21 04 00 00     ld hl, 4
-    3 D1:B21F E5 -  -  -      push hl
-    4 D1:B220 2E 11 -  -          ld l, 17
-    5 D1:B222 E5 -  -  -          push hl
-    6 D1:B223 CD 28 AA D1             call gfx_SetTextXY
-    7 D1:B227 2E 05 -  -              ld l, 5
-    8 D1:B229 E5 -  -  -              push hl
-    9 D1:B22A 2A F5 AE D1                 ld hl, (AmountOfWood)
-   10 D1:B22E E5 -  -  -                  push hl
-   11 D1:B22F CD 20 AA D1                     call gfx_PrintUInt
-   12 D1:B233 E1 -  -  -                  pop hl
-   13 D1:B234 E1 -  -  -              pop hl
-   14 D1:B235 E1 -  -  -          pop hl
-   15 D1:B236 2E 4E -  -          ld l, 78
-   16 D1:B238 E5 -  -  -          push hl
-   17 D1:B239 CD 28 AA D1             call gfx_SetTextXY
-   18 D1:B23D 2E 05 -  -              ld l, 5
-   19 D1:B23F E5 -  -  -              push hl
-   20 D1:B240 2A F8 AE D1                 ld hl, (AmountOfFood)
-   21 D1:B244 E5 -  -  -                  push hl
-   22 D1:B245 CD 20 AA D1                     call gfx_PrintUInt
-   23 D1:B249 E1 -  -  -                  pop hl
-   24 D1:B24A E1 -  -  -              pop hl
-   25 D1:B24B E1 -  -  -          pop hl
-   26 D1:B24C 2E 90 -  -          ld l, 144
-   27 D1:B24E E5 -  -  -          push hl
-   28 D1:B24F CD 28 AA D1             call gfx_SetTextXY
-   29 D1:B253 2E 05 -  -              ld l, 5
-   30 D1:B255 E5 -  -  -              push hl
-   31 D1:B256 2A FB AE D1                 ld hl, (AmountOfGold)
-   32 D1:B25A E5 -  -  -                  push hl
-   33 D1:B25B CD 20 AA D1                     call gfx_PrintUInt
-   34 D1:B25F E1 -  -  -                  pop hl
-   35 D1:B260 E1 -  -  -              pop hl
-   36 D1:B261 E1 -  -  -          pop hl
-   37 D1:B262 2E C8 -  -          ld l, 200
-   38 D1:B264 E5 -  -  -          push hl
-   39 D1:B265 CD 28 AA D1             call gfx_SetTextXY
-   40 D1:B269 2E 05 -  -              ld l, 5
-   41 D1:B26B E5 -  -  -              push hl
-   42 D1:B26C 2A FB AE D1                 ld hl, (AmountOfGold)
-   43 D1:B270 E5 -  -  -                  push hl
-   44 D1:B271 CD 20 AA D1                     call gfx_PrintUInt
-   45 D1:B275 E1 -  -  -                  pop hl
-   46 D1:B276 E1 -  -  -              pop hl
-   47 D1:B277 E1 -  -  -          pop hl
-   48 D1:B278 24 -  -  -          inc h
-   49 D1:B279 2E 05 -  -          ld l, 5
-   50 D1:B27B E5 -  -  -          push hl
-   51 D1:B27C CD 28 AA D1             call gfx_SetTextXY
-   52 D1:B280 2E 03 -  -              ld l, 3
-   53 D1:B282 E5 -  -  -              push hl
-   54 D1:B283 3A 01 AF D1                 ld a, (AmountOfPeople)
-   55 D1:B287 ED 62 -  -                  sbc hl, hl
-   56 D1:B289 6F -  -  -                  ld l, a
-   57 D1:B28A E5 -  -  -                  push hl
-   58 D1:B28B CD 20 AA D1                     call gfx_PrintUInt
-   59 D1:B28F E1 -  -  -                  pop hl
-   60 D1:B290 E1 -  -  -              pop hl
-   61 D1:B291 2E 2F -  -              ld l, '/'
-   62 D1:B293 E5 -  -  -              push hl
-   63 D1:B294 CD 1C AA D1                 call gfx_PrintChar
-   64 D1:B298 E1 -  -  -              pop hl
-   65 D1:B299 2E 03 -  -              ld l, 3
-   66 D1:B29B E5 -  -  -              push hl
-   67 D1:B29C 3A 02 AF D1                 ld a, (AmountOfMaxPeople)
-   68 D1:B2A0 B7 -  -  -                  or a, a
-   69 D1:B2A1 ED 62 -  -                  sbc hl, hl
-   70 D1:B2A3 6F -  -  -                  ld l, a
-   71 D1:B2A4 E5 -  -  -                  push hl
-   72 D1:B2A5 CD 20 AA D1                     call gfx_PrintUInt
-   73 D1:B2A9 E1 -  -  -                  pop hl
-   74 D1:B2AA E1 -  -  -              pop hl
-   75 D1:B2AB E1 -  -  -          pop hl
-   76 D1:B2AC E1 -  -  -      pop hl
+    1 D1:B217 -  -  -  -  DrawGame:
+    2 D1:B217 21 04 00 00     ld hl, 4
+    3 D1:B21B E5 -  -  -      push hl
+    4 D1:B21C 2E 11 -  -          ld l, 17
+    5 D1:B21E E5 -  -  -          push hl
+    6 D1:B21F CD 28 AA D1             call gfx_SetTextXY
+    7 D1:B223 2E 05 -  -              ld l, 5
+    8 D1:B225 E5 -  -  -              push hl
+    9 D1:B226 2A F1 AE D1                 ld hl, (AmountOfWood)
+   10 D1:B22A E5 -  -  -                  push hl
+   11 D1:B22B CD 20 AA D1                     call gfx_PrintUInt
+   12 D1:B22F E1 -  -  -                  pop hl
+   13 D1:B230 E1 -  -  -              pop hl
+   14 D1:B231 E1 -  -  -          pop hl
+   15 D1:B232 2E 4E -  -          ld l, 78
+   16 D1:B234 E5 -  -  -          push hl
+   17 D1:B235 CD 28 AA D1             call gfx_SetTextXY
+   18 D1:B239 2E 05 -  -              ld l, 5
+   19 D1:B23B E5 -  -  -              push hl
+   20 D1:B23C 2A F4 AE D1                 ld hl, (AmountOfFood)
+   21 D1:B240 E5 -  -  -                  push hl
+   22 D1:B241 CD 20 AA D1                     call gfx_PrintUInt
+   23 D1:B245 E1 -  -  -                  pop hl
+   24 D1:B246 E1 -  -  -              pop hl
+   25 D1:B247 E1 -  -  -          pop hl
+   26 D1:B248 2E 90 -  -          ld l, 144
+   27 D1:B24A E5 -  -  -          push hl
+   28 D1:B24B CD 28 AA D1             call gfx_SetTextXY
+   29 D1:B24F 2E 05 -  -              ld l, 5
+   30 D1:B251 E5 -  -  -              push hl
+   31 D1:B252 2A F7 AE D1                 ld hl, (AmountOfGold)
+   32 D1:B256 E5 -  -  -                  push hl
+   33 D1:B257 CD 20 AA D1                     call gfx_PrintUInt
+   34 D1:B25B E1 -  -  -                  pop hl
+   35 D1:B25C E1 -  -  -              pop hl
+   36 D1:B25D E1 -  -  -          pop hl
+   37 D1:B25E 2E C8 -  -          ld l, 200
+   38 D1:B260 E5 -  -  -          push hl
+   39 D1:B261 CD 28 AA D1             call gfx_SetTextXY
+   40 D1:B265 2E 05 -  -              ld l, 5
+   41 D1:B267 E5 -  -  -              push hl
+   42 D1:B268 2A F7 AE D1                 ld hl, (AmountOfGold)
+   43 D1:B26C E5 -  -  -                  push hl
+   44 D1:B26D CD 20 AA D1                     call gfx_PrintUInt
+   45 D1:B271 E1 -  -  -                  pop hl
+   46 D1:B272 E1 -  -  -              pop hl
+   47 D1:B273 E1 -  -  -          pop hl
+   48 D1:B274 24 -  -  -          inc h
+   49 D1:B275 2E 05 -  -          ld l, 5
+   50 D1:B277 E5 -  -  -          push hl
+   51 D1:B278 CD 28 AA D1             call gfx_SetTextXY
+   52 D1:B27C 2E 03 -  -              ld l, 3
+   53 D1:B27E E5 -  -  -              push hl
+   54 D1:B27F 3A FD AE D1                 ld a, (AmountOfPeople)
+   55 D1:B283 ED 62 -  -                  sbc hl, hl
+   56 D1:B285 6F -  -  -                  ld l, a
+   57 D1:B286 E5 -  -  -                  push hl
+   58 D1:B287 CD 20 AA D1                     call gfx_PrintUInt
+   59 D1:B28B E1 -  -  -                  pop hl
+   60 D1:B28C E1 -  -  -              pop hl
+   61 D1:B28D 2E 2F -  -              ld l, '/'
+   62 D1:B28F E5 -  -  -              push hl
+   63 D1:B290 CD 1C AA D1                 call gfx_PrintChar
+   64 D1:B294 E1 -  -  -              pop hl
+   65 D1:B295 2E 03 -  -              ld l, 3
+   66 D1:B297 E5 -  -  -              push hl
+   67 D1:B298 3A FE AE D1                 ld a, (AmountOfMaxPeople)
+   68 D1:B29C B7 -  -  -                  or a, a
+   69 D1:B29D ED 62 -  -                  sbc hl, hl
+   70 D1:B29F 6F -  -  -                  ld l, a
+   71 D1:B2A0 E5 -  -  -                  push hl
+   72 D1:B2A1 CD 20 AA D1                     call gfx_PrintUInt
+   73 D1:B2A5 E1 -  -  -                  pop hl
+   74 D1:B2A6 E1 -  -  -              pop hl
+   75 D1:B2A7 E1 -  -  -          pop hl
+   76 D1:B2A8 E1 -  -  -      pop hl
 Listing for file "aoce.asm"
-  263 D1:B2AD -  -  -  -  #include "mainmenu.asm"
+  260 D1:B2A9 -  -  -  -  #include "mainmenu.asm"
 Listing for file "C:\programming\Assembly\AoCE\mainmenu.asm"
-    1 D1:B2AD -  -  -  -  MainMenu:
-    2 D1:B2AD 21 00 00 D4     ld hl, vRAM
-    3 D1:B2B1 36 94 -  -      ld (hl), 094h
-    4 D1:B2B3 11 01 00 D4     ld de, vRAM+1
-    5 D1:B2B7 01 FF 2B 01     ld bc, 320*240-1
-    6 D1:B2BB ED B0 -  -      ldir
-    7 D1:B2BD 2E 20 E5 21 
+    1 D1:B2A9 -  -  -  -  MainMenu:
+    2 D1:B2A9 21 00 00 D4     ld hl, vRAM
+    3 D1:B2AD 36 94 -  -      ld (hl), 094h
+    4 D1:B2AF 11 01 00 D4     ld de, vRAM+1
+    5 D1:B2B3 01 FF 2B 01     ld bc, 320*240-1
+    6 D1:B2B7 ED B0 -  -      ldir
+    7 D1:B2B9 2E 20 E5 21 
               48 00 00 E5 
               11 66 94 D0 
               D5 21 96 5D 
@@ -1283,28 +1282,28 @@ Listing for file "C:\programming\Assembly\AoCE\mainmenu.asm"
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\macros.inc"
 
-              CD 19 B7 D1 
+              CD 03 B7 D1 
               CD 38 AA D1 
               D1 E1 E1 Listing for file "C:\programming\Assembly\AoCE\mainmenu.asm"
-    8 D1:B2D9 CD 7F B1 D1     call fadeIn
-    9 D1:B2DD 3E C8 -  -      ld a, 200
-   10 D1:B2DF CD B8 03 00     call _DelayTenTimesAms
-   11 D1:B2E3 CD 87 B1 D1     call fadeOut
-   12 D1:B2E7 11 00 00 D4     ld de, vRAM
-   13 D1:B2EB 21 00 00 E4     ld hl, blackBuffer
-   14 D1:B2EF 01 00 58 02     ld bc, 320*240*2
-   15 D1:B2F3 ED B0 -  -      ldir
-   16 D1:B2F5 21 05 00 00 
+    8 D1:B2D5 CD 7B B1 D1     call fadeIn
+    9 D1:B2D9 3E C8 -  -      ld a, 200
+   10 D1:B2DB CD B8 03 00     call _DelayTenTimesAms
+   11 D1:B2DF CD 83 B1 D1     call fadeOut
+   12 D1:B2E3 11 00 00 D4     ld de, vRAM
+   13 D1:B2E7 21 00 00 E4     ld hl, blackBuffer
+   14 D1:B2EB 01 00 58 02     ld bc, 320*240*2
+   15 D1:B2EF ED B0 -  -      ldir
+   16 D1:B2F1 21 05 00 00 
               E5 E5 11 66 
               94 D0 D5 21 
               00 00 00 -      dispCompressedImage(_AoCEI_compressed, 5, 5)
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\macros.inc"
 
-              CD 19 B7 D1 
+              CD 03 B7 D1 
               CD 38 AA D1 
               D1 E1 E1 Listing for file "C:\programming\Assembly\AoCE\mainmenu.asm"
-   17 D1:B30F 2E 05 E5 21 
+   17 D1:B30B 2E 05 E5 21 
               D7 00 00 E5 
               11 66 94 D0 
               D5 21 E9 1A 
@@ -1312,18 +1311,18 @@ Listing for file "C:\programming\Assembly\AoCE\macros.inc"
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\macros.inc"
 
-              CD 19 B7 D1 
+              CD 03 B7 D1 
               CD 38 AA D1 
               D1 E1 E1 Listing for file "C:\programming\Assembly\AoCE\mainmenu.asm"
-   18 D1:B32B 2E 5E E5 21 
+   18 D1:B327 2E 5E E5 21 
               12 00 00 E5 
-              21 5D AE D1 
+              21 59 AE D1 
               E5 CD 24 AA 
               D1 E1 E1 E1     printString(MadeByMessage, 18, 94)
-   19 D1:B33F CD 7F B1 D1     call fadeIn
-   20 D1:B343 -  -  -  -  SelectLoopDrawPlayHelpQuit:
-   21 D1:B343 CD 63 B4 D1     call EraseArea
-   22 D1:B347 2E 6E E5 21 
+   19 D1:B33B CD 7B B1 D1     call fadeIn
+   20 D1:B33F -  -  -  -  SelectLoopDrawPlayHelpQuit:
+   21 D1:B33F CD 5F B4 D1     call EraseArea
+   22 D1:B343 2E 6E E5 21 
               32 00 00 E5 
               11 66 94 D0 
               D5 21 4B 36 
@@ -1331,41 +1330,41 @@ Listing for file "C:\programming\Assembly\AoCE\macros.inc"
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\macros.inc"
 
-              CD 19 B7 D1 
+              CD 03 B7 D1 
               CD 38 AA D1 
               D1 E1 E1 Listing for file "C:\programming\Assembly\AoCE\mainmenu.asm"
-   23 D1:B363 21 A6 B4 D1     ld hl, SelectMenuMax
-   24 D1:B367 36 02 -  -      ld (hl), 2
-   25 D1:B369 CD 7A B4 D1     call SelectMenu
-   26 D1:B36D 38 06 -  -      jr c, +_
-   27 D1:B36F 0D -  -  -      dec c
-   28 D1:B370 28 07 -  -      jr z, DisplayHelp
-   29 D1:B372 0D -  -  -      dec c
-   30 D1:B373 20 4C -  -      jr nz, SelectedPlay
-   31 D1:B375 C3 56 AA D1 _:  jp ForceStopProgramWithFadeOut
-   32 D1:B379 -  -  -  -      
-   33 D1:B379 -  -  -  -  DisplayHelp:
-   34 D1:B379 CD 63 B4 D1     call EraseArea
-   35 D1:B37D 2E 70 E5 21 
+   23 D1:B35F 21 A2 B4 D1     ld hl, SelectMenuMax
+   24 D1:B363 36 02 -  -      ld (hl), 2
+   25 D1:B365 CD 76 B4 D1     call SelectMenu
+   26 D1:B369 38 06 -  -      jr c, +_
+   27 D1:B36B 0D -  -  -      dec c
+   28 D1:B36C 28 07 -  -      jr z, DisplayHelp
+   29 D1:B36E 0D -  -  -      dec c
+   30 D1:B36F 20 4C -  -      jr nz, SelectedPlay
+   31 D1:B371 C3 55 AA D1 _:  jp ForceStopProgramWithFadeOut
+   32 D1:B375 -  -  -  -      
+   33 D1:B375 -  -  -  -  DisplayHelp:
+   34 D1:B375 CD 5F B4 D1     call EraseArea
+   35 D1:B379 2E 70 E5 21 
               05 00 00 E5 
-              21 1B AE D1 
+              21 17 AE D1 
               E5 CD 24 AA 
               D1 E1 E1 E1     printString(GetHelp1, 5, 112)
-   36 D1:B391 2E 7A E5 21 
+   36 D1:B38D 2E 7A E5 21 
               05 00 00 E5 
-              21 35 AE D1 
+              21 31 AE D1 
               E5 CD 24 AA 
               D1 E1 E1 E1     printString(GetHelp2, 5, 122)
-   37 D1:B3A5 2E 84 E5 21 
+   37 D1:B3A1 2E 84 E5 21 
               05 00 00 E5 
-              21 4E AE D1 
+              21 4A AE D1 
               E5 CD 24 AA 
               D1 E1 E1 E1     printString(GetHelp3, 5, 132)
-   38 D1:B3B9 CD EF B4 D1     call GetKeyAnyFast
-   39 D1:B3BD C3 43 B3 D1     jp SelectLoopDrawPlayHelpQuit
-   40 D1:B3C1 -  -  -  -  SelectedPlay:
-   41 D1:B3C1 CD 63 B4 D1     call EraseArea
-   42 D1:B3C5 2E 6E E5 21 
+   38 D1:B3B5 CD EB B4 D1     call GetKeyAnyFast
+   39 D1:B3B9 C3 3F B3 D1     jp SelectLoopDrawPlayHelpQuit
+   40 D1:B3BD -  -  -  -  SelectedPlay:
+   41 D1:B3BD CD 5F B4 D1     call EraseArea
+   42 D1:B3C1 2E 6E E5 21 
               32 00 00 E5 
               11 66 94 D0 
               D5 21 F5 40 
@@ -1373,35 +1372,35 @@ Listing for file "C:\programming\Assembly\AoCE\macros.inc"
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\macros.inc"
 
-              CD 19 B7 D1 
+              CD 03 B7 D1 
               CD 38 AA D1 
               D1 E1 E1 Listing for file "C:\programming\Assembly\AoCE\mainmenu.asm"
-   43 D1:B3E1 21 A6 B4 D1     ld hl, SelectMenuMax
-   44 D1:B3E5 36 01 -  -      ld (hl), 1
-   45 D1:B3E7 CD 7A B4 D1     call SelectMenu
-   46 D1:B3EB DA 43 B3 D1     jp c, SelectLoopDrawPlayHelpQuit
-   47 D1:B3EF 0D -  -  -      dec c
-   48 D1:B3F0 20 32 -  -      jr nz, SelectedSinglePlayer
-   49 D1:B3F2 CD 63 B4 D1     call EraseArea
-   50 D1:B3F6 2E 70 E5 21 
+   43 D1:B3DD 21 A2 B4 D1     ld hl, SelectMenuMax
+   44 D1:B3E1 36 01 -  -      ld (hl), 1
+   45 D1:B3E3 CD 76 B4 D1     call SelectMenu
+   46 D1:B3E7 DA 3F B3 D1     jp c, SelectLoopDrawPlayHelpQuit
+   47 D1:B3EB 0D -  -  -      dec c
+   48 D1:B3EC 20 32 -  -      jr nz, SelectedSinglePlayer
+   49 D1:B3EE CD 5F B4 D1     call EraseArea
+   50 D1:B3F2 2E 70 E5 21 
               05 00 00 E5 
-              21 79 AE D1 
+              21 75 AE D1 
               E5 CD 24 AA 
               D1 E1 E1 E1     printString(NoMultiplayer1, 5, 112)
-   51 D1:B40A 2E 7A E5 21 
+   51 D1:B406 2E 7A E5 21 
               05 00 00 E5 
-              21 8C AE D1 
+              21 88 AE D1 
               E5 CD 24 AA 
               D1 E1 E1 E1     printString(NoMultiplayer2, 5, 122)
-   52 D1:B41E CD EF B4 D1     call GetKeyAnyFast
-   53 D1:B422 18 9D -  -      jr SelectedPlay
-   54 D1:B424 -  -  -  -  SelectedSinglePlayer:
-   55 D1:B424 21 CE AE D1     ld hl, AoCEMapAppvar
-   56 D1:B428 CD 20 03 02     call _Mov9ToOP1
-   57 D1:B42C CD 0C 05 02     call _ChkFindSym
-   58 D1:B430 38 2D -  -      jr c, +_
-   59 D1:B432 CD 63 B4 D1     call EraseArea
-   60 D1:B436 2E 6E E5 21 
+   52 D1:B41A CD EB B4 D1     call GetKeyAnyFast
+   53 D1:B41E 18 9D -  -      jr SelectedPlay
+   54 D1:B420 -  -  -  -  SelectedSinglePlayer:
+   55 D1:B420 21 CA AE D1     ld hl, AoCEMapAppvar
+   56 D1:B424 CD 20 03 02     call _Mov9ToOP1
+   57 D1:B428 CD 0C 05 02     call _ChkFindSym
+   58 D1:B42C 38 2D -  -      jr c, +_
+   59 D1:B42E CD 5F B4 D1     call EraseArea
+   60 D1:B432 2E 6E E5 21 
               32 00 00 E5 
               11 66 94 D0 
               D5 21 88 50 
@@ -1409,523 +1408,517 @@ Listing for file "C:\programming\Assembly\AoCE\macros.inc"
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\macros.inc"
 
-              CD 19 B7 D1 
+              CD 03 B7 D1 
               CD 38 AA D1 
               D1 E1 E1 Listing for file "C:\programming\Assembly\AoCE\mainmenu.asm"
-   61 D1:B452 CD 7A B4 D1     call SelectMenu
-   62 D1:B456 DA C1 B3 D1     jp c, SelectedPlay
-   63 D1:B45A 0D -  -  -      dec c
-   64 D1:B45B CA 9B AD D1     jp z, LoadMap
-   65 D1:B45F C3 5F AC D1 _:  jp GenerateMap
-   66 D1:B463 -  -  -  -  
-   67 D1:B463 -  -  -  -  EraseArea:
-   68 D1:B463 21 82 00 00     ld hl, 130
-   69 D1:B467 E5 -  -  -      push hl
-   70 D1:B468 2E D2 -  -          ld l, 210
-   71 D1:B46A E5 -  -  -          push hl
-   72 D1:B46B 2E 6E -  -              ld l, 110
-   73 D1:B46D E5 -  -  -              push hl
-   74 D1:B46E 2E 00 -  -                  ld l, 0
-   75 D1:B470 E5 -  -  -                  push hl
-   76 D1:B471 CD 30 AA D1                     call gfx_FillRectangle_NoClip                        ; gfx_FillRectangle_NoClip(0, 110, 210, 130);
-   77 D1:B475 E1 -  -  -                  pop hl
-   78 D1:B476 E1 -  -  -              pop hl
-   79 D1:B477 E1 -  -  -          pop hl
-   80 D1:B478 E1 -  -  -      pop hl
-   81 D1:B479 C9 -  -  -      ret
-   82 D1:B47A -  -  -  -      
-   83 D1:B47A -  -  -  -  SelectMenu:
-   84 D1:B47A 0E 00 -  -      ld c, 0
-   85 D1:B47C -  -  -  -  SelectLoop:
-   86 D1:B47C C5 -  -  -      push bc
-   87 D1:B47D 06 28 -  -          ld b, 40
-   88 D1:B47F ED 4C -  -          mlt bc
-   89 D1:B481 21 6E 00 00         ld hl, 110
-   90 D1:B485 09 -  -  -          add hl, bc
-   91 D1:B486 E5 -  -  -          push hl
-   92 D1:B487 21 0A 00 00             ld hl, 10
-   93 D1:B48B E5 -  -  -              push hl
-   94 D1:B48C 21 06 84 00                 ld hl, _pointer \.r1
+   61 D1:B44E CD 76 B4 D1     call SelectMenu
+   62 D1:B452 DA BD B3 D1     jp c, SelectedPlay
+   63 D1:B456 0D -  -  -      dec c
+   64 D1:B457 CA 97 AD D1     jp z, LoadMap
+   65 D1:B45B C3 5B AC D1 _:  jp GenerateMap
+   66 D1:B45F -  -  -  -  
+   67 D1:B45F -  -  -  -  EraseArea:
+   68 D1:B45F 21 82 00 00     ld hl, 130
+   69 D1:B463 E5 -  -  -      push hl
+   70 D1:B464 2E D2 -  -          ld l, 210
+   71 D1:B466 E5 -  -  -          push hl
+   72 D1:B467 2E 6E -  -              ld l, 110
+   73 D1:B469 E5 -  -  -              push hl
+   74 D1:B46A 2E 00 -  -                  ld l, 0
+   75 D1:B46C E5 -  -  -                  push hl
+   76 D1:B46D CD 30 AA D1                     call gfx_FillRectangle_NoClip                        ; gfx_FillRectangle_NoClip(0, 110, 210, 130);
+   77 D1:B471 E1 -  -  -                  pop hl
+   78 D1:B472 E1 -  -  -              pop hl
+   79 D1:B473 E1 -  -  -          pop hl
+   80 D1:B474 E1 -  -  -      pop hl
+   81 D1:B475 C9 -  -  -      ret
+   82 D1:B476 -  -  -  -      
+   83 D1:B476 -  -  -  -  SelectMenu:
+   84 D1:B476 0E 00 -  -      ld c, 0
+   85 D1:B478 -  -  -  -  SelectLoop:
+   86 D1:B478 C5 -  -  -      push bc
+   87 D1:B479 06 28 -  -          ld b, 40
+   88 D1:B47B ED 4C -  -          mlt bc
+   89 D1:B47D 21 6E 00 00         ld hl, 110
+   90 D1:B481 09 -  -  -          add hl, bc
+   91 D1:B482 E5 -  -  -          push hl
+   92 D1:B483 21 0A 00 00             ld hl, 10
+   93 D1:B487 E5 -  -  -              push hl
+   94 D1:B488 21 06 84 00                 ld hl, _pointer \.r1
 Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
 Listing for file "C:\programming\Assembly\AoCE\mainmenu.asm"
-   95 D1:B490 E5 -  -  -                  push hl
-   96 D1:B491 CD 38 AA D1                     call gfx_Sprite_NoClip                                ; gfx_Sprite_NoClip(_pointer, 10, 110+40*C);
-   97 D1:B495 E1 -  -  -                  pop hl
-   98 D1:B496 E1 -  -  -              pop hl
-   99 D1:B497 E1 -  -  -          pop hl
-  100 D1:B498 C1 -  -  -      pop bc
-  101 D1:B499 41 -  -  -      ld b, c
-  102 D1:B49A -  -  -  -  KeyLoop:
-  103 D1:B49A CD EF B4 D1     call GetKeyAnyFast
-  104 D1:B49E 2E 1E -  -      ld l, 01Eh
-  105 D1:B4A0 CB 46 -  -      bit kpDown, (hl)
-  106 D1:B4A2 28 08 -  -      jr z, +_
-  107 D1:B4A4 79 -  -  -      ld a, c
-  108 D1:B4A5 -  -  -  -  SelectMenuMax = $+1
-  109 D1:B4A5 FE 02 -  -      cp a, 2
-  110 D1:B4A7 28 03 -  -      jr z, +_
-  111 D1:B4A9 0C -  -  -      inc c
-  112 D1:B4AA 18 16 -  -      jr EraseCursor
-  113 D1:B4AC CB 5E -  -  _:    bit kpUp, (hl)
-  114 D1:B4AE 28 07 -  -      jr z, +_
-  115 D1:B4B0 79 -  -  -      ld a, c
-  116 D1:B4B1 B7 -  -  -      or a, a
-  117 D1:B4B2 28 03 -  -      jr z, +_
-  118 D1:B4B4 0D -  -  -      dec c
-  119 D1:B4B5 18 0B -  -      jr EraseCursor
-  120 D1:B4B7 2E 1C -  -  _:    ld l, 01Ch
-  121 D1:B4B9 CB 46 -  -      bit kpEnter, (hl)
-  122 D1:B4BB C0 -  -  -      ret nz
-  123 D1:B4BC CB 76 -  -  _:    bit kpClear, (hl)
-  124 D1:B4BE 28 DA -  -      jr z, KeyLoop
-  125 D1:B4C0 37 -  -  -      scf
-  126 D1:B4C1 C9 -  -  -      ret
-  127 D1:B4C2 -  -  -  -      
-  128 D1:B4C2 -  -  -  -  EraseCursor:
-  129 D1:B4C2 C5 -  -  -      push bc
-  130 D1:B4C3 2E 24 -  -          ld l, 36
-  131 D1:B4C5 E5 -  -  -          push hl
-  132 D1:B4C6 21 19 00 00             ld hl, 25
-  133 D1:B4CA E5 -  -  -              push hl
-  134 D1:B4CB 0E 28 -  -                  ld c, 40
-  135 D1:B4CD ED 4C -  -                  mlt bc
-  136 D1:B4CF 21 6E 00 00                 ld hl, 110
-  137 D1:B4D3 09 -  -  -                  add hl, bc
-  138 D1:B4D4 E5 -  -  -                  push hl
-  139 D1:B4D5 21 0A 00 00                     ld hl, 10
-  140 D1:B4D9 E5 -  -  -                      push hl
-  141 D1:B4DA CD 30 AA D1                         call gfx_FillRectangle_NoClip                    ; gfx_FillRectangle_NoClip(10, 110+40*B, 25, 36);
-  142 D1:B4DE E1 -  -  -                      pop hl
-  143 D1:B4DF E1 -  -  -                  pop hl
-  144 D1:B4E0 E1 -  -  -              pop hl
-  145 D1:B4E1 E1 -  -  -          pop hl
-  146 D1:B4E2 C1 -  -  -      pop bc
-  147 D1:B4E3 18 97 -  -      jr SelectLoop
+   95 D1:B48C E5 -  -  -                  push hl
+   96 D1:B48D CD 38 AA D1                     call gfx_Sprite_NoClip                                ; gfx_Sprite_NoClip(_pointer, 10, 110+40*C);
+   97 D1:B491 E1 -  -  -                  pop hl
+   98 D1:B492 E1 -  -  -              pop hl
+   99 D1:B493 E1 -  -  -          pop hl
+  100 D1:B494 C1 -  -  -      pop bc
+  101 D1:B495 41 -  -  -      ld b, c
+  102 D1:B496 -  -  -  -  KeyLoop:
+  103 D1:B496 CD EB B4 D1     call GetKeyAnyFast
+  104 D1:B49A 2E 1E -  -      ld l, 01Eh
+  105 D1:B49C CB 46 -  -      bit kpDown, (hl)
+  106 D1:B49E 28 08 -  -      jr z, +_
+  107 D1:B4A0 79 -  -  -      ld a, c
+  108 D1:B4A1 -  -  -  -  SelectMenuMax = $+1
+  109 D1:B4A1 FE 02 -  -      cp a, 2
+  110 D1:B4A3 28 03 -  -      jr z, +_
+  111 D1:B4A5 0C -  -  -      inc c
+  112 D1:B4A6 18 16 -  -      jr EraseCursor
+  113 D1:B4A8 CB 5E -  -  _:    bit kpUp, (hl)
+  114 D1:B4AA 28 07 -  -      jr z, +_
+  115 D1:B4AC 79 -  -  -      ld a, c
+  116 D1:B4AD B7 -  -  -      or a, a
+  117 D1:B4AE 28 03 -  -      jr z, +_
+  118 D1:B4B0 0D -  -  -      dec c
+  119 D1:B4B1 18 0B -  -      jr EraseCursor
+  120 D1:B4B3 2E 1C -  -  _:    ld l, 01Ch
+  121 D1:B4B5 CB 46 -  -      bit kpEnter, (hl)
+  122 D1:B4B7 C0 -  -  -      ret nz
+  123 D1:B4B8 CB 76 -  -  _:    bit kpClear, (hl)
+  124 D1:B4BA 28 DA -  -      jr z, KeyLoop
+  125 D1:B4BC 37 -  -  -      scf
+  126 D1:B4BD C9 -  -  -      ret
+  127 D1:B4BE -  -  -  -      
+  128 D1:B4BE -  -  -  -  EraseCursor:
+  129 D1:B4BE C5 -  -  -      push bc
+  130 D1:B4BF 2E 24 -  -          ld l, 36
+  131 D1:B4C1 E5 -  -  -          push hl
+  132 D1:B4C2 21 19 00 00             ld hl, 25
+  133 D1:B4C6 E5 -  -  -              push hl
+  134 D1:B4C7 0E 28 -  -                  ld c, 40
+  135 D1:B4C9 ED 4C -  -                  mlt bc
+  136 D1:B4CB 21 6E 00 00                 ld hl, 110
+  137 D1:B4CF 09 -  -  -                  add hl, bc
+  138 D1:B4D0 E5 -  -  -                  push hl
+  139 D1:B4D1 21 0A 00 00                     ld hl, 10
+  140 D1:B4D5 E5 -  -  -                      push hl
+  141 D1:B4D6 CD 30 AA D1                         call gfx_FillRectangle_NoClip                    ; gfx_FillRectangle_NoClip(10, 110+40*B, 25, 36);
+  142 D1:B4DA E1 -  -  -                      pop hl
+  143 D1:B4DB E1 -  -  -                  pop hl
+  144 D1:B4DC E1 -  -  -              pop hl
+  145 D1:B4DD E1 -  -  -          pop hl
+  146 D1:B4DE C1 -  -  -      pop bc
+  147 D1:B4DF 18 97 -  -      jr SelectLoop
 Listing for file "aoce.asm"
-  264 D1:B4E5 -  -  -  -  #include "routines.asm"
+  261 D1:B4E1 -  -  -  -  #include "routines.asm"
 Listing for file "C:\programming\Assembly\AoCE\routines.asm"
-    1 D1:B4E5 -  -  -  -  GetKeyFast:
-    2 D1:B4E5 21 00 02 F5     ld hl, 0F50200h
-    3 D1:B4E9 74 -  -  -      ld (hl), h
-    4 D1:B4EA AF -  -  -      xor a, a
-    5 D1:B4EB BE -  -  -  _:  cp a, (hl)
-    6 D1:B4EC 20 FD -  -      jr nz, -_
-    7 D1:B4EE C9 -  -  -      ret
-    8 D1:B4EF -  -  -  -      
-    9 D1:B4EF -  -  -  -  GetKeyAnyFast:
-   10 D1:B4EF CD E5 B4 D1     call GetKeyFast
-   11 D1:B4F3 2E 12 -  -      ld l, 012h
-   12 D1:B4F5 7E -  -  -      ld a, (hl)
-   13 D1:B4F6 2C -  -  -      inc l
-   14 D1:B4F7 2C -  -  -      inc l
-   15 D1:B4F8 B6 -  -  -      or a, (hl)
-   16 D1:B4F9 2C -  -  -      inc l
-   17 D1:B4FA 2C -  -  -      inc l
-   18 D1:B4FB B6 -  -  -      or a, (hl)
-   19 D1:B4FC 2C -  -  -      inc l
-   20 D1:B4FD 2C -  -  -      inc l
-   21 D1:B4FE B6 -  -  -      or a, (hl)
-   22 D1:B4FF 2C -  -  -      inc l
-   23 D1:B500 2C -  -  -      inc l
-   24 D1:B501 B6 -  -  -      or a, (hl)
-   25 D1:B502 2C -  -  -      inc l
-   26 D1:B503 2C -  -  -      inc l
-   27 D1:B504 B6 -  -  -      or a, (hl)
-   28 D1:B505 2C -  -  -      inc l
-   29 D1:B506 2C -  -  -      inc l
-   30 D1:B507 B6 -  -  -      or a, (hl)
-   31 D1:B508 28 E5 -  -      jr z, GetKeyAnyFast
-   32 D1:B50A 3E 14 -  -      ld a, 20
-   33 D1:B50C C3 B8 03 00     jp _DelayTenTimesAms
-   34 D1:B510 -  -  -  -  
-   35 D1:B510 -  -  -  -  LoadGraphicsAppvar:
-   36 D1:B510 D5 -  -  -      push de
-   37 D1:B511 E5 -  -  -          push hl
-   38 D1:B512 CD 20 03 02             call _Mov9ToOP1
-   39 D1:B516 CD 0C 05 02             call _ChkFindSym
-   40 D1:B51A 30 19 -  -              jr nc, +_
-   41 D1:B51C 21 D7 AE D1             ld hl, GraphicsAppvarNotFound
-   42 D1:B520 CD C0 07 02             call _PutS
-   43 D1:B524 CD F0 07 02             call _NewLine
-   44 D1:B528 E1 -  -  -          pop hl
-   45 D1:B529 CD C0 07 02         call _PutS
-   46 D1:B52D CD 8C 0D 02         call _GetKey
-   47 D1:B531 C3 5A AA D1         jp ForceStopProgram
-   48 D1:B535 E1 -  -  -  _:      pop hl
-   49 D1:B536 CD 98 1F 02         call _ChkInRAM
-   50 D1:B53A DC 48 14 02         call c, _Arc_Unarc
-   51 D1:B53E 13 -  -  -          inc de
-   52 D1:B53F 13 -  -  -          inc de
-   53 D1:B540 ED 53 52 B5 
+    1 D1:B4E1 -  -  -  -  GetKeyFast:
+    2 D1:B4E1 21 00 02 F5     ld hl, 0F50200h
+    3 D1:B4E5 74 -  -  -      ld (hl), h
+    4 D1:B4E6 AF -  -  -      xor a, a
+    5 D1:B4E7 BE -  -  -  _:  cp a, (hl)
+    6 D1:B4E8 20 FD -  -      jr nz, -_
+    7 D1:B4EA C9 -  -  -      ret
+    8 D1:B4EB -  -  -  -      
+    9 D1:B4EB -  -  -  -  GetKeyAnyFast:
+   10 D1:B4EB CD E1 B4 D1     call GetKeyFast
+   11 D1:B4EF 2E 12 -  -      ld l, 012h
+   12 D1:B4F1 7E -  -  -      ld a, (hl)
+   13 D1:B4F2 2C -  -  -      inc l
+   14 D1:B4F3 2C -  -  -      inc l
+   15 D1:B4F4 B6 -  -  -      or a, (hl)
+   16 D1:B4F5 2C -  -  -      inc l
+   17 D1:B4F6 2C -  -  -      inc l
+   18 D1:B4F7 B6 -  -  -      or a, (hl)
+   19 D1:B4F8 2C -  -  -      inc l
+   20 D1:B4F9 2C -  -  -      inc l
+   21 D1:B4FA B6 -  -  -      or a, (hl)
+   22 D1:B4FB 2C -  -  -      inc l
+   23 D1:B4FC 2C -  -  -      inc l
+   24 D1:B4FD B6 -  -  -      or a, (hl)
+   25 D1:B4FE 2C -  -  -      inc l
+   26 D1:B4FF 2C -  -  -      inc l
+   27 D1:B500 B6 -  -  -      or a, (hl)
+   28 D1:B501 2C -  -  -      inc l
+   29 D1:B502 2C -  -  -      inc l
+   30 D1:B503 B6 -  -  -      or a, (hl)
+   31 D1:B504 28 E5 -  -      jr z, GetKeyAnyFast
+   32 D1:B506 3E 14 -  -      ld a, 20
+   33 D1:B508 C3 B8 03 00     jp _DelayTenTimesAms
+   34 D1:B50C -  -  -  -  
+   35 D1:B50C -  -  -  -  LoadGraphicsAppvar:
+   36 D1:B50C D5 -  -  -      push de
+   37 D1:B50D E5 -  -  -          push hl
+   38 D1:B50E CD 20 03 02             call _Mov9ToOP1
+   39 D1:B512 CD 0C 05 02             call _ChkFindSym
+   40 D1:B516 30 19 -  -              jr nc, +_
+   41 D1:B518 21 D3 AE D1             ld hl, GraphicsAppvarNotFound
+   42 D1:B51C CD C0 07 02             call _PutS
+   43 D1:B520 CD F0 07 02             call _NewLine
+   44 D1:B524 E1 -  -  -          pop hl
+   45 D1:B525 CD C0 07 02         call _PutS
+   46 D1:B529 CD 8C 0D 02         call _GetKey
+   47 D1:B52D C3 59 AA D1         jp ForceStopProgram
+   48 D1:B531 E1 -  -  -  _:      pop hl
+   49 D1:B532 CD 98 1F 02         call _ChkInRAM
+   50 D1:B536 DC 48 14 02         call c, _Arc_Unarc
+   51 D1:B53A 13 -  -  -          inc de
+   52 D1:B53B 13 -  -  -          inc de
+   53 D1:B53C ED 53 4E B5 
               D1 -  -  -          ld (GraphicsAppvarStart), de
-   54 D1:B545 E1 -  -  -      pop hl
-   55 D1:B546 -  -  -  -  ChangeRelocationTableLoop:
-   56 D1:B546 E5 -  -  -      push hl
-   57 D1:B547 ED 27 -  -          ld hl, (hl)
-   58 D1:B549 7C -  -  -          ld a, h
-   59 D1:B54A A5 -  -  -          and a, l
-   60 D1:B54B 3C -  -  -          inc a
-   61 D1:B54C 28 12 -  -          jr z, +_
-   62 D1:B54E E5 -  -  -          push hl
-   63 D1:B54F ED 27 -  -              ld hl, (hl)
-   64 D1:B551 -  -  -  -  GraphicsAppvarStart = $+1
-   65 D1:B551 11 00 00 00             ld de, 0
-   66 D1:B555 19 -  -  -              add hl, de
-   67 D1:B556 EB -  -  -              ex de, hl
-   68 D1:B557 E1 -  -  -          pop hl
-   69 D1:B558 ED 1F -  -          ld (hl), de
-   70 D1:B55A E1 -  -  -      pop hl
-   71 D1:B55B 23 -  -  -      inc hl
-   72 D1:B55C 23 -  -  -      inc hl
-   73 D1:B55D 23 -  -  -      inc hl
-   74 D1:B55E 18 E6 -  -      jr ChangeRelocationTableLoop
-   75 D1:B560 E1 -  -  -  _:  pop hl
-   76 D1:B561 C9 -  -  -      ret
+   54 D1:B541 E1 -  -  -      pop hl
+   55 D1:B542 -  -  -  -  ChangeRelocationTableLoop:
+   56 D1:B542 E5 -  -  -      push hl
+   57 D1:B543 ED 27 -  -          ld hl, (hl)
+   58 D1:B545 7C -  -  -          ld a, h
+   59 D1:B546 A5 -  -  -          and a, l
+   60 D1:B547 3C -  -  -          inc a
+   61 D1:B548 28 12 -  -          jr z, +_
+   62 D1:B54A E5 -  -  -          push hl
+   63 D1:B54B ED 27 -  -              ld hl, (hl)
+   64 D1:B54D -  -  -  -  GraphicsAppvarStart = $+1
+   65 D1:B54D 11 00 00 00             ld de, 0
+   66 D1:B551 19 -  -  -              add hl, de
+   67 D1:B552 EB -  -  -              ex de, hl
+   68 D1:B553 E1 -  -  -          pop hl
+   69 D1:B554 ED 1F -  -          ld (hl), de
+   70 D1:B556 E1 -  -  -      pop hl
+   71 D1:B557 23 -  -  -      inc hl
+   72 D1:B558 23 -  -  -      inc hl
+   73 D1:B559 23 -  -  -      inc hl
+   74 D1:B55A 18 E6 -  -      jr ChangeRelocationTableLoop
+   75 D1:B55C E1 -  -  -  _:  pop hl
+   76 D1:B55D C9 -  -  -      ret
 Listing for file "aoce.asm"
-  265 D1:B562 -  -  -  -  #include "drawField.asm"
+  262 D1:B55E -  -  -  -  #include "drawField.asm"
 Listing for file "C:\programming\Assembly\AoCE\drawField.asm"
-    1 D1:B562 -  -  -  -  drawfield_loc = $
-    2 D1:B562 -  -  -  -  relocate(mpShaData)
+    1 D1:B55E -  -  -  -  drawfield_loc = $
+    2 D1:B55E -  -  -  -  relocate(cursorImage)
 Listing for file "C:\programming\Assembly\AoCE\drawField.asm"
-    3 E1:0010 -  -  -  -  
-    4 E1:0010 -  -  -  -  DrawField:
-    5 E1:0010 21 00 2C D5     ld hl, screenBuffer
-    6 E1:0014 36 FF -  -      ld (hl), 255
-    7 E1:0016 11 01 2C D5     ld de, screenBuffer+1
-    8 E1:001A 01 FF 2B 01     ld bc, 320*240-1
-    9 E1:001E ED B0 -  -      ldir
-   10 E1:0020 FD CB 00 46     bit need_to_redraw_tiles, (iy+0)
-   11 E1:0024 C4 00 08 E3     call nz, DrawTiles
-   12 E1:0028 11 20 28 D4     ld de, vRAM+(32*320)+32                                     ; Copy the buffer from (32,64) to (32,32)
-   13 E1:002C 21 20 7C D5     ld hl, screenBuffer+(64*320)+32
-   14 E1:0030 01 00 00 00     ld bc, 0
-   15 E1:0034 3E B0 -  -      ld a, 240-32-32
-   16 E1:0036 -  -  -  -  CopyBufferLoop:
-   17 E1:0036 48 -  -  -      ld c, b
-   18 E1:0037 04 -  -  -      inc b                                                       ; Copy 256 bytes
-   19 E1:0038 ED B0 -  -      ldir
-   20 E1:003A 0E 40 -  -      ld c, 32+32
-   21 E1:003C 09 -  -  -      add hl, bc
-   22 E1:003D EB -  -  -      ex de, hl
-   23 E1:003E 09 -  -  -      add hl, bc
-   24 E1:003F EB -  -  -      ex de, hl
-   25 E1:0040 3D -  -  -      dec a
-   26 E1:0041 20 F3 -  -      jr nz, CopyBufferLoop
-   27 E1:0043 C9 -  -  -      ret
-   28 E1:0044 -  -  -  -  DrawFieldEnd:
-   29 E1:0044 -  -  -  -      
-   30 E1:0044 -  -  -  -  endrelocate()
-   31 D1:B596 -  -  -  -  drawtiles_loc = $
-   32 D1:B596 -  -  -  -  relocate(cursorImage)
-   33 E3:0800 -  -  -  -  
-   34 E3:0800 -  -  -  -  DrawTiles:
-   35 E3:0800 DD 46 00 -      ld b, (ix+OFFSET_X)                                         ; We start with the shadow registers active
-   36 E3:0803 CB 60 -  -      bit 4, b
-   37 E3:0805 3E 10 -  -      ld a, 16
-   38 E3:0807 0E 20 -  -      ld c, 020h
-   39 E3:0809 28 04 -  -      jr z, +_
-   40 E3:080B 3E F0 -  -      ld a, -16
-   41 E3:080D 0E 28 -  -      ld c, 028h
-   42 E3:080F 32 62 08 E3 _:  ld (TopRowLeftOrRight), a
-   43 E3:0813 79 -  -  -      ld a, c
-   44 E3:0814 32 60 09 E3     ld (IncrementRowXOrNot1), a
-   45 E3:0818 DD 5E 01 -      ld e, (ix+OFFSET_Y)                                         ; Point to the output
-   46 E3:081B 16 A0 -  -      ld d, 160
-   47 E3:081D ED 5C -  -      mlt de
-   48 E3:081F 21 00 54 D5     ld hl, screenBuffer+(320*32)
-   49 E3:0823 19 -  -  -      add hl, de
-   50 E3:0824 19 -  -  -      add hl, de
-   51 E3:0825 16 00 -  -      ld d, 0
-   52 E3:0827 78 -  -  -      ld a, b
-   53 E3:0828 C6 10 -  -      add a, 16
-   54 E3:082A 5F -  -  -      ld e, a
-   55 E3:082B 19 -  -  -      add hl, de
-   56 E3:082C 22 5B 08 E3     ld (startingPosition), hl
-   57 E3:0830 2A 3D AF D1     ld hl, (TopLeftYTile)                                        ; Y*MAP_SIZE+X, point to the map data
-   58 E3:0834 29 -  -  -      add hl, hl
-   59 E3:0835 29 -  -  -      add hl, hl
-   60 E3:0836 29 -  -  -      add hl, hl
-   61 E3:0837 29 -  -  -      add hl, hl
-   62 E3:0838 29 -  -  -      add hl, hl
-   63 E3:0839 29 -  -  -      add hl, hl
-   64 E3:083A 29 -  -  -      add hl, hl
-   65 E3:083B ED 5B 3A AF 
+    3 E3:0800 -  -  -  -  
+    4 E3:0800 -  -  -  -  DrawField:
+    5 E3:0800 DD 46 00 -      ld b, (ix+OFFSET_X)                                         ; We start with the shadow registers active
+    6 E3:0803 CB 60 -  -      bit 4, b
+    7 E3:0805 3E 10 -  -      ld a, 16
+    8 E3:0807 0E 20 -  -      ld c, 020h
+    9 E3:0809 28 04 -  -      jr z, +_
+   10 E3:080B 3E F0 -  -      ld a, -16
+   11 E3:080D 0E 28 -  -      ld c, 028h
+   12 E3:080F 32 16 00 E1 _:  ld (TopRowLeftOrRight), a
+   13 E3:0813 79 -  -  -      ld a, c
+   14 E3:0814 32 2C 09 E3     ld (IncrementRowXOrNot1), a
+   15 E3:0818 DD 7E 01 -      ld a, (ix+OFFSET_Y)                                         ; Point to the output
+   16 E3:081B C6 20 -  -      add a, 32                                                   ; We start at row 32
+   17 E3:081D 5F -  -  -      ld e, a
+   18 E3:081E 16 A0 -  -      ld d, 160
+   19 E3:0820 ED 5C -  -      mlt de
+   20 E3:0822 2A 14 00 E3     ld hl, (currDrawingBuffer)
+   21 E3:0826 19 -  -  -      add hl, de
+   22 E3:0827 19 -  -  -      add hl, de
+   23 E3:0828 16 00 -  -      ld d, 0
+   24 E3:082A 78 -  -  -      ld a, b
+   25 E3:082B C6 10 -  -      add a, 16
+   26 E3:082D 5F -  -  -      ld e, a
+   27 E3:082E 19 -  -  -      add hl, de
+   28 E3:082F 22 5C 08 E3     ld (startingPosition), hl
+   29 E3:0833 2A 39 AF D1     ld hl, (TopLeftYTile)                                        ; Y*MAP_SIZE+X, point to the map data
+   30 E3:0837 29 -  -  -      add hl, hl
+   31 E3:0838 29 -  -  -      add hl, hl
+   32 E3:0839 29 -  -  -      add hl, hl
+   33 E3:083A 29 -  -  -      add hl, hl
+   34 E3:083B 29 -  -  -      add hl, hl
+   35 E3:083C 29 -  -  -      add hl, hl
+   36 E3:083D 29 -  -  -      add hl, hl
+   37 E3:083E ED 5B 36 AF 
               D1 -  -  -      ld de, (TopLeftXTile)
-   66 E3:0840 19 -  -  -      add hl, de
-   67 E3:0841 29 -  -  -      add hl, hl                                                  ; Each tile is 2 bytes worth
-   68 E3:0842 01 F6 31 D0     ld bc, mapAddress
-   69 E3:0846 09 -  -  -      add hl, bc
-   70 E3:0847 DD 2A 3D AF 
+   38 E3:0843 19 -  -  -      add hl, de
+   39 E3:0844 29 -  -  -      add hl, hl                                                  ; Each tile is 2 bytes worth
+   40 E3:0845 01 F6 31 D0     ld bc, mapAddress
+   41 E3:0849 09 -  -  -      add hl, bc
+   42 E3:084A DD 2A 39 AF 
               D1 -  -  -      ld ix, (TopLeftYTile)
-   71 E3:084C 3E 1C -  -      ld a, 28
-   72 E3:084E ED 73 7F 09 
+   43 E3:084F 3E 1C -  -      ld a, 28
+   44 E3:0851 ED 73 62 09 
               E3 -  -  -      ld (TempSP2), sp
-   73 E3:0853 31 40 01 00     ld sp, lcdWidth
-   74 E3:0857 -  -  -  -  DisplayEachRowLoop:
-   75 E3:0857 -  -  -  -  ; Registers:
-   76 E3:0857 -  -  -  -  ;   A   = height of tile/building
-   77 E3:0857 -  -  -  -  ;   BC  = length of row tile
-   78 E3:0857 -  -  -  -  ;   DE  = pointer to output
-   79 E3:0857 -  -  -  -  ;   HL  = pointer to tile/black tile
-   80 E3:0857 -  -  -  -  ;   A'  = row index
-   81 E3:0857 -  -  -  -  ;   B'  = column index
-   82 E3:0857 -  -  -  -  ;   DE' = x index tile
-   83 E3:0857 -  -  -  -  ;   HL' = pointer to map data
-   84 E3:0857 -  -  -  -  ;   IX  = y index tile
-   85 E3:0857 -  -  -  -  ;   IY  = pointer to output
-   86 E3:0857 -  -  -  -  ;   SP  = SCREEN_WIDTH
-   87 E3:0857 -  -  -  -  
-   88 E3:0857 CB 47 -  -      bit 0, a                                                    ; Here are the shadow registers active
-   89 E3:0859 -  -  -  -  startingPosition = $+2
-   90 E3:0859 FD 21 00 00 
+   45 E3:0856 31 40 01 00     ld sp, lcdWidth
+   46 E3:085A -  -  -  -  DisplayEachRowLoop:
+   47 E3:085A -  -  -  -  ; Registers:
+   48 E3:085A -  -  -  -  ;   A   = height of tile/building
+   49 E3:085A -  -  -  -  ;   BC  = length of row tile
+   50 E3:085A -  -  -  -  ;   DE  = pointer to output
+   51 E3:085A -  -  -  -  ;   HL  = pointer to tile/black tile
+   52 E3:085A -  -  -  -  ;   A'  = row index
+   53 E3:085A -  -  -  -  ;   B'  = column index
+   54 E3:085A -  -  -  -  ;   DE' = x index tile
+   55 E3:085A -  -  -  -  ;   HL' = pointer to map data
+   56 E3:085A -  -  -  -  ;   IX  = y index tile
+   57 E3:085A -  -  -  -  ;   IY  = pointer to output
+   58 E3:085A -  -  -  -  ;   SP  = SCREEN_WIDTH
+   59 E3:085A -  -  -  -  
+   60 E3:085A -  -  -  -  startingPosition = $+2                                          ; Here are the shadow registers active
+   61 E3:085A FD 21 00 00 
               00 -  -  -      ld iy, 0
-   91 E3:085E 28 03 -  -      jr z, +_
-   92 E3:0860 -  -  -  -  TopRowLeftOrRight = $+2
-   93 E3:0860 ED 33 00 -      lea iy, iy+0
-   94 E3:0863 08 -  -  -  _:  ex af, af'
-   95 E3:0864 3E 09 -  -      ld a, 9
-   96 E3:0866 -  -  -  -  DisplayTile:
-   97 E3:0866 47 -  -  -      ld b, a
-   98 E3:0867 7A -  -  -      ld a, d
-   99 E3:0868 DD B4 -  -      or a, ixh
-  100 E3:086A 20 24 -  -      jr nz, TileIsOutOfField
-  101 E3:086C 7B -  -  -      ld a, e                                                     ; Check if one of the both indexes is more than the MAP_SIZE, which is $80
-  102 E3:086D DD B5 -  -      or a, ixl
-  103 E3:086F 87 -  -  -      add a, a
-  104 E3:0870 38 1E -  -      jr c, TileIsOutOfField
-  105 E3:0872 -  -  -  -  CheckWhatTypeOfTileItIs:
-  106 E3:0872 7E -  -  -      ld a, (hl)
-  107 E3:0873 D9 -  -  -      exx                                                         ; Here are the main registers active
-  108 E3:0874 B7 -  -  -      or a, a
-  109 E3:0875 CA 39 09 E3     jp z, SkipDrawingOfTile
-  110 E3:0879 4F -  -  -      ld c, a
-  111 E3:087A 06 07 -  -      ld b, 7
-  112 E3:087C ED 4C -  -      mlt bc
-  113 E3:087E 21 FD AE D1     ld hl, TilePointers-7
-  114 E3:0882 09 -  -  -      add hl, bc
-  115 E3:0883 ED 17 -  -      ld de, (hl)                                                 ; Offset from the current position, if the tile/building has a height
-  116 E3:0885 FD 19 -  -      add iy, de
-  117 E3:0887 23 -  -  -      inc hl
-  118 E3:0888 23 -  -  -      inc hl
-  119 E3:0889 23 -  -  -      inc hl
-  120 E3:088A 7E -  -  -      ld a, (hl)                                                  ; Height of the tile
-  121 E3:088B 23 -  -  -      inc hl
-  122 E3:088C ED 27 -  -      ld hl, (hl)                                                 ; Pointer to the tile
-  123 E3:088E 18 07 -  -      jr +_
-  124 E3:0890 -  -  -  -  TileIsOutOfField:
-  125 E3:0890 D9 -  -  -      exx
-  126 E3:0891 21 00 00 E4     ld hl, blackBuffer
-  127 E3:0895 3E 01 -  -      ld a, 1
-  128 E3:0897 ED 13 00 -  _:  lea de, iy
-  129 E3:089A 01 02 00 00     ld bc, 2
-  130 E3:089E ED B0 -  -      ldir
-  131 E3:08A0 FD 39 -  -      add iy, sp
-  132 E3:08A2 ED 13 FE -      lea de, iy-2
-  133 E3:08A5 0E 06 -  -      ld c, 6
-  134 E3:08A7 ED B0 -  -      ldir
-  135 E3:08A9 FD 39 -  -      add iy, sp
-  136 E3:08AB ED 13 FC -      lea de, iy-4
-  137 E3:08AE 0E 0A -  -      ld c, 10
-  138 E3:08B0 ED B0 -  -      ldir
-  139 E3:08B2 FD 39 -  -      add iy, sp
-  140 E3:08B4 ED 13 FA -      lea de, iy-6
-  141 E3:08B7 0E 0E -  -      ld c, 14
-  142 E3:08B9 ED B0 -  -      ldir
-  143 E3:08BB FD 39 -  -      add iy, sp
-  144 E3:08BD ED 13 F8 -      lea de, iy-8
-  145 E3:08C0 0E 12 -  -      ld c, 18
-  146 E3:08C2 ED B0 -  -      ldir
-  147 E3:08C4 FD 39 -  -      add iy, sp
-  148 E3:08C6 ED 13 F6 -      lea de, iy-10
-  149 E3:08C9 0E 16 -  -      ld c, 22
-  150 E3:08CB ED B0 -  -      ldir
-  151 E3:08CD FD 39 -  -      add iy, sp
-  152 E3:08CF ED 13 F4 -      lea de, iy-12
-  153 E3:08D2 0E 1A -  -      ld c, 26
-  154 E3:08D4 ED B0 -  -      ldir
-  155 E3:08D6 FD 39 -  -      add iy, sp
-  156 E3:08D8 ED 13 F2 -      lea de, iy-14
-  157 E3:08DB 0E 1E -  -      ld c, 30
-  158 E3:08DD ED B0 -  -      ldir
-  159 E3:08DF FD 39 -  -  _:  add iy, sp
-  160 E3:08E1 ED 13 F1 -      lea de, iy-15
-  161 E3:08E4 0E 20 -  -      ld c, 32
-  162 E3:08E6 ED B0 -  -      ldir
-  163 E3:08E8 3D -  -  -      dec a
-  164 E3:08E9 20 F4 -  -      jr nz, -_
-  165 E3:08EB FD 39 -  -      add iy, sp
-  166 E3:08ED ED 13 F2 -      lea de, iy-14
-  167 E3:08F0 0E 1E -  -      ld c, 30
-  168 E3:08F2 ED B0 -  -      ldir
-  169 E3:08F4 FD 39 -  -      add iy, sp
-  170 E3:08F6 ED 13 F4 -      lea de, iy-12
-  171 E3:08F9 0E 1A -  -      ld c, 26
-  172 E3:08FB ED B0 -  -      ldir
-  173 E3:08FD FD 39 -  -      add iy, sp
-  174 E3:08FF ED 13 F6 -      lea de, iy-10
-  175 E3:0902 0E 16 -  -      ld c, 22
-  176 E3:0904 ED B0 -  -      ldir
-  177 E3:0906 FD 39 -  -      add iy, sp
-  178 E3:0908 ED 13 F8 -      lea de, iy-8
-  179 E3:090B 0E 12 -  -      ld c, 18
-  180 E3:090D ED B0 -  -      ldir
-  181 E3:090F FD 39 -  -      add iy, sp
-  182 E3:0911 ED 13 FA -      lea de, iy-6
-  183 E3:0914 0E 0E -  -      ld c, 14
-  184 E3:0916 ED B0 -  -      ldir
-  185 E3:0918 FD 39 -  -      add iy, sp
-  186 E3:091A ED 13 FC -      lea de, iy-4
-  187 E3:091D 0E 0A -  -      ld c, 10
-  188 E3:091F ED B0 -  -      ldir
-  189 E3:0921 FD 39 -  -      add iy, sp
-  190 E3:0923 ED 13 FE -      lea de, iy-2
-  191 E3:0926 0E 06 -  -      ld c, 6
-  192 E3:0928 ED B0 -  -      ldir
-  193 E3:092A FD 39 -  -      add iy, sp
-  194 E3:092C ED 13 00 -      lea de, iy-0
-  195 E3:092F ED A0 -  -      ldi
-  196 E3:0931 ED A0 -  -      ldi
-  197 E3:0933 11 20 EC FF     ld de, 32-(320*16)
-  198 E3:0937 18 04 -  -      jr +_
-  199 E3:0939 -  -  -  -  SkipDrawingOfTile:
-  200 E3:0939 11 20 00 00     ld de, 32
-  201 E3:093D FD 19 -  -  _:  add iy, de
-  202 E3:093F D9 -  -  -      exx
-  203 E3:0940 13 -  -  -      inc de
-  204 E3:0941 DD 2B -  -      dec ix
-  205 E3:0943 78 -  -  -      ld a, b
-  206 E3:0944 01 02 FF FF     ld bc, (-MAP_SIZE+1)*2
-  207 E3:0948 09 -  -  -      add hl, bc
-  208 E3:0949 3D -  -  -      dec a
-  209 E3:094A C2 66 08 E3     jp nz, DisplayTile
-  210 E3:094E 01 EE 09 00     ld bc, (MAP_SIZE*10-9)*2
-  211 E3:0952 09 -  -  -      add hl, bc
-  212 E3:0953 EB -  -  -      ex de, hl
-  213 E3:0954 01 F7 FF FF     ld bc, -9
-  214 E3:0958 09 -  -  -      add hl, bc
-  215 E3:0959 EB -  -  -      ex de, hl
-  216 E3:095A ED 32 0A -      lea ix, ix+9+1
-  217 E3:095D 08 -  -  -      ex af, af'
-  218 E3:095E CB 47 -  -      bit 0, a
-  219 E3:0960 -  -  -  -  IncrementRowXOrNot1:
-  220 E3:0960 20 08 -  -      jr nz, +_
-  221 E3:0962 13 -  -  -      inc de
-  222 E3:0963 01 02 FF FF     ld bc, (-MAP_SIZE+1)*2
-  223 E3:0967 09 -  -  -      add hl, bc
-  224 E3:0968 DD 2B -  -      dec ix
-  225 E3:096A D9 -  -  -  _:  exx
-  226 E3:096B 2A 5B 08 E3     ld hl, (startingPosition)
-  227 E3:096F 11 00 0A 00     ld de, 8*320
-  228 E3:0973 19 -  -  -      add hl, de
-  229 E3:0974 22 5B 08 E3     ld (startingPosition), hl
-  230 E3:0978 D9 -  -  -      exx
-  231 E3:0979 3D -  -  -      dec a
-  232 E3:097A C2 57 08 E3     jp nz, DisplayEachRowLoop
-  233 E3:097E -  -  -  -  TempSP2 = $+1
-  234 E3:097E 31 00 00 00     ld sp, 0
-  235 E3:0982 C9 -  -  -      ret
-  236 E3:0983 -  -  -  -  DrawTilesEnd:
-  237 E3:0983 -  -  -  -  
-  238 E3:0983 -  -  -  -  endrelocate()
+   62 E3:085F C3 10 00 E1     jp DrawTiles
+   63 E3:0863 -  -  -  -  ActuallyDisplayTile:
+   64 E3:0863 ED 13 00 -      lea de, iy
+   65 E3:0866 01 02 00 00     ld bc, 2
+   66 E3:086A ED B0 -  -      ldir
+   67 E3:086C FD 39 -  -      add iy, sp
+   68 E3:086E ED 13 FE -      lea de, iy-2
+   69 E3:0871 0E 06 -  -      ld c, 6
+   70 E3:0873 ED B0 -  -      ldir
+   71 E3:0875 FD 39 -  -      add iy, sp
+   72 E3:0877 ED 13 FC -      lea de, iy-4
+   73 E3:087A 0E 0A -  -      ld c, 10
+   74 E3:087C ED B0 -  -      ldir
+   75 E3:087E FD 39 -  -      add iy, sp
+   76 E3:0880 ED 13 FA -      lea de, iy-6
+   77 E3:0883 0E 0E -  -      ld c, 14
+   78 E3:0885 ED B0 -  -      ldir
+   79 E3:0887 FD 39 -  -      add iy, sp
+   80 E3:0889 ED 13 F8 -      lea de, iy-8
+   81 E3:088C 0E 12 -  -      ld c, 18
+   82 E3:088E ED B0 -  -      ldir
+   83 E3:0890 FD 39 -  -      add iy, sp
+   84 E3:0892 ED 13 F6 -      lea de, iy-10
+   85 E3:0895 0E 16 -  -      ld c, 22
+   86 E3:0897 ED B0 -  -      ldir
+   87 E3:0899 FD 39 -  -      add iy, sp
+   88 E3:089B ED 13 F4 -      lea de, iy-12
+   89 E3:089E 0E 1A -  -      ld c, 26
+   90 E3:08A0 ED B0 -  -      ldir
+   91 E3:08A2 FD 39 -  -      add iy, sp
+   92 E3:08A4 ED 13 F2 -      lea de, iy-14
+   93 E3:08A7 0E 1E -  -      ld c, 30
+   94 E3:08A9 ED B0 -  -      ldir
+   95 E3:08AB FD 39 -  -  _:  add iy, sp
+   96 E3:08AD ED 13 F1 -      lea de, iy-15
+   97 E3:08B0 0E 20 -  -      ld c, 32
+   98 E3:08B2 ED B0 -  -      ldir
+   99 E3:08B4 3D -  -  -      dec a
+  100 E3:08B5 20 F4 -  -      jr nz, -_
+  101 E3:08B7 FD 39 -  -      add iy, sp
+  102 E3:08B9 ED 13 F2 -      lea de, iy-14
+  103 E3:08BC 0E 1E -  -      ld c, 30
+  104 E3:08BE ED B0 -  -      ldir
+  105 E3:08C0 FD 39 -  -      add iy, sp
+  106 E3:08C2 ED 13 F4 -      lea de, iy-12
+  107 E3:08C5 0E 1A -  -      ld c, 26
+  108 E3:08C7 ED B0 -  -      ldir
+  109 E3:08C9 FD 39 -  -      add iy, sp
+  110 E3:08CB ED 13 F6 -      lea de, iy-10
+  111 E3:08CE 0E 16 -  -      ld c, 22
+  112 E3:08D0 ED B0 -  -      ldir
+  113 E3:08D2 FD 39 -  -      add iy, sp
+  114 E3:08D4 ED 13 F8 -      lea de, iy-8
+  115 E3:08D7 0E 12 -  -      ld c, 18
+  116 E3:08D9 ED B0 -  -      ldir
+  117 E3:08DB FD 39 -  -      add iy, sp
+  118 E3:08DD ED 13 FA -      lea de, iy-6
+  119 E3:08E0 0E 0E -  -      ld c, 14
+  120 E3:08E2 ED B0 -  -      ldir
+  121 E3:08E4 FD 39 -  -      add iy, sp
+  122 E3:08E6 ED 13 FC -      lea de, iy-4
+  123 E3:08E9 0E 0A -  -      ld c, 10
+  124 E3:08EB ED B0 -  -      ldir
+  125 E3:08ED FD 39 -  -      add iy, sp
+  126 E3:08EF ED 13 FE -      lea de, iy-2
+  127 E3:08F2 0E 06 -  -      ld c, 6
+  128 E3:08F4 ED B0 -  -      ldir
+  129 E3:08F6 FD 39 -  -      add iy, sp
+  130 E3:08F8 ED 13 00 -      lea de, iy-0
+  131 E3:08FB ED A0 -  -      ldi
+  132 E3:08FD ED A0 -  -      ldi
+  133 E3:08FF 11 20 EC FF     ld de, 32-(320*16)
+  134 E3:0903 18 04 -  -      jr +_
+  135 E3:0905 -  -  -  -  SkipDrawingOfTile:
+  136 E3:0905 11 20 00 00     ld de, 32
+  137 E3:0909 FD 19 -  -  _:  add iy, de
+  138 E3:090B D9 -  -  -      exx
+  139 E3:090C 13 -  -  -      inc de
+  140 E3:090D DD 2B -  -      dec ix
+  141 E3:090F 78 -  -  -      ld a, b
+  142 E3:0910 01 02 FF FF     ld bc, (-MAP_SIZE+1)*2
+  143 E3:0914 09 -  -  -      add hl, bc
+  144 E3:0915 3D -  -  -      dec a
+  145 E3:0916 C2 1A 00 E1     jp nz, DisplayTile
+  146 E3:091A 01 EE 09 00     ld bc, (MAP_SIZE*10-9)*2
+  147 E3:091E 09 -  -  -      add hl, bc
+  148 E3:091F EB -  -  -      ex de, hl
+  149 E3:0920 01 F7 FF FF     ld bc, -9
+  150 E3:0924 09 -  -  -      add hl, bc
+  151 E3:0925 EB -  -  -      ex de, hl
+  152 E3:0926 ED 32 0A -      lea ix, ix+9+1
+  153 E3:0929 08 -  -  -      ex af, af'
+  154 E3:092A CB 47 -  -      bit 0, a
+  155 E3:092C -  -  -  -  IncrementRowXOrNot1:
+  156 E3:092C 20 08 -  -      jr nz, +_
+  157 E3:092E 13 -  -  -      inc de
+  158 E3:092F 01 02 FF FF     ld bc, (-MAP_SIZE+1)*2
+  159 E3:0933 09 -  -  -      add hl, bc
+  160 E3:0934 DD 2B -  -      dec ix
+  161 E3:0936 D9 -  -  -  _:  exx
+  162 E3:0937 2A 5C 08 E3     ld hl, (startingPosition)
+  163 E3:093B 11 00 0A 00     ld de, 8*320
+  164 E3:093F 19 -  -  -      add hl, de
+  165 E3:0940 22 5C 08 E3     ld (startingPosition), hl
+  166 E3:0944 D9 -  -  -      exx
+  167 E3:0945 3D -  -  -      dec a
+  168 E3:0946 C2 5A 08 E3     jp nz, DisplayEachRowLoop
+  169 E3:094A ED 5B 14 00 
+              E3 -  -  -      ld de, (currDrawingBuffer)
+  170 E3:094F 21 57 0A 00     ld hl, _resources \.r2
+Listing for file "C:\programming\Assembly\AoCE\relocation.inc"
+Listing for file "C:\programming\Assembly\AoCE\drawField.asm"
+  171 E3:0953 01 C0 12 00     ld bc, _resources_width*_resources_height
+  172 E3:0957 ED B0 -  -      ldir
+  173 E3:0959 21 00 00 E4     ld hl, blackBuffer
+  174 E3:095D 06 28 -  -      ld b, 028h                                                      ; Same as "ld bc, 320*32"
+  175 E3:095F ED B0 -  -      ldir
+  176 E3:0961 -  -  -  -  TempSP2 = $+1
+  177 E3:0961 31 00 00 00     ld sp, 0
+  178 E3:0965 C9 -  -  -      ret
+  179 E3:0966 -  -  -  -  DrawFieldEnd:
+  180 E3:0966 -  -  -  -      
+  181 E3:0966 -  -  -  -  endrelocate()
+  182 D1:B6C4 -  -  -  -  
+  183 D1:B6C4 -  -  -  -  drawtiles_loc = $
+  184 D1:B6C4 -  -  -  -  relocate(mpShaData)
+  185 E1:0010 -  -  -  -  
+  186 E1:0010 -  -  -  -  DrawTiles:
+  187 E1:0010 CB 47 -  -      bit 0, a
+  188 E1:0012 28 03 -  -      jr z, +_
+  189 E1:0014 -  -  -  -  TopRowLeftOrRight = $+2
+  190 E1:0014 ED 33 00 -      lea iy, iy+0
+  191 E1:0017 08 -  -  -  _:  ex af, af'
+  192 E1:0018 3E 09 -  -      ld a, 9
+  193 E1:001A -  -  -  -  DisplayTile:
+  194 E1:001A 47 -  -  -      ld b, a
+  195 E1:001B 7A -  -  -      ld a, d
+  196 E1:001C DD B4 -  -      or a, ixh
+  197 E1:001E 20 24 -  -      jr nz, TileIsOutOfField
+  198 E1:0020 7B -  -  -      ld a, e                                                     ; Check if one of the both indexes is more than the MAP_SIZE, which is $80
+  199 E1:0021 DD B5 -  -      or a, ixl
+  200 E1:0023 87 -  -  -      add a, a
+  201 E1:0024 38 1E -  -      jr c, TileIsOutOfField
+  202 E1:0026 -  -  -  -  CheckWhatTypeOfTileItIs:
+  203 E1:0026 7E -  -  -      ld a, (hl)
+  204 E1:0027 D9 -  -  -      exx                                                         ; Here are the main registers active
+  205 E1:0028 B7 -  -  -      or a, a
+  206 E1:0029 CA 05 09 E3     jp z, SkipDrawingOfTile
+  207 E1:002D 4F -  -  -      ld c, a
+  208 E1:002E 06 07 -  -      ld b, 7
+  209 E1:0030 ED 4C -  -      mlt bc
+  210 E1:0032 21 F9 AE D1     ld hl, TilePointers-7
+  211 E1:0036 09 -  -  -      add hl, bc
+  212 E1:0037 ED 17 -  -      ld de, (hl)                                                 ; Offset from the current position, if the tile/building has a height
+  213 E1:0039 FD 19 -  -      add iy, de
+  214 E1:003B 23 -  -  -      inc hl
+  215 E1:003C 23 -  -  -      inc hl
+  216 E1:003D 23 -  -  -      inc hl
+  217 E1:003E 7E -  -  -      ld a, (hl)                                                  ; Height of the tile
+  218 E1:003F 23 -  -  -      inc hl
+  219 E1:0040 ED 27 -  -      ld hl, (hl)                                                 ; Pointer to the tile
+  220 E1:0042 18 07 -  -      jr +_
+  221 E1:0044 -  -  -  -  TileIsOutOfField:
+  222 E1:0044 D9 -  -  -      exx
+  223 E1:0045 21 00 00 E4     ld hl, blackBuffer
+  224 E1:0049 3E 01 -  -      ld a, 1
+  225 E1:004B C3 63 08 E3 _:  jp ActuallyDisplayTile
+  226 E1:004F -  -  -  -  DrawTilesEnd:
+  227 E1:004F -  -  -  -  
+  228 E1:004F -  -  -  -  endrelocate()
 Listing for file "aoce.asm"
-  266 D1:B719 -  -  -  -  #include "decompress.asm"
+  263 D1:B703 -  -  -  -  #include "decompress.asm"
 Listing for file "C:\programming\Assembly\AoCE\decompress.asm"
-    1 D1:B719 -  -  -  -  DecompressSprite:
-    2 D1:B719 -  -  -  -  ; Routine copied from the C toolchain, maybe by Matt Waltz
-    3 D1:B719 -  -  -  -  ;  Input:
-    4 D1:B719 -  -  -  -  ;   HL = compressed data pointer
-    5 D1:B719 -  -  -  -  ;   DE = output data pointer
-    6 D1:B719 -  -  -  -      
-    7 D1:B719 -  -  -  -  
-    8 D1:B719 3E 80 -  -      ld a, 128
-    9 D1:B71B -  -  -  -  dzx7t_copy_byte_loop:
-   10 D1:B71B ED A0 -  -      ldi                                                ; copy literal byte
-   11 D1:B71D -  -  -  -  dzx7t_main_loop:
-   12 D1:B71D 87 -  -  -      add a, a                                        ; check next bit
-   13 D1:B71E CC 77 B7 D1     call z, dzx7t_load_bits                            ; no more bits left?
-   14 D1:B722 30 F7 -  -      jr nc, dzx7t_copy_byte_loop                        ; next bit indicates either literal or sequence
-   15 D1:B724 -  -  -  -  ; determine number of bits used for length (Elias gamma coding)
-   16 D1:B724 D5 -  -  -      push de
-   17 D1:B725 11 00 00 00         ld de, 0
-   18 D1:B729 01 01 00 00         ld bc, 1        
-   19 D1:B72D -  -  -  -  dzx7t_len_size_loop:
-   20 D1:B72D 14 -  -  -          inc d
-   21 D1:B72E 87 -  -  -          add a, a                                    ; check next bit
-   22 D1:B72F CC 77 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
-   23 D1:B733 30 F8 -  -          jr nc, dzx7t_len_size_loop
-   24 D1:B735 18 0B -  -          jr dzx7t_len_value_start
-   25 D1:B737 -  -  -  -  ; determine length
-   26 D1:B737 -  -  -  -  dzx7t_len_value_loop:
-   27 D1:B737 87 -  -  -          add a, a                                    ; check next bit
-   28 D1:B738 CC 77 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
-   29 D1:B73C CB 11 -  -          rl c
-   30 D1:B73E CB 10 -  -          rl b
-   31 D1:B740 38 32 -  -          jr c, dzx7t_exit                            ; check end marker
-   32 D1:B742 -  -  -  -  dzx7t_len_value_start:
-   33 D1:B742 15 -  -  -          dec d
-   34 D1:B743 20 F2 -  -          jr nz, dzx7t_len_value_loop
-   35 D1:B745 03 -  -  -          inc bc                                        ; adjust length
-   36 D1:B746 -  -  -  -  ; determine offset
-   37 D1:B746 5E -  -  -          ld e, (hl)                                    ; load offset flag (1 bit) + offset value (7 bits)
-   38 D1:B747 23 -  -  -          inc hl
-   39 D1:B748 CB 23 -  -          sla e
-   40 D1:B74A 1C -  -  -          inc e
-   41 D1:B74B 30 1E -  -          jr nc, dzx7t_offset_end                        ; if offset flag is set, load 4 extra bits
-   42 D1:B74D 87 -  -  -          add a, a                                    ; check next bit
-   43 D1:B74E CC 77 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
-   44 D1:B752 CB 12 -  -          rl d                                        ; insert first bit into D
-   45 D1:B754 87 -  -  -          add a, a                                    ; check next bit
-   46 D1:B755 CC 77 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
-   47 D1:B759 CB 12 -  -          rl d                                        ; insert first bit into D
-   48 D1:B75B 87 -  -  -          add a, a                                    ; check next bit
-   49 D1:B75C CC 77 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
-   50 D1:B760 CB 12 -  -          rl d                                        ; insert first bit into D
-   51 D1:B762 87 -  -  -          add a, a                                    ; check next bit
-   52 D1:B763 CC 77 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
-   53 D1:B767 3F -  -  -          ccf
-   54 D1:B768 38 01 -  -          jr c, dzx7t_offset_end
-   55 D1:B76A 14 -  -  -          inc d                                        ; equivalent to adding 128 to DE
-   56 D1:B76B -  -  -  -  dzx7t_offset_end:
-   57 D1:B76B CB 1B -  -          rr e                                        ; insert inverted fourth bit into E
-   58 D1:B76D -  -  -  -  ; copy previous sequence
-   59 D1:B76D E3 -  -  -          ex (sp), hl                                    ; store source, restore destination
-   60 D1:B76E E5 -  -  -          push hl                                        ; store destination
-   61 D1:B76F ED 52 -  -              sbc hl, de                                ; HL = destination - offset - 1
-   62 D1:B771 D1 -  -  -          pop de                                        ; DE = destination
-   63 D1:B772 ED B0 -  -          ldir
-   64 D1:B774 -  -  -  -  dzx7t_exit:
-   65 D1:B774 E1 -  -  -      pop hl                                            ; restore source address (compressed data)
-   66 D1:B775 30 A6 -  -      jr nc, dzx7t_main_loop
-   67 D1:B777 -  -  -  -  dzx7t_load_bits:
-   68 D1:B777 7E -  -  -          ld a, (hl)                                    ; load another group of 8 bits
-   69 D1:B778 23 -  -  -          inc hl
-   70 D1:B779 17 -  -  -          rla
-   71 D1:B77A C9 -  -  -          ret
+    1 D1:B703 -  -  -  -  DecompressSprite:
+    2 D1:B703 -  -  -  -  ; Routine copied from the C toolchain, maybe by Matt Waltz
+    3 D1:B703 -  -  -  -  ;  Input:
+    4 D1:B703 -  -  -  -  ;   HL = compressed data pointer
+    5 D1:B703 -  -  -  -  ;   DE = output data pointer
+    6 D1:B703 -  -  -  -      
+    7 D1:B703 -  -  -  -  
+    8 D1:B703 3E 80 -  -      ld a, 128
+    9 D1:B705 -  -  -  -  dzx7t_copy_byte_loop:
+   10 D1:B705 ED A0 -  -      ldi                                                ; copy literal byte
+   11 D1:B707 -  -  -  -  dzx7t_main_loop:
+   12 D1:B707 87 -  -  -      add a, a                                        ; check next bit
+   13 D1:B708 CC 61 B7 D1     call z, dzx7t_load_bits                            ; no more bits left?
+   14 D1:B70C 30 F7 -  -      jr nc, dzx7t_copy_byte_loop                        ; next bit indicates either literal or sequence
+   15 D1:B70E -  -  -  -  ; determine number of bits used for length (Elias gamma coding)
+   16 D1:B70E D5 -  -  -      push de
+   17 D1:B70F 11 00 00 00         ld de, 0
+   18 D1:B713 01 01 00 00         ld bc, 1        
+   19 D1:B717 -  -  -  -  dzx7t_len_size_loop:
+   20 D1:B717 14 -  -  -          inc d
+   21 D1:B718 87 -  -  -          add a, a                                    ; check next bit
+   22 D1:B719 CC 61 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
+   23 D1:B71D 30 F8 -  -          jr nc, dzx7t_len_size_loop
+   24 D1:B71F 18 0B -  -          jr dzx7t_len_value_start
+   25 D1:B721 -  -  -  -  ; determine length
+   26 D1:B721 -  -  -  -  dzx7t_len_value_loop:
+   27 D1:B721 87 -  -  -          add a, a                                    ; check next bit
+   28 D1:B722 CC 61 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
+   29 D1:B726 CB 11 -  -          rl c
+   30 D1:B728 CB 10 -  -          rl b
+   31 D1:B72A 38 32 -  -          jr c, dzx7t_exit                            ; check end marker
+   32 D1:B72C -  -  -  -  dzx7t_len_value_start:
+   33 D1:B72C 15 -  -  -          dec d
+   34 D1:B72D 20 F2 -  -          jr nz, dzx7t_len_value_loop
+   35 D1:B72F 03 -  -  -          inc bc                                        ; adjust length
+   36 D1:B730 -  -  -  -  ; determine offset
+   37 D1:B730 5E -  -  -          ld e, (hl)                                    ; load offset flag (1 bit) + offset value (7 bits)
+   38 D1:B731 23 -  -  -          inc hl
+   39 D1:B732 CB 23 -  -          sla e
+   40 D1:B734 1C -  -  -          inc e
+   41 D1:B735 30 1E -  -          jr nc, dzx7t_offset_end                        ; if offset flag is set, load 4 extra bits
+   42 D1:B737 87 -  -  -          add a, a                                    ; check next bit
+   43 D1:B738 CC 61 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
+   44 D1:B73C CB 12 -  -          rl d                                        ; insert first bit into D
+   45 D1:B73E 87 -  -  -          add a, a                                    ; check next bit
+   46 D1:B73F CC 61 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
+   47 D1:B743 CB 12 -  -          rl d                                        ; insert first bit into D
+   48 D1:B745 87 -  -  -          add a, a                                    ; check next bit
+   49 D1:B746 CC 61 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
+   50 D1:B74A CB 12 -  -          rl d                                        ; insert first bit into D
+   51 D1:B74C 87 -  -  -          add a, a                                    ; check next bit
+   52 D1:B74D CC 61 B7 D1         call z, dzx7t_load_bits                        ; no more bits left?
+   53 D1:B751 3F -  -  -          ccf
+   54 D1:B752 38 01 -  -          jr c, dzx7t_offset_end
+   55 D1:B754 14 -  -  -          inc d                                        ; equivalent to adding 128 to DE
+   56 D1:B755 -  -  -  -  dzx7t_offset_end:
+   57 D1:B755 CB 1B -  -          rr e                                        ; insert inverted fourth bit into E
+   58 D1:B757 -  -  -  -  ; copy previous sequence
+   59 D1:B757 E3 -  -  -          ex (sp), hl                                    ; store source, restore destination
+   60 D1:B758 E5 -  -  -          push hl                                        ; store destination
+   61 D1:B759 ED 52 -  -              sbc hl, de                                ; HL = destination - offset - 1
+   62 D1:B75B D1 -  -  -          pop de                                        ; DE = destination
+   63 D1:B75C ED B0 -  -          ldir
+   64 D1:B75E -  -  -  -  dzx7t_exit:
+   65 D1:B75E E1 -  -  -      pop hl                                            ; restore source address (compressed data)
+   66 D1:B75F 30 A6 -  -      jr nc, dzx7t_main_loop
+   67 D1:B761 -  -  -  -  dzx7t_load_bits:
+   68 D1:B761 7E -  -  -          ld a, (hl)                                    ; load another group of 8 bits
+   69 D1:B762 23 -  -  -          inc hl
+   70 D1:B763 17 -  -  -          rla
+   71 D1:B764 C9 -  -  -          ret
 Listing for file "aoce.asm"
-  267 D1:B77B -  -  -  -  
-  268 D1:B77B -  -  -  -  #include "relocation_table1.asm"
+  264 D1:B765 -  -  -  -  
+  265 D1:B765 -  -  -  -  #include "relocation_table1.asm"
 Listing for file "C:\programming\Assembly\AoCE\relocation_table1.asm"
-    1 D1:B77B -  -  -  -  RelocationTable1:
-    2 D1:B77B CB B2 D1 -  	.dl 13742795
-    3 D1:B77E 01 B3 D1 -  	.dl 13742849
-    4 D1:B781 1D B3 D1 -  	.dl 13742877
-    5 D1:B784 55 B3 D1 -  	.dl 13742933
-    6 D1:B787 D3 B3 D1 -  	.dl 13743059
-    7 D1:B78A 44 B4 D1 -  	.dl 13743172
-    8 D1:B78D 8D B4 D1 -  	.dl 13743245
+    1 D1:B765 -  -  -  -  RelocationTable1:
+    2 D1:B765 C7 B2 D1 -  	.dl 13742791
+    3 D1:B768 FD B2 D1 -  	.dl 13742845
+    4 D1:B76B 19 B3 D1 -  	.dl 13742873
+    5 D1:B76E 51 B3 D1 -  	.dl 13742929
+    6 D1:B771 CF B3 D1 -  	.dl 13743055
+    7 D1:B774 40 B4 D1 -  	.dl 13743168
+    8 D1:B777 89 B4 D1 -  	.dl 13743241
 Listing for file "aoce.asm"
-  269 D1:B790 FF FF -  -      .dw 0FFFFh
-  270 D1:B792 -  -  -  -  #include "relocation_table2.asm"
+  266 D1:B77A FF FF -  -      .dw 0FFFFh
+  267 D1:B77C -  -  -  -  #include "relocation_table2.asm"
 Listing for file "C:\programming\Assembly\AoCE\relocation_table2.asm"
-    1 D1:B792 -  -  -  -  RelocationTable2:
-    2 D1:B792 08 AF D1 -  	.dl 13741832
-    3 D1:B795 0F AF D1 -  	.dl 13741839
-    4 D1:B798 16 AF D1 -  	.dl 13741846
-    5 D1:B79B 1D AF D1 -  	.dl 13741853
-    6 D1:B79E 24 AF D1 -  	.dl 13741860
-    7 D1:B7A1 2B AF D1 -  	.dl 13741867
-    8 D1:B7A4 32 AF D1 -  	.dl 13741874
+    1 D1:B77C -  -  -  -  RelocationTable2:
+    2 D1:B77C 04 AF D1 -  	.dl 13741828
+    3 D1:B77F 0B AF D1 -  	.dl 13741835
+    4 D1:B782 12 AF D1 -  	.dl 13741842
+    5 D1:B785 19 AF D1 -  	.dl 13741849
+    6 D1:B788 20 AF D1 -  	.dl 13741856
+    7 D1:B78B 27 AF D1 -  	.dl 13741863
+    8 D1:B78E 2E AF D1 -  	.dl 13741870
+    9 D1:B791 AE B6 D1 -  	.dl 13743790
 Listing for file "aoce.asm"
-  271 D1:B7A7 FF FF -  -      .dw 0FFFFh
-  272 D1:B7A9 -  -  -  -  
-  273 D1:B7A9 -  -  -  -  .echo "Size of main program:       ",$-start+2+9+4
+  268 D1:B794 FF FF -  -      .dw 0FFFFh
+  269 D1:B796 -  -  -  -  
+  270 D1:B796 -  -  -  -  .echo "Size of main program:       ",$-start+2+9+4

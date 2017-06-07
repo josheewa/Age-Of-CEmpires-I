@@ -1,37 +1,7 @@
 drawfield_loc = $
-relocate(mpShaData)
-
-DrawField:
-    ld hl, screenBuffer
-    ld (hl), 255
-    ld de, screenBuffer+1
-    ld bc, 320*240-1
-    ldir
-    bit need_to_redraw_tiles, (iy+0)
-    call nz, DrawTiles
-    ld de, vRAM+(32*320)+32                                     ; Copy the buffer from (32,64) to (32,32)
-    ld hl, screenBuffer+(64*320)+32
-    ld bc, 0
-    ld a, 240-32-32
-CopyBufferLoop:
-    ld c, b
-    inc b                                                       ; Copy 256 bytes
-    ldir
-    ld c, 32+32
-    add hl, bc
-    ex de, hl
-    add hl, bc
-    ex de, hl
-    dec a
-    jr nz, CopyBufferLoop
-    ret
-DrawFieldEnd:
-    
-endrelocate()
-drawtiles_loc = $
 relocate(cursorImage)
 
-DrawTiles:
+DrawField:
     ld b, (ix+OFFSET_X)                                         ; We start with the shadow registers active
     bit 4, b
     ld a, 16
@@ -42,10 +12,12 @@ DrawTiles:
 _:  ld (TopRowLeftOrRight), a
     ld a, c
     ld (IncrementRowXOrNot1), a
-    ld e, (ix+OFFSET_Y)                                         ; Point to the output
+    ld a, (ix+OFFSET_Y)                                         ; Point to the output
+    add a, 32                                                   ; We start at row 32
+    ld e, a
     ld d, 160
     mlt de
-    ld hl, screenBuffer+(320*32)
+    ld hl, (currDrawingBuffer)
     add hl, de
     add hl, de
     ld d, 0
@@ -85,47 +57,11 @@ DisplayEachRowLoop:
 ;   IY  = pointer to output
 ;   SP  = SCREEN_WIDTH
 
-    bit 0, a                                                    ; Here are the shadow registers active
-startingPosition = $+2
+startingPosition = $+2                                          ; Here are the shadow registers active
     ld iy, 0
-    jr z, +_
-TopRowLeftOrRight = $+2
-    lea iy, iy+0
-_:  ex af, af'
-    ld a, 9
-DisplayTile:
-    ld b, a
-    ld a, d
-    or a, ixh
-    jr nz, TileIsOutOfField
-    ld a, e                                                     ; Check if one of the both indexes is more than the MAP_SIZE, which is $80
-    or a, ixl
-    add a, a
-    jr c, TileIsOutOfField
-CheckWhatTypeOfTileItIs:
-    ld a, (hl)
-    exx                                                         ; Here are the main registers active
-    or a, a
-    jp z, SkipDrawingOfTile
-    ld c, a
-    ld b, 7
-    mlt bc
-    ld hl, TilePointers-7
-    add hl, bc
-    ld de, (hl)                                                 ; Offset from the current position, if the tile/building has a height
-    add iy, de
-    inc hl
-    inc hl
-    inc hl
-    ld a, (hl)                                                  ; Height of the tile
-    inc hl
-    ld hl, (hl)                                                 ; Pointer to the tile
-    jr +_
-TileIsOutOfField:
-    exx
-    ld hl, blackBuffer
-    ld a, 1
-_:  lea de, iy
+    jp DrawTiles
+ActuallyDisplayTile:
+    lea de, iy
     ld bc, 2
     ldir
     add iy, sp
@@ -230,9 +166,63 @@ _:  exx
     exx
     dec a
     jp nz, DisplayEachRowLoop
+    ld de, (currDrawingBuffer)
+    ld hl, _resources \.r2
+    ld bc, _resources_width*_resources_height
+    ldir
+    ld hl, blackBuffer
+    ld b, 028h                                                      ; Same as "ld bc, 320*32"
+    ldir
 TempSP2 = $+1
     ld sp, 0
     ret
+DrawFieldEnd:
+    
+endrelocate()
+
+drawtiles_loc = $
+relocate(mpShaData)
+
+DrawTiles:
+    bit 0, a
+    jr z, +_
+TopRowLeftOrRight = $+2
+    lea iy, iy+0
+_:  ex af, af'
+    ld a, 9
+DisplayTile:
+    ld b, a
+    ld a, d
+    or a, ixh
+    jr nz, TileIsOutOfField
+    ld a, e                                                     ; Check if one of the both indexes is more than the MAP_SIZE, which is $80
+    or a, ixl
+    add a, a
+    jr c, TileIsOutOfField
+CheckWhatTypeOfTileItIs:
+    ld a, (hl)
+    exx                                                         ; Here are the main registers active
+    or a, a
+    jp z, SkipDrawingOfTile
+    ld c, a
+    ld b, 7
+    mlt bc
+    ld hl, TilePointers-7
+    add hl, bc
+    ld de, (hl)                                                 ; Offset from the current position, if the tile/building has a height
+    add iy, de
+    inc hl
+    inc hl
+    inc hl
+    ld a, (hl)                                                  ; Height of the tile
+    inc hl
+    ld hl, (hl)                                                 ; Pointer to the tile
+    jr +_
+TileIsOutOfField:
+    exx
+    ld hl, blackBuffer
+    ld a, 1
+_:  jp ActuallyDisplayTile
 DrawTilesEnd:
 
 endrelocate()

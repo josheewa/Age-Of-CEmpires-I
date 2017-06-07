@@ -90,7 +90,6 @@ gfx_SetTransparentColor:
     jp 225
     
 Main:
-    di
     call _HomeUp
     call _ClrLCDFull
     call _RunIndicOff
@@ -100,6 +99,7 @@ ForceStopProgramWithFadeOut:
     call fadeOut
 ForceStopProgram:
     call gfx_End
+    di
 backupSP = $+1
     ld sp, 0
     ld a, 0D1h
@@ -165,8 +165,6 @@ RunProgram:
     xor a, a
     ld (ix+OFFSET_X), a
     ld (ix+OFFSET_Y), a
-    ld iy, AoCEFlags
-    set need_to_redraw_tiles, (iy+0)
     ld hl, drawfield_loc
     ld de, DrawField
     ld bc, DrawFieldEnd - DrawField
@@ -174,21 +172,19 @@ RunProgram:
     ld de, DrawTiles
     ld bc, DrawTilesEnd - DrawTiles
     ldir
+    ld hl, vRAM+(320*240)
+    ld (currDrawingBuffer), hl
     
 MainGameLoop:
-    ld hl, 0D52C00h
-    ld (mpLcdBase), hl
-    scf
-    sbc hl, hl
-    ld (hl), 2
     call DrawField
     call GetKeyFast
+    ld ix, saveSScreen+21000
     ld iy, TopLeftXTile
     ld l, 01Ch
     bit kpClear, (hl)
-    jp z, ForceStopProgram
+    jp nz, ForceStopProgram
     ld l, 01Eh
-CheckIfPressedUp:             ; All the controls are 'reversed', if you press [LEFT], it should scroll to the right
+CheckIfPressedUp:                                   ; All the controls are 'reversed', if you press [LEFT], it should scroll to the right
     bit kpUp, (hl)
     jr z, CheckIfPressedRight
     ld a, (ix+OFFSET_Y)
@@ -199,16 +195,16 @@ CheckIfPressedUp:             ; All the controls are 'reversed', if you press [L
     and %00001111
     ld (ix+OFFSET_Y), a
     jr nz, CheckIfPressedRight
-    shift_tile0_x_left()
-    shift_tile0_y_up()
+    ScrollLeft()
+    ScrollUp()
 CheckIfPressedRight:
     bit kpRight, (hl)
     jr z, CheckIfPressedLeft
     ld a, (ix+OFFSET_X)
     or a, a
     jr nz, +_
-    shift_tile0_x_right()
-    shift_tile0_y_up()
+    ScrollRight()
+    ScrollUp()
 _:  dec a
     dec a
     dec a
@@ -226,30 +222,33 @@ CheckIfPressedLeft:
     and %00011111
     ld (ix+OFFSET_X), a
     jr nz, CheckIfPressedDown
-    shift_tile0_x_left()
-    shift_tile0_y_down()
+    ScrollLeft()
+    ScrollDown()
 CheckIfPressedDown:
     bit kpDown, (hl)
     jr z, CheckKeyPressesStop
     ld a, (ix+OFFSET_Y)
     or a, a
     jr nz, +_
-    shift_tile0_x_right()
-    shift_tile0_y_down()
-_: dec a
+    ScrollRight()
+    ScrollDown()
+_:  dec a
     dec a
     dec a
     dec a
     and %00001111
     ld (ix+OFFSET_Y), a
 CheckKeyPressesStop:
-    ld iy, AoCEFlags
-    res need_to_redraw_tiles, (iy+0)
-    ld a, (hl)
+    ld hl, vRAM
+    ld de, (mpLcdBase)
     or a, a
-    jr z, +_
-    set need_to_redraw_tiles, (iy+0)
-_:  jp MainGameLoop
+    sbc hl, de
+    add hl, de
+    jr nz, +_
+    ld hl, vRAM+(320*240)
+_:  ld (currDrawingBuffer), de
+    ld (mpLcdBase), hl
+    jp MainGameLoop
     
 #include "map.asm"
 #include "data.asm"

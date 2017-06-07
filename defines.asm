@@ -9,8 +9,6 @@ screenBuffer                .equ vRAM+(320*240)
 mapAddress                  .equ pixelShadow
 blackBuffer                 .equ 0E40000h
 
-need_to_redraw_tiles        .equ 0
-
 kpUp                        .equ 3
 kpLeft                      .equ 1
 kpRight                     .equ 2

@@ -1,22 +1,22 @@
-#macro shift_tile0_x_left()
+#macro ScrollLeft()
 	ld de, (iy+OFFSET_X_TILE0)
 	dec de
 	ld (iy+OFFSET_X_TILE0), de
 #endmacro
 
-#macro shift_tile0_x_right()
+#macro ScrollRight()
 	ld de, (iy+OFFSET_X_TILE0)
 	inc de
 	ld (iy+OFFSET_X_TILE0), de
 #endmacro
 
-#macro shift_tile0_y_up()
+#macro ScrollUp()
 	ld de, (iy+OFFSET_Y_TILE0)
 	dec de
 	ld (iy+OFFSET_Y_TILE0), de
 #endmacro
 
-#macro shift_tile0_y_down()
+#macro ScrollDown()
 	ld de, (iy+OFFSET_Y_TILE0)
 	inc de
 	ld (iy+OFFSET_Y_TILE0), de
