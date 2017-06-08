@@ -11,7 +11,7 @@
 start:
     jp AoCEStart
     .db 1
-    .db 16,16
+    .db 16,16                                                               ; Cesium icon, made by Pieman7373
     .db 000h,000h,000h,000h,020h,061h,081h,0A1h,0A1h,0A0h,0A0h,040h,001h,000h,000h,000h
     .db 000h,000h,000h,020h,061h,0A2h,0C2h,0C1h,0C0h,0A0h,0C0h,061h,021h,021h,021h,000h
     .db 000h,000h,020h,061h,0A1h,0C1h,0A1h,0A0h,061h,0A1h,0C1h,062h,029h,029h,021h,021h
@@ -110,7 +110,7 @@ backupSP = $+1
     ld iy, flags
     jp _DrawStatusBar
 #include "flash.asm"
-RunProgram:
+RunProgram:                                                             ; Set 2 timers for random seeds
     or a, a
     sbc hl, hl
     ex de, hl
@@ -192,7 +192,7 @@ CheckIfPressedUp:                                   ; All the controls are 'reve
     inc a
     inc a
     inc a
-    and %00001111
+    and a, %00001111
     ld (ix+OFFSET_Y), a
     jr nz, CheckIfPressedRight
     ScrollLeft()
@@ -209,7 +209,7 @@ _:  dec a
     dec a
     dec a
     dec a
-    and %00011111
+    and a, %00011111
     ld (ix+OFFSET_X), a
 CheckIfPressedLeft:
     bit kpLeft, (hl)
@@ -219,7 +219,7 @@ CheckIfPressedLeft:
     inc a
     inc a
     inc a
-    and %00011111
+    and a, %00011111
     ld (ix+OFFSET_X), a
     jr nz, CheckIfPressedDown
     ScrollLeft()
@@ -236,9 +236,10 @@ _:  dec a
     dec a
     dec a
     dec a
-    and %00001111
+    and a, %00001111
     ld (ix+OFFSET_Y), a
 CheckKeyPressesStop:
+; Swap buffers
     ld hl, vRAM
     ld de, (mpLcdBase)
     or a, a
@@ -253,7 +254,7 @@ _:  ld (currDrawingBuffer), de
 #include "map.asm"
 #include "data.asm"
 #include "fade.asm"
-#include "drawGame.asm"
+;#include "drawGame.asm"
 #include "mainmenu.asm"
 #include "routines.asm"
 #include "drawField.asm"

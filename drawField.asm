@@ -5,15 +5,15 @@ DrawField:
     ld b, (ix+OFFSET_X)                                         ; We start with the shadow registers active
     bit 4, b
     ld a, 16
-    ld c, 020h
+    ld c, 028h
     jr z, +_
     ld a, -16
-    ld c, 028h
+    ld c, 020h
 _:  ld (TopRowLeftOrRight), a
     ld a, c
     ld (IncrementRowXOrNot1), a
     ld a, (ix+OFFSET_Y)                                         ; Point to the output
-    add a, 32                                                   ; We start at row 32
+    add a, 31                                                   ; We start at row 31
     ld e, a
     ld d, 160
     mlt de
@@ -22,7 +22,7 @@ _:  ld (TopRowLeftOrRight), a
     add hl, de
     ld d, 0
     ld a, b
-    add a, 16
+    add a, 15
     ld e, a
     add hl, de
     ld (startingPosition), hl
@@ -40,7 +40,7 @@ _:  ld (TopRowLeftOrRight), a
     ld bc, mapAddress
     add hl, bc
     ld ix, (TopLeftYTile)
-    ld a, 28
+    ld a, 23
     ld (TempSP2), sp
     ld sp, lcdWidth
 DisplayEachRowLoop:
@@ -59,12 +59,14 @@ DisplayEachRowLoop:
 
 startingPosition = $+2                                          ; Here are the shadow registers active
     ld iy, 0
+    bit 0, a
+    jr nz, +_
+TopRowLeftOrRight = $+2
+    lea iy, iy+0
+_:  ex af, af'
+    ld a, 9
     jp DrawTiles
 ActuallyDisplayTile:
-    lea de, iy
-    ld bc, 2
-    ldir
-    add iy, sp
     lea de, iy-2
     ld c, 6
     ldir
@@ -92,7 +94,7 @@ ActuallyDisplayTile:
     lea de, iy-14
     ld c, 30
     ldir
-_:  add iy, sp
+_:  add iy, sp                                                  ; Display middle part of the building/tile
     lea de, iy-15
     ld c, 32
     ldir
@@ -168,10 +170,21 @@ _:  exx
     jp nz, DisplayEachRowLoop
     ld de, (currDrawingBuffer)
     ld hl, _resources \.r2
-    ld bc, _resources_width*_resources_height
+    ld bc, _resources_width * _resources_height
     ldir
     ld hl, blackBuffer
-    ld b, 028h                                                      ; Same as "ld bc, 320*32"
+    ld bc, 320*40+32
+    ld a, 160
+_:  ldir
+    ex de, hl
+    inc b
+    add hl, bc
+    ex de, hl
+    ld c, 32+32
+    dec b
+    dec a
+    jr nz, -_
+    ld bc, 320*25+32
     ldir
 TempSP2 = $+1
     ld sp, 0
@@ -184,12 +197,6 @@ drawtiles_loc = $
 relocate(mpShaData)
 
 DrawTiles:
-    bit 0, a
-    jr z, +_
-TopRowLeftOrRight = $+2
-    lea iy, iy+0
-_:  ex af, af'
-    ld a, 9
 DisplayTile:
     ld b, a
     ld a, d
@@ -222,7 +229,11 @@ TileIsOutOfField:
     exx
     ld hl, blackBuffer
     ld a, 1
-_:  jp ActuallyDisplayTile
+_:  lea de, iy
+    ld bc, 2
+    ldir
+    add iy, sp
+    jp ActuallyDisplayTile
 DrawTilesEnd:
 
 endrelocate()
