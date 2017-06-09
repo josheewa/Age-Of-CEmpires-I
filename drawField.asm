@@ -188,8 +188,24 @@ _:  ldir
     ldir
 TempSP2 = $+1
     ld sp, 0
-    ret
 DrawFieldEnd:
+
+PuppetsEvents:
+    ld a, (AmountOfPeople)
+    or a, a
+    ex af, af'
+    ld ix, puppetStack
+PuppetEventLoop:
+    ex af, af'
+    ret z
+    ex af, af'
+    ; Do action
+    
+    ex af, af'
+    dec a
+    lea ix, ix+9
+    ex af, af'
+PuppetsEventsEnd:
     
 endrelocate()
 

@@ -1,14 +1,14 @@
 Opened convpng.ini
 
 --- Group gfx_tiles (ASM) ---
-Using built-in xlibc palette...
-TranspColorIndex : 0
-TranspColor : 0xFFFF
+Using built-in xlibc palette ...
+warning: ignoring transparent color value for a fixed palette.Transparent Color Index : 0
+Transparent Color : 0xFFFF
 4:
- food : converted! (food.asm)
- gold : converted! (gold.asm)
- grass : converted! (grass.asm)
- stone : converted! (stone.asm)
+ food : converted!
+ gold : converted!
+ grass : converted!
+ stone : converted!
 
 Converted in 1 s
 

@@ -1,23 +1,23 @@
 Opened convpng.ini
 
 --- Group gfx_main1 (ASM) ---
-Using built-in xlibc palette...
-TranspColorIndex : 0
-TranspColor : 0xFFFF
+Using built-in xlibc palette ...
+warning: ignoring transparent color value for a fixed palette.Transparent Color Index : 0
+Transparent Color : 0xFFFF
 6:
- AoCEI : converted! (compress: 18022 -> 6889 bytes)
- soldier : converted! (compress: 23312 -> 7010 bytes)
- playhelpquit : converted! (compress: 9128 -> 2730 bytes)
- singlemultiplayer : converted! (compress: 17264 -> 3987 bytes)
- newloadgame : converted! (compress: 15248 -> 3342 bytes)
- intro : converted! (compress: 30627 -> 9840 bytes)
+ AoCEI : converted! (18022 > 6889 bytes)
+ soldier : converted! (23312 > 7010 bytes)
+ playhelpquit : converted! (9128 > 2730 bytes)
+ singlemultiplayer : converted! (17264 > 3987 bytes)
+ newloadgame : converted! (15248 > 3342 bytes)
+ intro : converted! (30627 > 9815 bytes)
 
 --- Group gfx_main2 (ASM) ---
-Using built-in xlibc palette...
-TranspColorIndex : 0
-TranspColor : 0xFFFF
+Using built-in xlibc palette ...
+warning: ignoring transparent color value for a fixed palette.Transparent Color Index : 0
+Transparent Color : 0xFFFF
 1:
- pointer : converted! (pointer.asm)
+ pointer : converted!
 
 Converted in 1 s
 

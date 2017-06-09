@@ -156,6 +156,15 @@ RunProgram:                                                             ; Set 2 
     ld hl, GraphicsAppvar2
     ld de, RelocationTable2
     call LoadGraphicsAppvar
+    
+    ld ix, puppetStack
+    ld (ix+puppetType), 0
+    ld (ix+puppetEvent), 1
+    ld (ix+puppetX), 2
+    ld (ix+puppetY), 3
+    ld (ix+puppetHealth), 100
+    ld (ix+puppetHitpoints), 3
+    
     ld ix, saveSScreen+21000
     di
     ld.sis sp, 0987Eh
@@ -167,7 +176,7 @@ RunProgram:                                                             ; Set 2 
     ld (ix+OFFSET_Y), a
     ld hl, drawfield_loc
     ld de, DrawField
-    ld bc, DrawFieldEnd - DrawField
+    ld bc, DrawFieldEnd - DrawField + PuppetsEventsEnd - PuppetsEvents
     ldir
     ld de, DrawTiles
     ld bc, DrawTilesEnd - DrawTiles
