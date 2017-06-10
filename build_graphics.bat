@@ -14,6 +14,7 @@ call :editFile gfx_buildings.inc Buildings
 cd ..\Tiles
 convpng
 call :editFile gfx_tiles.inc Tiles
+pause
 exit
 
 :colorEcho
