@@ -1,7 +1,8 @@
 ; Converted using ConvPNG
 
 ; 8 bpp image
-_food_size .equ 546
+_food_width .equ 32
+_food_height .equ 17
 _food:
  .db 32,17
  .db 0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,084h,06Bh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh

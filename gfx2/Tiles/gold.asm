@@ -1,7 +1,8 @@
 ; Converted using ConvPNG
 
 ; 8 bpp image
-_gold_size .equ 546
+_gold_width .equ 32
+_gold_height .equ 17
 _gold:
  .db 32,17
  .db 0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0DEh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh

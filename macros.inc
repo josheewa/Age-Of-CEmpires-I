@@ -1,25 +1,81 @@
 #macro ScrollLeft()
-	ld de, (iy+OFFSET_X_TILE0)
+	ld de, (iy+TopLeftXTile)
 	dec de
-	ld (iy+OFFSET_X_TILE0), de
+	ld (iy+TopLeftXTile), de
 #endmacro
 
 #macro ScrollRight()
-	ld de, (iy+OFFSET_X_TILE0)
+	ld de, (iy+TopLeftXTile)
 	inc de
-	ld (iy+OFFSET_X_TILE0), de
+	ld (iy+TopLeftXTile), de
 #endmacro
 
 #macro ScrollUp()
-	ld de, (iy+OFFSET_Y_TILE0)
+	ld de, (iy+TopLeftYTile)
 	dec de
-	ld (iy+OFFSET_Y_TILE0), de
+	ld (iy+TopLeftYTile), de
 #endmacro
 
 #macro ScrollDown()
-	ld de, (iy+OFFSET_Y_TILE0)
+	ld de, (iy+TopLeftYTile)
 	inc de
-	ld (iy+OFFSET_Y_TILE0), de
+	ld (iy+TopLeftYTile), de
+#endmacro
+
+#macro ScrollFieldRight()
+    ld a, (ix+OFFSET_X)
+    or a, a
+    jr nz, +_
+    ScrollRight()
+    ScrollUp()
+_:  dec a
+    dec a
+    dec a
+    dec a
+    and a, %00011111
+    ld (ix+OFFSET_X), a
+#endmacro
+
+#macro ScrollFieldLeft()
+    ld a, (ix+OFFSET_X)
+    inc a
+    inc a
+    inc a
+    inc a
+    and a, %00011111
+    ld (ix+OFFSET_X), a
+    jr nz, +_
+    ScrollLeft()
+    ScrollDown()
+_:
+#endmacro
+
+#macro ScrollFieldUp()
+    ld a, (ix+OFFSET_Y)
+    inc a
+    inc a
+    inc a
+    inc a
+    and a, %00001111
+    ld (ix+OFFSET_Y), a
+    jr nz, +_
+    ScrollLeft()
+    ScrollUp()
+_:
+#endmacro
+
+#macro ScrollFieldDown()
+    ld a, (ix+OFFSET_Y)
+    or a, a
+    jr nz, +_
+    ScrollRight()
+    ScrollDown()
+_:  dec a
+    dec a
+    dec a
+    dec a
+    and a, %00001111
+    ld (ix+OFFSET_Y), a
 #endmacro
 
 #macro printString(message, x, y)

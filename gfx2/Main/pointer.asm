@@ -1,7 +1,8 @@
 ; Converted using ConvPNG
 
 ; 8 bpp image
-_pointer_size .equ 807
+_pointer_width .equ 23
+_pointer_height .equ 35
 _pointer:
  .db 23,35
  .db 000h,000h,000h,000h,041h,0A3h,061h,000h,000h,000h,000h,000h,000h,000h,000h,000h,000h,000h,000h,000h,000h,000h,000h

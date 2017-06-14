@@ -20,9 +20,9 @@ GeneratingMapMessage:
 LoadingMapMessage:
     .db "Loading map...", 0
 GraphicsAppvar1:
-    .db AppVarObj, "AOCEGFX1"
+    .db AppVarObj, "AOCEGFX1", 0
 GraphicsAppvar2:
-    .db AppVarObj, "AOCEGFX2"
+    .db AppVarObj, "AOCEGFX2", 0
 AoCEMapAppvar:
     .db AppVarObj, "AOCEMAP", 0
 GraphicsAppvarNotFound:
@@ -44,6 +44,8 @@ AmountOfMaxPeople:
     .db 10
 AmountOfBuildings:
     .db 0
+TempData:
+    .block 8
 
 TilePointers:
     .dl 0                         \ .db 1                  \ .dl _grass \.r2
@@ -53,20 +55,6 @@ TilePointers:
     .dl 0                         \ .db 1                  \ .dl _food  \.r2
     .dl -(_test1_height - 16)*320 \ .db _test1_height - 15 \ .dl _test1 \.r2
     .dl -(_test2_height - 16)*320 \ .db _test2_height - 15 \ .dl _test2 \.r2
-    
-TileHeights:
-    .db 0
-    .db 0
-    .db 0
-    .db 0
-    
-AoCEFlags:
-    .db 0
-    
-TopLeftXTile:
-    .dl -10
-TopLeftYTile:
-    .dl -3
     
 ResourcesType1:
     .db 0, 1, 0
@@ -130,3 +118,21 @@ pal_sprites:                                                                ; Do
     .dw $7468, $74E9, $756A, $75EB, $766C, $76ED, $776E, $77EF
     .dw $7870, $78F1, $7972, $79F3, $7A74, $7AF5, $7B76, $7BF7
     .dw $7C78, $7CF9, $7D7A, $7DFB, $7E7C, $7EFD, $7F7E, $FFFF
+    
+_IYOffsets:
+#define prevAddr eval($)
+.org 0
+
+TopLeftXTile:            .dl -10
+TopLeftYTile:            .dl -3
+MouseX:                  .dl 0
+MouseY:                  .db 0
+SelectedAreaStartX:      .dl 0
+SelectedAreaStartY:      .dl 0
+SelectedAreaLeftBound:   .dl 0
+SelectedAreaRightBound:  .dl 0
+SelectedAreaUpperBound:  .db 0
+SelectedAreaLowerBound:  .db 0
+AoCEFlags1:              .db 0
+
+.org $+prevAddr

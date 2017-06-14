@@ -94,22 +94,20 @@ Main:
     call _ClrLCDFull
     call _RunIndicOff
     ld (backupSP), sp
-    jp RunProgram
+    jr RunProgram
+#include "flash.asm"
 ForceStopProgramWithFadeOut:
     call fadeOut
 ForceStopProgram:
-    call gfx_End
-    di
 backupSP = $+1
     ld sp, 0
-    ld a, 0D1h
-    ld mb, a
+    di
     call.lis fLockFlash & 0FFFFh
     ld a, 0D0h
     ld mb, a
+    call gfx_End
     ld iy, flags
     jp _DrawStatusBar
-#include "flash.asm"
 RunProgram:                                                             ; Set 2 timers for random seeds
     or a, a
     sbc hl, hl
@@ -140,10 +138,6 @@ RunProgram:                                                             ; Set 2 
     ld l, lcdBpp8
     push hl
         call gfx_Begin
-        ld de, mpLcdPalette
-        ld hl, blackBuffer
-        ld bc, 256*2
-        ;ldir
         ld l, 254
         ex (sp), hl
         call gfx_SetTextFGColor
@@ -167,7 +161,7 @@ RunProgram:                                                             ; Set 2 
     
     ld ix, saveSScreen+21000
     di
-    ld.sis sp, 0987Eh
+    ld.sis sp, $987E
     ld a, 0D1h
     ld mb, a
     call.lis fUnlockFlash & 0FFFFh
@@ -176,7 +170,7 @@ RunProgram:                                                             ; Set 2 
     ld (ix+OFFSET_Y), a
     ld hl, drawfield_loc
     ld de, DrawField
-    ld bc, DrawFieldEnd - DrawField + PuppetsEventsEnd - PuppetsEvents
+    ld bc, DisplaySelectedAreaBorderEnd - DrawField
     ldir
     ld de, DrawTiles
     ld bc, DrawTilesEnd - DrawTiles
@@ -187,67 +181,74 @@ RunProgram:                                                             ; Set 2 
 MainGameLoop:
     call DrawField
     call GetKeyFast
-    ld ix, saveSScreen+21000
-    ld iy, TopLeftXTile
+    ld ix, variables
+CheckKeys369:                                           ; Check [3], [6], [9]
+    ld l, 01Ah
+    ld a, (hl)
+    and a, (1 << kp3) | (1 << kp6) | (1 << kp9)
+    jr z, CheckKeys28
+    ScrollFieldRight()
+CheckKey3:
+    bit kp3, (hl)
+    jr z, CheckKey9
+    ScrollFieldDown()
+CheckKey9:
+    bit kp9, (hl)
+    jr z, CheckKeys28
+    ScrollFieldUp()
+CheckKeys28:                                            ; Check [2], [8]
+    ld l, 018h
+    ld a, (hl)
+    and a, (1 << kp2) | (1 << kp8)
+    jr z, CheckKeys147
+CheckKey2:
+    bit kp3, (hl)
+    jr z, CheckKey8
+    ScrollFieldDown()
+CheckKey8:
+    bit kp9, (hl)
+    jr z, CheckKeys147
+    ScrollFieldUp()
+CheckKeys147:
+    ld l, 016h
+    ld a, (hl)
+    and a, (1 << kp1) | (1 << kp4) | (1 << kp7)
+    jr z, CheckClearEnter
+    ScrollFieldLeft()
+CheckKey1:
+    bit kp1, (hl)
+    jr z, CheckKey7
+    ScrollFieldDown()
+CheckKey7:
+    bit kp7, (hl)
+    jr z, CheckClearEnter
+    ScrollFieldUp()
+CheckClearEnter:
     ld l, 01Ch
     bit kpClear, (hl)
     jp nz, ForceStopProgram
-    ld l, 01Eh
-CheckIfPressedUp:                                   ; All the controls are 'reversed', if you press [LEFT], it should scroll to the right
-    bit kpUp, (hl)
-    jr z, CheckIfPressedRight
-    ld a, (ix+OFFSET_Y)
-    inc a
-    inc a
-    inc a
-    inc a
-    and a, %00001111
-    ld (ix+OFFSET_Y), a
-    jr nz, CheckIfPressedRight
-    ScrollLeft()
-    ScrollUp()
-CheckIfPressedRight:
-    bit kpRight, (hl)
-    jr z, CheckIfPressedLeft
-    ld a, (ix+OFFSET_X)
-    or a, a
-    jr nz, +_
-    ScrollRight()
-    ScrollUp()
-_:  dec a
-    dec a
-    dec a
-    dec a
-    and a, %00011111
-    ld (ix+OFFSET_X), a
-CheckIfPressedLeft:
-    bit kpLeft, (hl)
-    jr z, CheckIfPressedDown
-    ld a, (ix+OFFSET_X)
-    inc a
-    inc a
-    inc a
-    inc a
-    and a, %00011111
-    ld (ix+OFFSET_X), a
-    jr nz, CheckIfPressedDown
-    ScrollLeft()
-    ScrollDown()
-CheckIfPressedDown:
-    bit kpDown, (hl)
-    jr z, CheckKeyPressesStop
-    ld a, (ix+OFFSET_Y)
-    or a, a
-    jr nz, +_
-    ScrollRight()
-    ScrollDown()
-_:  dec a
-    dec a
-    dec a
-    dec a
-    and a, %00001111
-    ld (ix+OFFSET_Y), a
-CheckKeyPressesStop:
+    bit kpEnter, (hl)
+    jr z, CheckReleaseEnterKey
+    bit holdDownEnterKey, (iy+AoCEFlags1)
+    set holdDownEnterKey, (iy+AoCEFlags1)
+    jr nz, CheckStop
+CreateNewSelectedArea:
+    ld hl, (iy+MouseX)
+    ld (iy+SelectedAreaStartX), hl
+    ld (iy+SelectedAreaLeftBound), hl
+    ld (iy+SelectedAreaRightBound), hl
+    ld l, (iy+MouseY)
+    ld (iy+SelectedAreaStartY), l
+    ld (iy+SelectedAreaUpperBound), l
+    ld (iy+SelectedAreaLowerBound), l
+    jr CheckStop
+CheckReleaseEnterKey:
+    bit holdDownEnterKey, (iy+AoCEFlags1)
+    res holdDownEnterKey, (iy+AoCEFlags1)
+    jr z, CheckStop
+ParseSelectedArea:
+; Yay #not :P
+CheckStop:
 ; Swap buffers
     ld hl, vRAM
     ld de, (mpLcdBase)
@@ -261,17 +262,14 @@ _:  ld (currDrawingBuffer), de
     jp MainGameLoop
     
 #include "map.asm"
-#include "data.asm"
 #include "fade.asm"
-;#include "drawGame.asm"
 #include "mainmenu.asm"
 #include "routines.asm"
 #include "drawField.asm"
 #include "decompress.asm"
-
+#include "data.asm"
 #include "relocation_table1.asm"
     .dw 0FFFFh
 #include "relocation_table2.asm"
     .dw 0FFFFh
-
 .echo "Size of main program:       ",$-start+2+9+4

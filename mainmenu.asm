@@ -1,4 +1,8 @@
 MainMenu:
+    ld de, mpLcdPalette
+    ld hl, blackBuffer
+    ld bc, 256*2
+    ldir
     ld hl, vRAM
     ld (hl), 094h
     ld de, vRAM+1

@@ -42,6 +42,7 @@ LoadGraphicsAppvar:
             call _PutS
             call _NewLine
         pop hl
+        inc hl
         call _PutS
         call _GetKey
         jp ForceStopProgram

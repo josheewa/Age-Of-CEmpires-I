@@ -2,8 +2,6 @@
 MAP_SIZE                    .equ 128
 OFFSET_X                    .equ 0
 OFFSET_Y                    .equ 1
-OFFSET_X_TILE0              .equ 0
-OFFSET_Y_TILE0              .equ 3
 
 ;;; Pointers
 currDrawingBuffer           .equ 0E30014h
@@ -11,8 +9,18 @@ screenBuffer                .equ vRAM+(320*240)
 mapAddress                  .equ pixelShadow
 puppetStack                 .equ pixelShadow+(MAP_SIZE*MAP_SIZE*2)
 blackBuffer                 .equ 0E40000h
+variables                   .equ saveSScreen+21000
 
 ;;; Keypresses
+kp1                         .equ 1
+kp2                         .equ 1
+kp3                         .equ 1
+kp4                         .equ 2
+kp5                         .equ 2
+kp6                         .equ 2
+kp7                         .equ 3
+kp8                         .equ 3
+kp9                         .equ 3
 kpUp                        .equ 3
 kpLeft                      .equ 1
 kpRight                     .equ 2
@@ -37,3 +45,6 @@ puppetY                     .equ 3
 puppetHealth                .equ 4
 puppetHitpoints             .equ 5
 puppetPath                  .equ 6
+
+;;; Flags
+holdDownEnterKey            .equ 0

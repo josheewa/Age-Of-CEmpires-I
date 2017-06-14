@@ -1,7 +1,8 @@
 ; Converted using ConvPNG
 
 ; 8 bpp image
-_stone_size .equ 546
+_stone_width .equ 32
+_stone_height .equ 17
 _stone:
  .db 32,17
  .db 0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0DEh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh,0FFh
