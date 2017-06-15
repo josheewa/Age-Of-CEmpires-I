@@ -80,12 +80,8 @@ gfx_SetTextXY:
     jp 57
 gfx_SetTextFGColor:
     jp 63
-gfx_FillRectangle_NoClip:
-    jp 126
-gfx_TransparentSprite:
-    jp 174
-gfx_Sprite_NoClip:
-    jp 177
+gfx_TransparentSprite_NoClip:
+    jp 180
 gfx_SetTransparentColor:
     jp 225
     
@@ -150,6 +146,10 @@ RunProgram:                                                             ; Set 2 
     ld hl, GraphicsAppvar2
     ld de, RelocationTable2
     call LoadGraphicsAppvar
+    ld l, 0F8h
+    push hl
+        call gfx_SetTransparentColor
+    pop hl
     
     ld ix, puppetStack
     ld (ix+puppetType), 0
@@ -170,7 +170,7 @@ RunProgram:                                                             ; Set 2 
     ld (ix+OFFSET_Y), a
     ld hl, drawfield_loc
     ld de, DrawField
-    ld bc, DisplaySelectedAreaBorderEnd - DrawField
+    ld bc, DisplayCursorEnd - DrawField
     ldir
     ld de, DrawTiles
     ld bc, DrawTilesEnd - DrawTiles
@@ -182,6 +182,49 @@ MainGameLoop:
     call DrawField
     call GetKeyFast
     ld ix, variables
+    ld iy, _IYOffsets
+CheckKeysUpLeftDownRight:
+    ld l, 01Eh
+CheckUp:
+    bit kpUp, (hl)
+    jr z, CheckLeft
+    ld a, (iy+CursorY)
+    cp a, 40+_resources_height
+    jr z, CheckLeft
+    dec a
+    ld (iy+CursorY), a
+CheckLeft:
+    bit kpLeft, (hl)
+    jr z, CheckDown
+    ld de, (iy+CursorX)
+    ld a, d
+    or a, a
+    jr nz, +_
+    ld a, e
+    cp a, 32
+    jr z, CheckDown
+_:  dec de
+    ld (iy+CursorX), de
+CheckDown:
+    bit kpDown, (hl)
+    jr z, CheckRight
+    ld a, (iy+CursorY)
+    cp a, 240-25-_cursor_height
+    jr z, CheckRight
+    inc a
+    ld (iy+CursorY), a
+CheckRight:
+    bit kpRight, (hl)
+    jr z, CheckKeys369
+    ld de, (iy+CursorX)
+    ld a, d
+    or a, a
+    jr z, +_
+    ld a, e
+    cp a, 320-256-32-_cursor_width
+    jr z, CheckKeys369
+_:  inc de
+    ld (iy+CursorX), de
 CheckKeys369:                                           ; Check [3], [6], [9]
     ld l, 01Ah
     ld a, (hl)
@@ -209,7 +252,7 @@ CheckKey8:
     bit kp9, (hl)
     jr z, CheckKeys147
     ScrollFieldUp()
-CheckKeys147:
+CheckKeys147:                                           ; Check [1], [4], [7]
     ld l, 016h
     ld a, (hl)
     and a, (1 << kp1) | (1 << kp4) | (1 << kp7)
@@ -233,11 +276,11 @@ CheckClearEnter:
     set holdDownEnterKey, (iy+AoCEFlags1)
     jr nz, CheckStop
 CreateNewSelectedArea:
-    ld hl, (iy+MouseX)
+    ld hl, (iy+CursorX)
     ld (iy+SelectedAreaStartX), hl
     ld (iy+SelectedAreaLeftBound), hl
     ld (iy+SelectedAreaRightBound), hl
-    ld l, (iy+MouseY)
+    ld l, (iy+CursorY)
     ld (iy+SelectedAreaStartY), l
     ld (iy+SelectedAreaUpperBound), l
     ld (iy+SelectedAreaLowerBound), l

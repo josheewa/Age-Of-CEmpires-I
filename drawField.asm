@@ -175,6 +175,9 @@ IncrementRowXOrNot1:
     dec ix
 _:  dec a
     jp nz, DisplayEachRowLoop
+    scf
+    sbc hl, hl
+    ld (hl), 2
     ld de, (currDrawingBuffer)
     ld hl, _resources \.r2
     ld bc, _resources_width * _resources_height
@@ -289,12 +292,26 @@ PuppetsEventsEnd:
 DisplaySelectedAreaBorder:
     ld iy, _IYOffsets
     bit holdDownEnterKey, (iy+AoCEFlags1)
-    ret z                                                               ; We didn't select an area
+    jr z, DisplayCursor                                                 ; We didn't select an area
     ld a, (iy+SelectedAreaUpperBound)
     sub a, (iy+SelectedAreaLowerBound)
-    ret z                                                               ; The area is 0 pixels height, so just a point (or line)
-    ret
+    jr z, DisplayCursor                                                 ; The area is 0 pixels height, so just a point (or line)
+    jr DisplayCursor
 DisplaySelectedAreaBorderEnd:
+
+DisplayCursor:
+    ld l, (iy+CursorY)
+    push hl
+        ld hl, (iy+CursorX)
+        push hl
+            ld hl, _cursor \.r2
+            push hl
+                call gfx_TransparentSprite_NoClip
+            pop hl
+        pop hl
+    pop hl
+    ret
+DisplayCursorEnd:
 
 #IF $ - DrawField > 1024
 .error "cursorImage data too large: ",$-DrawField," bytes!"

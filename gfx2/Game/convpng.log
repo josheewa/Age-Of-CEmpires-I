@@ -4,8 +4,9 @@ Opened convpng.ini
 Using built-in xlibc palette...
 TranspColorIndex : 0
 TranspColor : 0xFFFF
-1:
+2:
  resources : converted! (resources.asm)
+ cursor : converted! (cursor.asm)
 
 Converted in 0 s
 

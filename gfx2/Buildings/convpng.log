@@ -1,12 +1,12 @@
 Opened convpng.ini
 
 --- Group gfx_buildings (ASM) ---
-Using built-in xlibc palette ...
-warning: ignoring transparent color value for a fixed palette.Transparent Color Index : 0
-Transparent Color : 0xFFFF
+Using built-in xlibc palette...
+TranspColorIndex : 0
+TranspColor : 0xFFFF
 2:
- test1 : converted!
- test2 : converted!
+ test1 : converted! (test1.asm)
+ test2 : converted! (test2.asm)
 
 Converted in 0 s
 

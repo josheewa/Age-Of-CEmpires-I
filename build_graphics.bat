@@ -14,6 +14,9 @@ call :editFile gfx_buildings.inc Buildings
 cd ..\Tiles
 convpng
 call :editFile gfx_tiles.inc Tiles
+cd ..\Game
+convpng
+call :editFile gfx_gameplay.inc Game
 pause
 exit
 

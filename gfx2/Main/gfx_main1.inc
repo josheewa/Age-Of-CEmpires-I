@@ -1,7 +1,10 @@
-#ifndef __gfx_main1__ 
-#define __gfx_main1__ 
+#ifndef gfx_main1_H 
+#define gfx_main1_INC 
+#define db .db 
+#define dw .dw 
+#define dl .dl 
 #include "gfx2/Main/gfx_main1.asm" 
-gfx_main1_transparent_color_index .equ 0 
+gfx_main1_transpcolor_index equ 0 
 #include "gfx2/Main/AoCEI.asm" ; 6889 bytes 
 #include "gfx2/Main/soldier.asm" ; 7010 bytes 
 #include "gfx2/Main/playhelpquit.asm" ; 2730 bytes 

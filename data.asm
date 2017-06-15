@@ -125,8 +125,8 @@ _IYOffsets:
 
 TopLeftXTile:            .dl -10
 TopLeftYTile:            .dl -3
-MouseX:                  .dl 0
-MouseY:                  .db 0
+CursorX:                 .dl 160-12
+CursorY:                 .db 120-16
 SelectedAreaStartX:      .dl 0
 SelectedAreaStartY:      .dl 0
 SelectedAreaLeftBound:   .dl 0
