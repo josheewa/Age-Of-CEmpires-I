@@ -175,9 +175,6 @@ IncrementRowXOrNot1:
     dec ix
 _:  dec a
     jp nz, DisplayEachRowLoop
-    scf
-    sbc hl, hl
-    ld (hl), 2
     ld de, (currDrawingBuffer)
     ld hl, _resources \.r2
     ld bc, _resources_width * _resources_height
@@ -205,7 +202,7 @@ PuppetsEvents:
     or a, a
     ex af, af'
     ld ix, puppetStack
-    ld iy, TempData
+    ld iy, TempData1
     ld hl, (_IYOffsets + TopLeftXTile)
     ld de, (_IYOffsets + TopLeftYTile)
     or a, a
@@ -233,7 +230,7 @@ PuppetEventLoop:
     sub a, (ix+puppetY)
     sbc hl, hl
     ld l, a
-    ld de, (iy+0)
+    ld de, (iy+TopLeftXTile)
     or a, a
     sbc hl, de
     ld (iy+6), l
@@ -247,7 +244,7 @@ PuppetEventLoop:
     ld l, a
     jr nc, +_
     inc h
-_:  ld de, (iy+3)
+_:  ld de, (iy+TopLeftYTile)
     or a, a
     sbc hl, de
     ld (iy+7), l
@@ -255,6 +252,9 @@ _:  ld de, (iy+3)
     add hl, de
     jr c, DontDrawPuppet
 DrawPuppet:
+    scf
+    sbc hl, hl
+    ;ld (hl), 2
     ld a, (iy+6)
     add a, (iy+7)
     add a, a
@@ -278,6 +278,13 @@ DrawPuppet:
     ld de, (currDrawingBuffer)
     add hl, de
     
+    ld (hl), 255
+    push hl
+    pop de
+    inc de
+    ld bc, 20
+    ldir
+    
 
 DontDrawPuppet:
     ; Event
@@ -293,12 +300,43 @@ DisplaySelectedAreaBorder:
     ld iy, _IYOffsets
     bit holdDownEnterKey, (iy+AoCEFlags1)
     jr z, DisplayCursor                                                 ; We didn't select an area
-    ld a, (iy+SelectedAreaUpperBound)
-    sub a, (iy+SelectedAreaLowerBound)
-    jr z, DisplayCursor                                                 ; The area is 0 pixels height, so just a point (or line)
-    jr DisplayCursor
-DisplaySelectedAreaBorderEnd:
-
+    ld a, (iy+SelectedAreaStartY)
+    ld b, (iy+CursorY)
+    cp a, b
+    ex af, af'
+    ld hl, (iy+SelectedAreaStartX)
+    ld de, (iy+CursorX)
+    or a, a
+    sbc hl, de
+    jr nz, DrawSelectedArea
+    ex af, af'
+    jr z, DisplayCursor
+    jr +_
+DrawSelectedArea:
+    ex af, af'
+_:  add hl, de
+    jr nc, +_
+    ex de, hl
+_:  or a, a
+    sbc hl, de
+    inc hl
+    sub a, b
+    jr nc, +_
+    neg
+    ld b, (iy+SelectedAreaStartY)
+_:  inc a
+    ld c, a
+    push bc                                                         ; Height
+        push hl                                                     ; Width
+            ld c, b
+            push bc                                                 ; Y
+                push de                                             ; X
+                    call gfx_Rectangle_NoClip
+                pop hl
+            pop hl
+        pop hl
+    pop hl
+    ld iy, _IYOffsets
 DisplayCursor:
     ld l, (iy+CursorY)
     push hl

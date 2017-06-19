@@ -66,6 +66,8 @@ gfx_Begin:
     jp 0
 gfx_End:
     jp 3
+gfx_SetColor:
+    jp 6
 gfx_SetDraw:
     jp 27
 gfx_SwapDraw:
@@ -80,6 +82,12 @@ gfx_SetTextXY:
     jp 57
 gfx_SetTextFGColor:
     jp 63
+gfx_Rectangle_NoClip:
+    jp 123
+gfx_FillRectangle_NoClip:
+    jp 126
+gfx_Sprite_NoClip:
+    jp 177
 gfx_TransparentSprite_NoClip:
     jp 180
 gfx_SetTransparentColor:
@@ -140,6 +148,7 @@ RunProgram:                                                             ; Set 2 
         ld l, 255
         ex (sp), hl
         call gfx_SetTransparentColor
+        call gfx_SetColor
     pop hl
     ;call MainMenu
     call GenerateMap
@@ -154,8 +163,8 @@ RunProgram:                                                             ; Set 2 
     ld ix, puppetStack
     ld (ix+puppetType), 0
     ld (ix+puppetEvent), 1
-    ld (ix+puppetX), 2
-    ld (ix+puppetY), 3
+    ld (ix+puppetX), 0
+    ld (ix+puppetY), 0
     ld (ix+puppetHealth), 100
     ld (ix+puppetHitpoints), 3
     
@@ -278,12 +287,8 @@ CheckClearEnter:
 CreateNewSelectedArea:
     ld hl, (iy+CursorX)
     ld (iy+SelectedAreaStartX), hl
-    ld (iy+SelectedAreaLeftBound), hl
-    ld (iy+SelectedAreaRightBound), hl
     ld l, (iy+CursorY)
     ld (iy+SelectedAreaStartY), l
-    ld (iy+SelectedAreaUpperBound), l
-    ld (iy+SelectedAreaLowerBound), l
     jr CheckStop
 CheckReleaseEnterKey:
     bit holdDownEnterKey, (iy+AoCEFlags1)
@@ -305,7 +310,6 @@ _:  ld (currDrawingBuffer), de
     jp MainGameLoop
     
 #include "map.asm"
-#include "fade.asm"
 #include "mainmenu.asm"
 #include "routines.asm"
 #include "drawField.asm"

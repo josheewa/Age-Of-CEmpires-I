@@ -44,7 +44,7 @@ AmountOfMaxPeople:
     .db 10
 AmountOfBuildings:
     .db 0
-TempData:
+TempData1:
     .block 8
 
 TilePointers:
@@ -123,16 +123,15 @@ _IYOffsets:
 #define prevAddr eval($)
 .org 0
 
-TopLeftXTile:            .dl -10
-TopLeftYTile:            .dl -3
+;TopLeftXTile:            .dl -10
+;TopLeftYTile:            .dl -3
+TopLeftXTile:            .dl 0
+TopLeftYTile:            .dl 0
 CursorX:                 .dl 160-12
 CursorY:                 .db 120-16
 SelectedAreaStartX:      .dl 0
-SelectedAreaStartY:      .dl 0
-SelectedAreaLeftBound:   .dl 0
-SelectedAreaRightBound:  .dl 0
-SelectedAreaUpperBound:  .db 0
-SelectedAreaLowerBound:  .db 0
+SelectedAreaStartY:      .db 0
+TempData2:               .block 8
 AoCEFlags1:              .db 0
 
 .org $+prevAddr
