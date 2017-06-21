@@ -46,6 +46,8 @@ AmountOfBuildings:
     .db 0
 TempData1:
     .block 8
+PathFindingData:
+    .block 20
 
 TilePointers:
     .dl 0                         \ .db 1                  \ .dl _grass \.r2
@@ -123,15 +125,15 @@ _IYOffsets:
 #define prevAddr eval($)
 .org 0
 
-;TopLeftXTile:            .dl -10
-;TopLeftYTile:            .dl -3
-TopLeftXTile:            .dl 0
-TopLeftYTile:            .dl 0
+TopLeftXTile:            .dl -10
+TopLeftYTile:            .dl -3
+;TopLeftXTile:            .dl 0
+;TopLeftYTile:            .dl 0
 CursorX:                 .dl 160-12
 CursorY:                 .db 120-16
 SelectedAreaStartX:      .dl 0
 SelectedAreaStartY:      .db 0
-TempData2:               .block 8
+TempData2:               .block 12
 AoCEFlags1:              .db 0
 
 .org $+prevAddr

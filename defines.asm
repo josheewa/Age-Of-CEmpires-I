@@ -48,3 +48,17 @@ puppetPath                  .equ 6
 
 ;;; Flags
 holdDownEnterKey            .equ 0
+
+;;; Pathfinding data and equates
+PFOpenedList                .equ pixelShadow
+PFClosedList                .equ pixelShadow + (9*8*4)
+PFStartX                    .equ 0
+PFStartY                    .equ 1
+PFCurX                      .equ 2
+PFCurY                      .equ 3
+PFCurTileDepth              .equ 4
+PFEndX                      .equ 5
+PFEndY                      .equ 6
+PFAmountOfOpenTiles         .equ 7
+PFAmountOfClosedTiles       .equ 8
+PFIndexOfCurInOpenList      .equ 9

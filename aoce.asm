@@ -9,6 +9,12 @@
 .org UserMem
 
 start:
+    scf
+    sbc hl, hl
+    ld (hl), 2
+    call FindPath
+    ld iy, flags
+    ret
     jp AoCEStart
     .db 1
     .db 16,16                                                               ; Cesium icon, made by Pieman7373
@@ -148,7 +154,6 @@ RunProgram:                                                             ; Set 2 
         ld l, 255
         ex (sp), hl
         call gfx_SetTransparentColor
-        call gfx_SetColor
     pop hl
     ;call MainMenu
     call GenerateMap
@@ -158,6 +163,9 @@ RunProgram:                                                             ; Set 2 
     ld l, 0F8h
     push hl
         call gfx_SetTransparentColor
+        ld l, 0FFh
+        ex (sp), hl
+        call gfx_SetColor
     pop hl
     
     ld ix, puppetStack
@@ -311,10 +319,11 @@ _:  ld (currDrawingBuffer), de
     
 #include "map.asm"
 #include "mainmenu.asm"
+#include "pathfinding.asm"
 #include "routines.asm"
 #include "drawField.asm"
-#include "decompress.asm"
 #include "data.asm"
+#include "decompress.asm"
 #include "relocation_table1.asm"
     .dw 0FFFFh
 #include "relocation_table2.asm"

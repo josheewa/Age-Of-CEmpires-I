@@ -42,6 +42,7 @@ _:  ld (TopRowLeftOrRight), a
     ld ix, (_IYOffsets + TopLeftYTile)
     ld a, 23
     ld (TempSP2), sp
+    ld (TempSP3), sp
     ld sp, lcdWidth
 DisplayEachRowLoop:
 ; Registers:
@@ -202,82 +203,70 @@ PuppetsEvents:
     or a, a
     ex af, af'
     ld ix, puppetStack
-    ld iy, TempData1
-    ld hl, (_IYOffsets + TopLeftXTile)
-    ld de, (_IYOffsets + TopLeftYTile)
-    or a, a
-    sbc hl, de
-    ld (iy+0), hl
-    add hl, de
-    add hl, de
-    ld (iy+3), hl
+    ld iy, _IYOffsets
+    ;ld hl, (_IYOffsets + TopLeftXTile)
+    ;ld de, (_IYOffsets + TopLeftYTile)
+    ;or a, a
+    ;sbc hl, de
+    ;ld (iy+0), hl
+    ;add hl, de
+    ;add hl, de
+    ;ld (iy+3), hl
 PuppetEventLoop:
     ex af, af'
     jr z, DisplaySelectedAreaBorder
     ex af, af'
-    
-; Check if we need to draw the puppet:
-; X_tile - Y_tile in [X_1-Y_1,X_1-Y_1+9]
-; X_tile - Y_tile - (X-1 - Y_1) in [0,9]
-; X_tile - Y_tile - (iy+0) in [0,9]
 
-; X_tile + Y_tile in [X_1+Y_1,X_1+Y_1+23]
-; X_tile + Y_tile - (X_1+Y_1) in [0,23]
-; X_tile + Y_tile - (iy+3) in [0,23]
+; isoToScreenX(X_tile - X_1) <= 320
+; isoToScreenY(Y_tile - Y_1) <= 240
 
-; Check if X is in the range
-    ld a, (ix+puppetX)
-    sub a, (ix+puppetY)
+; var posX = (x - y) * tileW;
+; var posY = (x + y) * tileH / 2;
+
+    or a, a
     sbc hl, hl
-    ld l, a
+    ld l, (ix+puppetX)
     ld de, (iy+TopLeftXTile)
+    sbc hl, de
+    ld (iy+TempData2), hl                                                       ; X_tile - X_1
+    add hl, de
+    ld l, (ix+puppetX)
+    ld de, (iy+TopLeftYTile)
     or a, a
     sbc hl, de
-    ld (iy+6), l
-    ld de, -10
-    add hl, de
-    jr c, DontDrawPuppet
-; Check if Y is in the range
-    sbc hl, hl
-    ld a, (ix+puppetX)
-    add a, (ix+puppetY)
-    ld l, a
-    jr nc, +_
-    inc h
-_:  ld de, (iy+TopLeftYTile)
+    ld (iy+TempData2+3), hl                                                     ; Y_tile - Y_1
+    ex de, hl
+    ld hl, (iy+TempData2)
     or a, a
     sbc hl, de
-    ld (iy+7), l
-    ld de, -24
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    ld de, 0
+    ld a, (variables+OFFSET_X)
+    ld e, a
     add hl, de
-    jr c, DontDrawPuppet
-DrawPuppet:
-    scf
-    sbc hl, hl
-    ;ld (hl), 2
-    ld a, (iy+6)
-    add a, (iy+7)
-    add a, a
-    add a, a
-    add a, a
-    add a, 31
-    ld hl, variables+OFFSET_Y
-    add a, (hl)
+    ld (iy+TempData2+6), hl
+    ld hl, (iy+TempData2)
+    ld de, (iy+TempData2+3)
+    add hl, de
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    ld de, variables+OFFSET_Y
+    ld a, (de)
+    add a, l
     ld l, a
     ld h, 160
     mlt hl
     add hl, hl
-    ld e, (iy+6)
-    ld d, 16
-    mlt de
+    ld de, (iy+TempData2+6)
     add hl, de
-    ld a, (variables+OFFSET_X)
-    ld d, 0
-    ld e, a
+    ld de, (31*320)+15
     add hl, de
     ld de, (currDrawingBuffer)
     add hl, de
-    
     ld (hl), 255
     push hl
     pop de
@@ -332,22 +321,17 @@ _:  inc a
             push bc                                                 ; Y
                 push de                                             ; X
                     call gfx_Rectangle_NoClip
-                pop hl
-            pop hl
-        pop hl
-    pop hl
-    ld iy, _IYOffsets
+                    ld iy, _IYOffsets
 DisplayCursor:
-    ld l, (iy+CursorY)
-    push hl
-        ld hl, (iy+CursorX)
-        push hl
-            ld hl, _cursor \.r2
-            push hl
-                call gfx_TransparentSprite_NoClip
-            pop hl
-        pop hl
-    pop hl
+                    ld l, (iy+CursorY)
+                    push hl
+                        ld hl, (iy+CursorX)
+                        push hl
+                            ld hl, _cursor \.r2
+                            push hl
+                                call gfx_TransparentSprite_NoClip
+TempSP3 = $+1
+    ld sp, 0
     ret
 DisplayCursorEnd:
 
