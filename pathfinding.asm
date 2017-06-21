@@ -2,12 +2,7 @@ FindPath:
     di
     ld iy, PathFindingData
     ld (iy+PFStartX), 2
-    ld (iy+PFStartY), 4
-    ld (iy+PFEndX), 6
-    ld (iy+PFEndY), 5
-    ld (iy+PFAmountOfOpenTiles), 1
-    ld (iy+PFAmountOfClosedTiles), 0
-    ld hl, PFOpenedList
+    ld (iy+PFStartY), 4    ld (iy+PFEndX), 6    ld (iy+PFEndY), 5    ld (iy+PFAmountOfOpenTiles), 1    ld (iy+PFAmountOfClosedTiles), 0    ld hl, PFOpenedList
     ld (hl), 2
     inc hl
     ld (hl), 4
@@ -37,6 +32,10 @@ FindPath2:
     ld b, a                                                                     ; B = index of tile in open list
     ld (iy+PFIndexOfCurInOpenList), a
     ld d, a                                                                     ; D = current minimum score
+    ld a, (iy+PFAmountOfOpenTiles)
+    or a, a
+    ret z                                                                       ; There exists no path
+    ld e, a                                                                     ; E = amount of open tiles
 GetMinimumTile:
     lea ix, ix+4
     ld c, (ix+3)                                                                ; C = score of tile in open list
@@ -47,7 +46,7 @@ GetMinimumTile:
     ld (iy+PFIndexOfCurInOpenList), b
 _:  inc b
     ld a, b
-    cp a, (iy+PFAmountOfOpenTiles)                                              ; Check if the index is equal to the amount of tiles in the open list
+    cp a, e                                                                     ; Check if the index is equal to the amount of tiles in the open list
     jr nz, GetMinimumTile
     ld e, (iy+PFIndexOfCurInOpenList)                                           ; Get the tile with the lowest score
     ld d, 4
@@ -85,35 +84,31 @@ CheckLeftNeighbour:
     ld a, d
     or a, a
     jr z, CheckUpperNeighbour
-    dec a
-    ld d, a
+    dec d
     call FindTileInBothLists
     call nz, AddTileIfWalkable
+    inc b
 CheckUpperNeighbour:
     ld a, (iy+PFCurY)
     or a, a
     jr z, CheckRightNeighbour
-    dec a
-    ld e, a
-    ld d, (iy+PFCurX)
+    dec e
     call FindTileInBothLists
     call nz, AddTileIfWalkable
+    inc e
 CheckRightNeighbour:
     ld a, (iy+PFCurX)
     cp a, 8
     jr z, CheckLowerNeightbour
-    inc a
-    ld d, a
-    ld e, (iy+PFCurY)
+    inc d
     call FindTileInBothLists
     call nz, AddTileIfWalkable
+    dec d
 CheckLowerNeightbour:
     ld a, (iy+PFCurY)
     cp a, 7
     jr z, +_
-    inc a
-    ld e, a
-    ld d, (iy+PFCurX)
+    inc e
     call FindTileInBothLists
     call nz, AddTileIfWalkable
 _:  jp FindPath2
