@@ -7,8 +7,8 @@ if not exist bin mkdir bin
 if exist relocation_table1.asm del "relocation_table1.asm"
 if exist relocation_table2.asm del "relocation_table2.asm"
 cd gfx
-spasm -E -L graphics1.asm ..\bin\AOCEGFX1.8xv
-spasm -E -L graphics2.asm ..\bin\AOCEGFX2.8xv
+spasm -E -L appvar1.asm ..\bin\AOCEGFX1.8xv
+spasm -E -L appvar2.asm ..\bin\AOCEGFX2.8xv
 cd ..\bin
 call :editFile AOCEGFX1.lab
 call :editFile AOCEGFX2.lab

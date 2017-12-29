@@ -1,3 +1,4 @@
 bin
+*.bat
 relocation_table1.asm
 relocation_table2.asm
