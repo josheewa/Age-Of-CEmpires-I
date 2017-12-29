@@ -3,6 +3,8 @@ Select all the buildings of the Central European:
  - Feudal Age, append filename with _2
  - Castle Age, append filename with _3
  - Imperial Age, append filename with _4
+
+Background should be rgb(160, 0, 96) (dark pink)
  
 If the building doesn't exist in that age, ignore it, like the Castle in the Dark Age. A Castle in the Imperial Age should still be named castle_4.
 
