@@ -210,9 +210,7 @@ prng24:
 	xor	a, h
 	ld	(iy+3*4+0), a
 	ld	hl, (iy+3*4)
-	ld	a, b
 	ld	de, (iy+2*4)
-	ld	c, (iy+2*4+3)
 	add	hl, de
 	ret
 	
