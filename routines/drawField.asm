@@ -82,9 +82,9 @@ CheckWhatTypeOfTileItIs:
 	or	a, a
 	jp	z, SkipDrawingOfTile
 	ld	c, a
-	ld	b, 7
+	ld	b, 3
 	mlt	bc
-	ld	hl, TilePointers-7
+	ld	hl, TilePointers - 3
 	add	hl, bc
 	ld	hl, (hl)		; Pointer to the tile
 	jr	+_
@@ -134,7 +134,7 @@ ActuallyDisplayTile:
 	lea	de, iy-0
 	ldi
 	ldi
-	ld	de, 32-(320*16)
+	ld	de, 32 - (320 * 16)
 	jr	+_
 SkipDrawingOfTile:
 	ld	de, 32
@@ -143,11 +143,11 @@ _:	add	iy, de
 	inc	de
 	dec	ix
 	ld	a, b
-	ld	bc, (-MAP_SIZE+1)*2
+	ld	bc, (-MAP_SIZE + 1) * 2
 	add	hl, bc
 	dec	a
 	jp	nz, DisplayTile
-	ld	bc, (MAP_SIZE*10-9)*2
+	ld	bc, (MAP_SIZE * 10 - 9) * 2
 	add	hl, bc
 	ex	de, hl
 	ld	bc, -9
@@ -159,7 +159,7 @@ _:	add	iy, de
 IncrementRowXOrNot1:
 	jr	nz, +_
 	inc	de
-	ld	bc, (-MAP_SIZE+1)*2
+	ld	bc, (-MAP_SIZE + 1) * 2
 	add	hl, bc
 	dec	ix
 _:	dec	a

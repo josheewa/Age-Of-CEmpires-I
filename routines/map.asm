@@ -5,6 +5,7 @@ GenerateMap:
 	ld	de, screenBuffer+1
 	ld	bc, 320*240-1
 	ldir
+	jp	CreateMap
 	printString(GeneratingMapMessage, 5, 112)
 	ld	hl, (0F30044h)
 	call	srand
@@ -118,6 +119,7 @@ DontDrawResource:
 	ld	b, ixh
 	dec	b
 	jp	nz, PlaceAllResourceTypesLoop
+CreateMap:
 ; All the resources are now placed, so copy them to the map appvar
 	ld	hl, AoCEMapAppvar
 	call	_Mov9ToOP1

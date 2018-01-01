@@ -1,8 +1,8 @@
 TilePointers:
-	.dl	_grass \.r2
-	.dl	_food  \.r2
-	.dl	_gold  \.r2
-	.dl	_stone \.r2
+	.dl	_grass + 2 \.r2
+	;.dl	_food  \.r2
+	;.dl	_gold  \.r2
+	;.dl	_stone \.r2
     
 pal_sprites:				; Don't worry, it's just the xLIBC palette
     .dw $0000, $0081, $0102, $0183, $0204, $0285, $0306, $0387

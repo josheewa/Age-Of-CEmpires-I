@@ -169,6 +169,10 @@ RunProgram:
 	ldir
 	ld	hl, vRAM+(320*240)
 	ld	(currDrawingBuffer), hl
+	ld	de, mpLcdPalette
+	ld	hl, _age_1_pal
+	ld	bc, 256*2
+	ldir
 	scf
 	sbc	hl, hl
 	ld	(hl), 2
@@ -253,6 +257,7 @@ _:	ld	(currDrawingBuffer), de
 	ld	(mpLcdBase), hl
 	jp	MainGameLoop
     
+#include "gfx/bin/age_1.asm"
 #include "data/tables.asm"
 #include "data/data.asm"
 #include "routines/map.asm"
