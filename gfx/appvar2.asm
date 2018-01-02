@@ -1,4 +1,4 @@
 #define db .db
 #define equ .equ
-#include "Gameplay/resources.asm"
+#include "gameplay_gfx.inc"
 #include "tiles_gfx.inc"

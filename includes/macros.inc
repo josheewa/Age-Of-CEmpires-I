@@ -111,3 +111,9 @@ _:	dec	a
 	pop	hl
 	pop	hl
 #endmacro
+
+#macro randInt(x)
+	call	prng24
+	ld	bc, x			; 7 types of resources group
+	call	__idvrmu
+#endmacro

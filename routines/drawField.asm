@@ -166,7 +166,7 @@ _:	dec	a
 	jp	nz, DisplayEachRowLoop
 	ld	de, (currDrawingBuffer)
 	ld	hl, _resources \.r2
-	ld	bc, _resources_width * _resources_height
+	ld	bc, 320 * 15
 	ldir
 	ld	hl, blackBuffer
 	ld	bc, 320*40+32

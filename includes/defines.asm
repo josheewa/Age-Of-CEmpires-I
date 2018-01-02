@@ -31,9 +31,12 @@ kpEnter                     .equ 0
 ;;; Tiles
 TILE_EMPTY                  .equ 0
 TILE_GRASS                  .equ 1
-TILE_FOOD                   .equ 2
-TILE_GOLD                   .equ 3
-TILE_STONE                  .equ 4
+TILE_FOOD_1                 .equ 2
+TILE_FOOD_2                 .equ 3
+TILE_GOLD_1                 .equ 4
+TILE_GOLD_2                 .equ 5
+TILE_STONE_1                .equ 6
+TILE_STONE_2                .equ 7
 TILE_TREE                   .equ 5
 
 ;;; Puppet struct
